@@ -9,6 +9,23 @@ const { camelizeKeys, decamelizeKeys } = require('humps');
 // eslint-disable-next-line new-cap
 const router = express.Router();
 
+router.get('/users', (req, res, next) => {
+  knex('users')
+    .orderBy('id')
+    .then((rows) => {
+      const users = camelizeKeys(rows);
+
+      res.send(users);
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+router.get('/users/:id', (req, res, next) => {
+  
+});
+
 router.post('/users', (req, res, next) => {
   const { username, email, password } = req.body;
 
@@ -45,6 +62,92 @@ router.post('/users', (req, res, next) => {
 
       delete user.hashedPassword;
 
+      res.send(user);
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+router.patch('/users/:id', (req, res, next) => {
+  const id = Number.parseInt(req.params.id);
+
+  if (Number.isNaN(id)) {
+    return next();
+  }
+
+  knex('users')
+    .where('id', id)
+    .first()
+    .then((user) => {
+      if (!user) {
+        return next(boom.create(404, 'Not Found'));
+      }
+
+      const { username, email, password } = req.body;
+      const updateUser = {};
+
+      if (username) {
+        updateUser.username = username;
+      }
+
+      if (email) {
+        updateUser.email = email;
+      }
+
+      if (password) {
+        bcrypt.hash(password, 12).
+          then((hashedPassword) => {
+            updateUser.hashedPassword = hashedPassword;
+
+            return knex('users')
+              .update(decamelizeKeys(updateUser))
+              .where('id', id);
+          })
+          .catch((err) => {
+            next(err);
+          });
+      } else {
+        return knex('users')
+          .update(decamelizeKeys(updateUser))
+          .where('id', id);
+      }
+    })
+    .then((row) => {
+      const user = camelizeKeys(row);
+
+      res.send(user);
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+router.delete('/users', (req, res, next) => {
+  let user;
+
+  const { username } = req.body;
+
+  knex('users')
+    .where('username', username)
+    .first()
+    .then((row) => {
+      if (!row) {
+        return next(boom.create(404, 'User not found'));
+      }
+
+      user = camelizeKeys(row);
+
+      return knex('users')
+        .del()
+        .where('username', username);
+    })
+    .then(() => {
+      delete user.id;
+      delete user.hashedPassword;
+      delete user.updatedAt;
+      // TODO: Do we need this?
+      // res.clearCookie('users');
       res.send(user);
     })
     .catch((err) => {
