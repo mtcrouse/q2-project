@@ -1,5 +1,10 @@
 'use strict';
 
+// TODO: Do we need this?
+// if (process.env.NODE_ENV !== 'production') {
+//   require('dotenv').config();
+// }
+
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -15,6 +20,7 @@ app.use(morgan('short'));
 
 app.use(express.static(path.join('public')));
 
+// TODO: Make sure this works when uncommented
 // CSRF protection
 // app.use((req, res, next) => {
 //   if (/json/.test(req.get('Accept'))) {
