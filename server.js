@@ -12,6 +12,10 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(morgan('short'));
 
+const path = require('path');
+
+app.use(express.static(path.join('public')));
+
 const users = require('./routes/users');
 const searches = require('./routes/searches');
 
