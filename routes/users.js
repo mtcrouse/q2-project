@@ -22,10 +22,6 @@ router.get('/users', (req, res, next) => {
     });
 });
 
-router.get('/users/:id', (req, res, next) => {
-  
-});
-
 router.post('/users', (req, res, next) => {
   const { username, email, password } = req.body;
 
