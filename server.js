@@ -5,6 +5,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
+const path = require('path');
 
 app.disable('x-powered-by');
 
@@ -12,9 +13,16 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(morgan('short'));
 
-const path = require('path');
-
 app.use(express.static(path.join('public')));
+
+// CSRF protection
+// app.use((req, res, next) => {
+//   if (/json/.test(req.get('Accept'))) {
+//     return next();
+//   }
+//
+//   res.sendStatus(406);
+// });
 
 const users = require('./routes/users');
 const searches = require('./routes/searches');
