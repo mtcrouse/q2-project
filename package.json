@@ -4,7 +4,7 @@
   "description": "map of twitter",
   "main": "app.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "knex": "knex"
   },
   "repository": {
@@ -18,10 +18,13 @@
   },
   "homepage": "https://github.com/mtcrouse/q2-project#readme",
   "dependencies": {
+    "bcrypt-as-promised": "^1.1.0",
     "body-parser": "^1.15.2",
     "boom": "^4.2.0",
+    "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
     "humps": "^1.1.0",
+    "jsonwebtoken": "^7.1.9",
     "knex": "^0.12.5",
     "morgan": "^1.7.0",
     "pg": "^6.1.0"
