@@ -13,8 +13,10 @@ app.use(cookieParser());
 app.use(morgan('short'));
 
 const users = require('./routes/users');
+const searches = require('./routes/searches');
 
 app.use(users);
+app.use(searches);
 
 app.use((_req, res) => {
   res.sendStatus(404);
