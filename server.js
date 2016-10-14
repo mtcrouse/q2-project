@@ -32,6 +32,9 @@ app.use(express.static(path.join('public')));
 
 const users = require('./routes/users');
 const searches = require('./routes/searches');
+const favorites = require('./routes/favorites');
+const searches_users = require('./routes/searches_users')
+const searches_users = require('./routes/favorites_users')
 
 app.use(users);
 app.use(searches);
