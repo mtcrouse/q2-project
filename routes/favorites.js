@@ -26,10 +26,11 @@ const router = express.Router();
 // };
 
 router.post('/favorites', (req, res, next) => {
+	// I need to add count
 	// const { userId } = req.token
 	const { searchId, count } = req.body;
 
-	if ( searchId !== parseInt(searchId) || !searchId.trim() || typeof searchId !== 'number') {
+	if ( !searchId.trim() || typeof Number(searchId) !== 'number') {
 		return next(boom.create(400, 'searchId must be an integer'))
 	}
 
@@ -48,7 +49,7 @@ router.post('/favorites', (req, res, next) => {
 					}, '*');
 		})
 		.then((row) => {
-			const favorite = camelizeKeys(rows[0]);
+			const favorite = camelizeKeys(row[0]);
 
 			res.send(favorite);
 		})
@@ -57,20 +58,132 @@ router.post('/favorites', (req, res, next) => {
 		});
 });
 
-// router.get('/favorites', (req, res, next) => {
+router.get('/favorites', /*authorize,*/ (req, res, next) => {
+	// const { userId } = req.token;
 
-// })
+	const userId = 1;
 
-// router.get('/favorites/:id', (req, res, next) => {
+	if (req.body.length > 0) {
+		return next(boom.creat(400, 'Bad query: set :id in route'));
+	}
 
-// })
+	knex('favorites')
+		.innerJoin('searches', 'searches.id', 'favorites.search_id')
+		.then((rows) => {
+			const favorites = camelizeKeys(rows);
 
-// router.patch('favorites/:id', (req, res, next) => {
+			res.send(favorites);
+		})
+		.catch((err) => {
+			next(err);
+		});
+});
 
-// })
+router.get('/favorites/:id', /*authorize,*/ (req, res, next) => {
+	// const { userId } = req.token;
 
-// router.delete('favorites/:id', (req, res, next) => {
+	const userId = 1;
+	const favoriteId = req.params.id;
+	console.log(favoriteId);
 
-// })
+	if (!Number.isInteger(Number(favoriteId))) {
+		return next(boom.create(400, 'favoriteId must be an integer'))
+	}
+
+	knex('favorites')
+		.where('favorites.id', favoriteId)
+		.first()
+		.innerJoin('searches', 'searches.id', 'favorites.search_id')
+		.then((row) => {
+			if (!row) {
+				res.status(200);
+				res.send(`Favorite at id ${favoriteId} does not exist`)
+			} else {
+				res.status(200);
+				res.send(row);
+			}
+		})
+		.catch((err) => {
+			next(err);
+		});
+});
+
+router.patch('/favorites/:id', /* authorize,*/ (req, res, next) => {
+	// const { userId } = req.token;
+	// This works, but because of foreign key constraints no keys can
+	// be patched.
+	const body = req.body;
+	const favoriteId = req.params.id;
+
+	console.log(req.body);
+	console.log(req.params.id);
+
+	knex('favorites')
+		.where('id', Number(req.params.id))
+		.first()
+		.then((favorite) => {
+			if (favorite === [] || !favorite) {
+				return next(boom.create(400, `Favorite ${favoriteId} not found`))
+			} 
+			else {
+				console.log(favorite);
+			}
+
+			const { searchId, count } = req.body
+			const updateFavorite = {}
+
+			if (searchId) {
+				updateFavorite.searchId = searchId;
+			}
+
+			if (count) {
+				updateFavorite.count = count;
+			}
+
+			return knex('favorites')
+				.update(decamelizeKeys(updateFavorite), '*')
+				.where('id', req.params.id);
+		})
+		.then((row) => {
+			res.send(camelizeKeys(row/*[0]*/));
+		})
+		.catch((err) => {
+			next(err);			
+		});
+});
+
+router.delete('/favorites/:id', /*authorize,*/ (req, res, next) => {
+  // const { userId } = req.token;
+  const favoriteId = req.params.id
+
+	if(!Number(req.params.id)) {
+		return next(boom.create(400, `No id provided or id ${id} is not an integer`))
+	}
+
+	let favorite;
+
+	knex('favorites')
+		.where('id', favoriteId)
+		.first()
+		.then((row) => {
+			if (!row) {
+				return next(boom.create(400, `No favorite exists at req.params.id ${id}`))
+			}
+			favorite = camelizeKeys(row);
+
+			return knex('favorites')
+				.where({
+					id: favoriteId
+				})
+				.del()
+		})
+		.then(() => {
+			delete favorite.id
+			res.send(favorite)
+		})
+		.catch((err) => {
+			next(err);
+		});
+});
 
 module.exports = router;
