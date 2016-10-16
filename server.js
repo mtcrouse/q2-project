@@ -32,9 +32,15 @@ app.use(express.static(path.join('public')));
 
 const users = require('./routes/users');
 const searches = require('./routes/searches');
+const favorites = require('./routes/favorites');
+const searches_users = require('./routes/searches_users')
+const favorites_users = require('./routes/favorites_users')
 
 app.use(users);
 app.use(searches);
+app.use(favorites);
+app.use(favorites_users);
+// app.use(searches_users);
 
 app.use((_req, res) => {
   res.sendStatus(404);

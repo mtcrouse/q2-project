@@ -22,6 +22,24 @@ router.get('/users', (req, res, next) => {
     });
 });
 
+router.get('/users/:id', /*authorize,*/ (req, res, next) => {
+  const { id } = req.params;
+
+  knex('users')
+    .where('id', id)
+    .first()
+    .then((row) => {
+      if (!row) {
+        return next(boom.create(400, `No user at id ${id}`));
+      }
+
+      res.send(camelizeKeys(row));
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
 router.post('/users', (req, res, next) => {
   const { username, email, password } = req.body;
 
@@ -110,8 +128,7 @@ router.patch('/users/:id', (req, res, next) => {
       }
     })
     .then((row) => {
-      const user = camelizeKeys(row);
-
+      const user = camelizeKeys(row[0]);
       res.send(user);
     })
     .catch((err) => {
@@ -129,7 +146,7 @@ router.delete('/users', (req, res, next) => {
     .first()
     .then((row) => {
       if (!row) {
-        return next(boom.create(404, 'User not found'));
+        return next(boom.create(404, `User not found at id ${username}`));
       }
 
       user = camelizeKeys(row);
@@ -149,6 +166,7 @@ router.delete('/users', (req, res, next) => {
     .catch((err) => {
       next(err);
     });
+
 });
 
 module.exports = router;
