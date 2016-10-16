@@ -36,4 +36,24 @@ router.post('/searches', (req, res, next) => {
     });
 });
 
+router.get('/searches', /*authorize,*/, (req, res, next) => {
+  
+})
+
+router.get('/searches/:id', /*authorize,*/, (req, res, next) => {
+
+})
+
+router.post('/searches', /*authorize,*/, (req, res, next) => {
+
+})
+
+router.patch('/searches/:id', /*authorize,*/, (req, res, next) => {
+
+})
+
+router.delete('/searches/:id', /*authorize,*/, (req, res, next) => {
+
+})
+
 module.exports = router;

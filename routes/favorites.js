@@ -61,10 +61,10 @@ router.post('/favorites', (req, res, next) => {
 router.get('/favorites', /*authorize,*/ (req, res, next) => {
 	// const { userId } = req.token;
 
-	const userId = 1;
+	const userId = 1; //change this
 
-	if (req.body.length > 0) {
-		return next(boom.creat(400, 'Bad query: set :id in route'));
+	// if (req.body.length > 0) {
+	// 	return next(boom.creat(400, 'Bad query: set :id in route'));
 	}
 
 	knex('favorites')
