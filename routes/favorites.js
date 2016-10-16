@@ -30,8 +30,8 @@ router.post('/favorites', (req, res, next) => {
 	// const { userId } = req.token
 	const { searchId, count } = req.body;
 
-	if ( !searchId.trim() || typeof Number(searchId) !== 'number') {
-		return next(boom.create(400, 'searchId must be an integer'))
+	if ( !searchId || !searchId.trim()) {
+		return next(boom.create(400, 'no searchId'))
 	}
 
 	knex('searches')
@@ -39,7 +39,7 @@ router.post('/favorites', (req, res, next) => {
 		.first()
 		.then((row) => {
 			if (!row) {
-				return next(boom.create(404, 'search not found'));
+				return next(boom.create(404, `search not found at id ${searchId}`));
 			}
 
 			return knex('favorites')
@@ -65,7 +65,7 @@ router.get('/favorites', /*authorize,*/ (req, res, next) => {
 
 	// if (req.body.length > 0) {
 	// 	return next(boom.creat(400, 'Bad query: set :id in route'));
-	}
+	// }
 
 	knex('favorites')
 		.innerJoin('searches', 'searches.id', 'favorites.search_id')
@@ -157,7 +157,7 @@ router.delete('/favorites/:id', /*authorize,*/ (req, res, next) => {
   const favoriteId = req.params.id
 
 	if(!Number(req.params.id)) {
-		return next(boom.create(400, `No id provided or id ${id} is not an integer`))
+		return next(boom.create(400, `No id provided`))
 	}
 
 	let favorite;
@@ -167,7 +167,7 @@ router.delete('/favorites/:id', /*authorize,*/ (req, res, next) => {
 		.first()
 		.then((row) => {
 			if (!row) {
-				return next(boom.create(400, `No favorite exists at req.params.id ${id}`))
+				return next(boom.create(400, `No favorite exists at id ${favoriteId}`))
 			}
 			favorite = camelizeKeys(row);
 

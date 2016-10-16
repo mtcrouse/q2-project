@@ -52,4 +52,24 @@ router.post('/users', (req, res, next) => {
     });
 });
 
+router.get('/users', /*authorize,*/ (req, res, next) => {
+  throw boom.create(400, 'Route handler not yet written');
+});
+
+router.get('/users/:id', /*authorize,*/ (req, res, next) => {
+  throw boom.create(400, 'Route handler not yet written');
+});
+
+router.post('/users', /*authorize,*/ (req, res, next) => {
+  throw boom.create(400, 'Route handler not yet written');
+});
+
+router.patch('/users/:id', /*authorize,*/ (req, res, next) => {
+  throw boom.create(400, 'Route handler not yet written');
+});
+
+router.delete('/users/:id', /*authorize,*/ (req, res, next) => {
+  throw boom.create(400, 'Route handler not yet written');
+});
+
 module.exports = router;
