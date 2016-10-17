@@ -21,6 +21,7 @@
     "bcrypt-as-promised": "^1.1.0",
     "body-parser": "^1.15.2",
     "boom": "^4.2.0",
+    "child_process": "^1.0.2",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
     "humps": "^1.1.0",
@@ -28,6 +29,7 @@
     "knex": "^0.12.5",
     "morgan": "^1.7.0",
     "pg": "^6.1.0",
+    "socket.io": "^1.5.0",
     "twitter": "^1.4.0"
   }
 }
