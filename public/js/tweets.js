@@ -27,4 +27,25 @@ $(document).ready(() => {
 
     return false;
   });
+
+  $('#stream-form').submit((event) => {
+    event.preventDefault();
+
+    $('.tweet').remove();
+
+    $.getJSON('/tweets/stream')
+      .done((tweets) => {
+        // const $body = $('body');
+        // console.log(tweets);
+        //
+        // for (let tweet of tweets.statuses) {
+        //   console.log(tweet);
+        //   $body.append(`<div class="tweet"><p>${JSON.stringify(tweet.text)}</p><div>`);
+        // }
+        console.log(tweets);
+      })
+      .fail(() => {
+        console.log('Unable to retrieve tweets');
+      });
+  });
 });
