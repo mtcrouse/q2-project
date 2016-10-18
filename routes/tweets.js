@@ -17,20 +17,6 @@ var client = new Twitter({
   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
-router.get('/tweets/stream', (req, res, next) => {
-  var stream = client.stream('statuses/sample');
-  stream.on('data', function(event) {
-    // console.log(event && event.text);
-    if (event.text) {
-        console.log(event.text);
-    }
-  });
-
-  stream.on('error', function(error) {
-    throw error;
-  });
-});
-
 router.get('/tweets/:searchid', (req, res, next) => {
   const searchid = req.params.searchid;
 

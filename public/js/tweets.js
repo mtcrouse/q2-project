@@ -4,7 +4,6 @@ $(document).ready(() => {
   var socket = io();
 
   socket.on('tweety', function(msg){
-    // $('body').prepend($('<p>').text(msg));
     console.log(msg);
   });
 
@@ -42,13 +41,6 @@ $(document).ready(() => {
 
     $.getJSON('/tweets/stream')
       .done((tweets) => {
-        // const $body = $('body');
-        // console.log(tweets);
-        //
-        // for (let tweet of tweets.statuses) {
-        //   console.log(tweet);
-        //   $body.append(`<div class="tweet"><p>${JSON.stringify(tweet.text)}</p><div>`);
-        // }
         console.log(tweets);
       })
       .fail(() => {
