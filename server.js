@@ -1,9 +1,8 @@
 'use strict';
 
-// TODO: Do we need this?
-// if (process.env.NODE_ENV !== 'production') {
-//   require('dotenv').config();
-// }
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 
 const express = require('express');
 const app = require('express')();
@@ -25,13 +24,13 @@ app.use(express.static(path.join('public')));
 
 // TODO: Make sure this works when uncommented
 // CSRF protection
-// app.use((req, res, next) => {
-//   if (/json/.test(req.get('Accept'))) {
-//     return next();
-//   }
-//
-//   res.sendStatus(406);
-// });
+app.use((req, res, next) => {
+  if (/json/.test(req.get('Accept'))) {
+    return next();
+  }
+
+  res.sendStatus(406);
+});
 
 const users = require('./routes/users');
 const searches = require('./routes/searches');
@@ -52,10 +51,10 @@ app.use((_req, res) => {
 });
 
 var client = new Twitter({
-  consumer_key: '',
-  consumer_secret: '',
-  access_token_key: '',
-  access_token_secret: ''
+  consumer_key: process.env.TWITTER_CONSUMER_KEY,
+  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+  access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
 io.on('connection', function(socket){
@@ -63,7 +62,7 @@ io.on('connection', function(socket){
   var stream = client.stream('statuses/sample');
   stream.on('data', function(event) {
     if (event.text) {
-        io.emit('tweety', event.user.location);
+        io.emit('tweety', event.text);
     }
   });
 

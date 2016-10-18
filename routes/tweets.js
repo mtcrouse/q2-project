@@ -1,5 +1,9 @@
 'use strict';
 
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 const express = require('express');
 var Twitter = require('twitter');
 
@@ -7,10 +11,10 @@ var Twitter = require('twitter');
 const router = express.Router();
 
 var client = new Twitter({
-  consumer_key: 'a3WChaKvcropKCKS1A8DKpnt4',
-  consumer_secret: 'WcTHmQxMBhbUkFeX5JXUCll7kg2eC54Nl5it8ShyfKPbgKwHiv',
-  access_token_key: '778483188498739201-bTUX93sgIOWxVKImc9tAlS6eOkqf57Y',
-  access_token_secret: 'ZRtcn8iUyZsnVNCiphyAm8giaxhdk1EvWDri5cSJ961kq'
+  consumer_key: process.env.TWITTER_CONSUMER_KEY,
+  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+  access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
 router.get('/tweets/stream', (req, res, next) => {
