@@ -41,7 +41,7 @@ $(document).ready(() => {
             theaddress = theaddress.join('');
             // $body.append(`<div class="tweet"><p>${theaddress}</p><div>`)
 
-            let $xhr = $.getJSON(`https://maps.googleapis.com/maps/api/geocode/json?address=${theaddress}&key=AIzaSyD9Eqb-zTPSDLCscIVgyP2RvYL3Y4GfxUk&v`);
+            let $xhr = $.getJSON(`https://maps.googleapis.com/maps/api/geocode/json?address=${theaddress}&key=-----------------`);
             $xhr.done(function(xhrdata) {
               console.log(xhrdata);
               $('body').append(`<div class="tweet"><p>${xhrdata.results[0].formatted_address}</p><div>`)
