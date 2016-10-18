@@ -13,6 +13,7 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const path = require('path');
 const Twitter = require('twitter');
+const knex = require('./knex');
 
 app.disable('x-powered-by');
 
@@ -22,7 +23,6 @@ app.use(morgan('short'));
 
 app.use(express.static(path.join('public')));
 
-// TODO: Make sure this works when uncommented
 // CSRF protection
 app.use((req, res, next) => {
   if (/json/.test(req.get('Accept'))) {
@@ -57,19 +57,39 @@ var client = new Twitter({
   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
-io.on('connection', function(socket){
+// io.on('connection', function(socket){
+//
+//   var stream = client.stream('statuses/sample');
+//   stream.on('data', function(event) {
+//     if (event.text) {
+//         io.emit('tweety', event);
+//     }
+//   });
+//
+//   console.log('a user connected');
+//   socket.on('disconnect', function(){
+//     console.log('user disconnected');
+//   });
+// });
 
-  var stream = client.stream('statuses/sample');
-  stream.on('data', function(event) {
-    if (event.text) {
-        io.emit('tweety', event.text);
-    }
-  });
+const knexFn = function(message) {
+    return knex('tweets').insert([{
+      tweet: message
+    }])
+    .then(() => {
+      console.log('all good');
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
 
-  console.log('a user connected');
-  socket.on('disconnect', function(){
-    console.log('user disconnected');
-  });
+let stream = client.stream('statuses/sample');
+stream.on('data', function(event) {
+  if (event.text) {
+    console.log(event);
+    knexFn(event);
+  }
 });
 
 // eslint-disable-next-line max-params

@@ -1,6 +1,13 @@
 $(document).ready(() => {
   'use strict';
 
+  var socket = io();
+
+  socket.on('tweety', function(msg){
+    // $('body').prepend($('<p>').text(msg));
+    console.log(msg);
+  });
+
   $('#search-form').submit((event) => {
     event.preventDefault();
 
