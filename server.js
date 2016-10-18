@@ -62,7 +62,15 @@ const knexFn = function(message) {
       tweet: message
     }])
     .then(() => {
-      console.log('all good');
+      return knex('tweets').count('*');
+    })
+    .then((count) => {
+      if (count[0].count > 1000) {
+        console.log('greater than 1000');
+      } else {
+        console.log(count[0].count);
+      }
+      return;
     })
     .catch((err) => {
       console.error(err);
