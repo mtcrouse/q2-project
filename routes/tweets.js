@@ -30,7 +30,7 @@ router.get('/tweets/stream', (req, res, next) => {
 router.get('/tweets/:searchid', (req, res, next) => {
   const searchid = req.params.searchid;
 
-  client.get('search/tweets', {q: searchid}, function(error, tweet, response) {
+  client.get('search/tweets', {q: searchid, count: 100}, function(error, tweet, response) {
     if (error) {
       throw error;
     }
