@@ -22,13 +22,6 @@ router.get('/users', (req, res, next) => {
     });
 });
 
-// router.get('/users/test', (req, res, next) => {
-//
-// knex('tweets').insert({tweet: 'bababa'}).then(() => console.log('good'));
-//
-// });
-
-
 router.get('/users/:id', /*authorize,*/ (req, res, next) => {
   const { id } = req.params;
 
