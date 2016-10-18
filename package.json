@@ -24,6 +24,7 @@
     "child_process": "^1.0.2",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
+    "express.io": "^1.1.13",
     "humps": "^1.1.0",
     "jsonwebtoken": "^7.1.9",
     "knex": "^0.12.5",

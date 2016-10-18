@@ -7,10 +7,10 @@ var Twitter = require('twitter');
 const router = express.Router();
 
 var client = new Twitter({
-  consumer_key: '',
-  consumer_secret: '',
-  access_token_key: '',
-  access_token_secret: ''
+  consumer_key: 'a3WChaKvcropKCKS1A8DKpnt4',
+  consumer_secret: 'WcTHmQxMBhbUkFeX5JXUCll7kg2eC54Nl5it8ShyfKPbgKwHiv',
+  access_token_key: '778483188498739201-bTUX93sgIOWxVKImc9tAlS6eOkqf57Y',
+  access_token_secret: 'ZRtcn8iUyZsnVNCiphyAm8giaxhdk1EvWDri5cSJ961kq'
 });
 
 router.get('/tweets/stream', (req, res, next) => {

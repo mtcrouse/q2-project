@@ -6,11 +6,14 @@
 // }
 
 const express = require('express');
-const app = express();
+const app = require('express')();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const path = require('path');
+const Twitter = require('twitter');
 
 app.disable('x-powered-by');
 
@@ -48,6 +51,28 @@ app.use((_req, res) => {
   res.sendStatus(404);
 });
 
+var client = new Twitter({
+  consumer_key: '',
+  consumer_secret: '',
+  access_token_key: '',
+  access_token_secret: ''
+});
+
+io.on('connection', function(socket){
+
+  var stream = client.stream('statuses/sample');
+  stream.on('data', function(event) {
+    if (event.text) {
+        io.emit('tweety', event.user.location);
+    }
+  });
+
+  console.log('a user connected');
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
+});
+
 // eslint-disable-next-line max-params
 app.use((err, _req, res, _next) => {
   if (err.output && err.output.statusCode) {
@@ -64,7 +89,7 @@ app.use((err, _req, res, _next) => {
 
 const port = process.env.PORT || 8000;
 
-app.listen(port, () => {
+http.listen(port, () => {
   if (app.get('env') !== 'test') {
     // eslint-disable-next-line no-console
     console.log('Listening on port', port);
