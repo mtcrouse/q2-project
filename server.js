@@ -26,7 +26,7 @@ app.use(express.static(path.join('public')));
 //   if (/json/.test(req.get('Accept'))) {
 //     return next();
 //   }
-//
+//w
 //   res.sendStatus(406);
 // });
 

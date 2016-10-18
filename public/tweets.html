@@ -4,12 +4,13 @@
     <meta charset="utf-8">
     <title>Tweets</title>
 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="/css/tweets.css" media="screen">
   </head>
   <body>
-
+    <div id="map"></div>
     <form id="search-form">
-      <input type="text" id="search-term">
+      <input type="text" id="search-term" value="San Francisco">
       <button type="submit">Submit</button>
     </form>
 
@@ -17,8 +18,9 @@
         <button type="submit">Stream</button>
       </form>
 
-
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9Eqb-zTPSDLCscIVgyP2RvYL3Y4GfxUk&v=3&libraries=visualization&callback=initMap" async defer></script>
     <script type="text/javascript" src="js/tweets.js"></script>
   </body>
 </html>
