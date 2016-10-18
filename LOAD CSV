@@ -1,0 +1,38 @@
+LOAD CSV  
+      FROM '~/downloads/worldcitiespop.csv' (Country,City,AccentCity,Region,Population,Latitude,Longitude)
+      INTO postgresql:///pgloader?csv (Country,City,AccentCity,Region,Population,Latitude,Longitude)
+ 
+      WITH truncate,  
+           skip header = 1,  
+           fields optionally enclosed by '"',  
+           fields escaped by double-quote,  
+           fields terminated by ','  
+ 
+       SET client_encoding to 'latin1',  
+           work_mem to '128MB',  
+           standard_conforming_strings to 'on'  
+ 
+    BEFORE LOAD DO  
+     $$ drop table if exists csv; $$,  
+     $$ create table csv (
+        id serial
+        Country varchar(50),
+        City varchar(50),
+        AccentCity varchar(50),
+        Region varchar(50),
+        Population varchar(50),
+        Latitude double precision(50),
+        Longitude double precision(50)  
+   $$; 
+
+
+copy cities from '/users/smk267/Downloads/worldcitiespop.csv' DELIMITERS ',' CSV;
+
+
+
+
+create table cities (id serial, Country varchar(50), City varchar(50), AccentCity varchar(50), Region varchar(50), Population varchar(50), Latitude double precision, Longitude double precision);
+
+create table cities (id serial, Country varchar(50), City varchar(50), AccentCity varchar(50), Region varchar(50), Population varchar(50), Latitude varchar(50), Longitude varchar(50));
+
+create table cities (id serial, Country char(2), City varchar(50), AccentCity varchar(50), Region varchar(50), Population varchar(50), Latitude varchar(50), Longitude varchar(50));

@@ -41,6 +41,13 @@ $(document).ready(() => {
   'use strict';
 
 
+  var socket = io();
+
+  socket.on('tweety', function(msg){
+    console.log(msg);
+  });
+
+  
   $('#mapbutton').click((event) =>{
     initMap()
   });
@@ -128,6 +135,7 @@ $(document).ready(() => {
 
     $.getJSON('/tweets/stream')
       .done((tweets) => {
+        console.log(tweets);
       })
       .fail(() => {
         console.log('Unable to retrieve tweets');

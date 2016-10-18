@@ -1,16 +1,19 @@
 'use strict';
 
-// TODO: Do we need this?
-// if (process.env.NODE_ENV !== 'production') {
-//   require('dotenv').config();
-// }
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 
 const express = require('express');
-const app = express();
+const app = require('express')();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const path = require('path');
+const Twitter = require('twitter');
+const knex = require('./knex');
 
 app.disable('x-powered-by');
 
@@ -20,15 +23,14 @@ app.use(morgan('short'));
 
 app.use(express.static(path.join('public')));
 
-// TODO: Make sure this works when uncommented
 // CSRF protection
-// app.use((req, res, next) => {
-//   if (/json/.test(req.get('Accept'))) {
-//     return next();
-//   }
-//w
-//   res.sendStatus(406);
-// });
+app.use((req, res, next) => {
+  if (/json/.test(req.get('Accept'))) {
+    return next();
+  }
+
+  res.sendStatus(406);
+});
 
 const users = require('./routes/users');
 const searches = require('./routes/searches');
@@ -48,6 +50,40 @@ app.use((_req, res) => {
   res.sendStatus(404);
 });
 
+var client = new Twitter({
+  consumer_key: process.env.TWITTER_CONSUMER_KEY,
+  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+  access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+});
+
+const knexFn = function(message) {
+    return knex('tweets').insert([{
+      tweet: message
+    }])
+    .then(() => {
+      console.log('all good');
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
+
+io.on('connection', function(socket){
+  let stream = client.stream('statuses/sample');
+  stream.on('data', function(event) {
+    if (event.text) {
+        io.emit('tweety', event);
+        knexFn(event);
+    }
+  });
+
+  console.log('a user connected');
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
+});
+
 // eslint-disable-next-line max-params
 app.use((err, _req, res, _next) => {
   if (err.output && err.output.statusCode) {
@@ -64,7 +100,7 @@ app.use((err, _req, res, _next) => {
 
 const port = process.env.PORT || 8000;
 
-app.listen(port, () => {
+http.listen(port, () => {
   if (app.get('env') !== 'test') {
     // eslint-disable-next-line no-console
     console.log('Listening on port', port);
