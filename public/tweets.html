@@ -4,16 +4,39 @@
     <meta charset="utf-8">
     <title>Tweets</title>
 
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css"/>
     <link rel="stylesheet" href="/css/tweets.css" media="screen">
   </head>
   <body>
 
+
+      <div id="user-box" class="z-depth-3 float-box hoverable tooltipped" data-position="left" data-delay="50" data-tooltip="Click here to go to your user account">
+        <div class="container center-align">
+            <i class="small material-icons">perm_identity</i>
+        </div>
+      </div>
+
+
+
+    <div id="title-box" class="z-depth-3 float-box">
+      <div class="container center-align">
+        <h5>Twitter Map</h5>
+      </div>
+    </div>
+
+    <div id="search-menu" class="z-depth-3 float-box">
+      <div class="container center-align">
+        <form id="search-form">
+          <input type="text" id="search-term">
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+
     <div id="map"></div>
 
-    <form id="search-form">
-      <input type="text" id="search-term">
-      <button type="submit">Submit</button>
-    </form>
+
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>

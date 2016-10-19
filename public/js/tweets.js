@@ -44,11 +44,11 @@ $(document).ready(() => {
   });
 
 
-  const heatmap = new HeatmapOverlay(map, 
+  const heatmap = new HeatmapOverlay(map,
     {
       'radius': .5,
-      'maxOpacity': 1, 
-      'scaleRadius': true, 
+      'maxOpacity': 1,
+      'scaleRadius': true,
       'useLocalExtrema': false,
       latField: 'lat',
       lngField: 'lng',
@@ -69,7 +69,7 @@ $(document).ready(() => {
       testData.data.push({lat: coords.coordinates[0], lng: coords.coordinates[1], count: 1});
       // console.log(testData);
       heatmap.setData(testData);
-    } 
+    }
 
     else if (msg.user.location) {
       let theaddress = msg.user.location;
