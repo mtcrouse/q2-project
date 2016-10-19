@@ -1,20 +1,8 @@
-.tweet {
-  border: 3px solid blue;
-  margin: 20px;
-}
-
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-}
-
-#map {
-  height: 100%;
-  width:100%;
-  position: relative;
-  z-index: 0;
 }
 
 .float-box {
@@ -25,11 +13,28 @@ html, body {
   opacity: 0.7;
 }
 
+#map {
+  height: 100%;
+  width:100%;
+  position: relative;
+  z-index: 0;
+}
+
 #search-menu {
   height: 40%;
   width: 25%;
   right: 37.5%;
   top: 30%;
+}
+
+#search-icon {
+  top: 10%;
+  right: 13px;
+  border-radius: 200px;
+  cursor: pointer;
+  width: 7%;
+  height: 7%;
+  display: none;
 }
 
 #title-box {

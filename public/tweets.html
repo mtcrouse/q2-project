@@ -10,26 +10,29 @@
   </head>
   <body>
 
-
-      <div id="user-box" class="z-depth-3 float-box hoverable tooltipped" data-position="left" data-delay="50" data-tooltip="Click here to go to your user account">
-        <div class="container center-align">
-            <i class="small material-icons">perm_identity</i>
-        </div>
+    <div id="search-icon" class="z-depth-3 float-box tooltipped" data-position="left" data-delay="50" data-tooltip="Click here to search again">
+      <div class="container center-align">
+          <i class="small material-icons">search</i>
       </div>
+    </div>
 
+    <div id="user-box" class="z-depth-3 float-box tooltipped" data-position="left" data-delay="50" data-tooltip="Click here to go to your user account">
+      <div class="container center-align">
+          <i class="small material-icons">perm_identity</i>
+      </div>
+    </div>
 
-
-    <div id="title-box" class="z-depth-3 float-box">
+    <div id="title-box" class="z-depth-3 float-box tooltipped" data-position="right" data-delay="50" data-tooltip="By Metta Crouse and Samuel Kurland">
       <div class="container center-align">
         <h5>Twitter Map</h5>
       </div>
     </div>
 
     <div id="search-menu" class="z-depth-3 float-box">
-      <div class="container center-align">
+      <div id="search-menu-container" class="container center-align">
         <form id="search-form">
-          <input type="text" id="search-term">
-          <button type="submit">Submit</button>
+          <input type="text" id="search-term" class="center-align">
+          <button class="btn blue" type="submit">Submit</button>
         </form>
       </div>
     </div>

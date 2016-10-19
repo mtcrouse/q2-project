@@ -97,18 +97,21 @@ $(document).ready(() => {
     }
   });
 
+  $('#search-icon').click(() => {
+    $('#search-icon').fadeOut();
+    $('#search-menu').fadeIn();
+  });
 
   $('#search-form').submit((event) => {
     event.preventDefault();
 
-    $('.tweet').remove();
-
     const searchTerm = $('#search-term').val().trim();
+
+    $('#search-menu').fadeOut();
+    $('#search-icon').fadeIn();
 
     $.getJSON(`/tweets/${searchTerm}`)
       .done((tweets) => {
-        // console.log(tweets);
-        // const $body = $('body');
 
         $('#search-term').val('');
 
@@ -125,8 +128,6 @@ $(document).ready(() => {
           }
 
           else if (tweet.user.location){
-            // $body.append(`<div class='tweet'><p>${tweet.user.location}</p><div>`);
-            // $body.append(`<div class='tweet'><p>${JSON.stringify(tweet)}</p><div>`);
 
             let theaddress = tweet.user.location;
             theaddress = theaddress.split('');
