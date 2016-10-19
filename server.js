@@ -38,12 +38,14 @@ const favorites = require('./routes/favorites');
 const searches_users = require('./routes/searches_users');
 const favorites_users = require('./routes/favorites_users');
 const tweets = require('./routes/tweets');
+const token = require('./routes/token');
 
 app.use(users);
 app.use(searches);
 app.use(favorites);
 app.use(favorites_users);
 app.use(tweets);
+app.use(token);
 // app.use(searches_users);
 
 app.use((_req, res) => {

@@ -3,57 +3,45 @@
 const bcrypt = require('bcrypt-as-promised');
 const boom = require('boom');
 const express = require('express');
+const jwt = require('jsonwebtoken');
 const knex = require('../knex');
 const { camelizeKeys, decamelizeKeys } = require('humps');
 
 // eslint-disable-next-line new-cap
+const ev = require('express-validation');
+const validations = require('../validations/users');
+
 const router = express.Router();
 
-router.get('/users', (req, res, next) => {
-  knex('users')
-    .orderBy('id')
-    .then((rows) => {
-      const users = camelizeKeys(rows);
+// const authorize = function(req, res, next) {
+//   jwt.verify(req.cookies.token, process.env.JWT_SECRET, (err, decoded) => {
+//     if (err) {
+//       res.verify = false;
 
-      res.send(users);
-    })
-    .catch((err) => {
-      next(err);
-    });
-});
+//       return next(boom.create(401, 'Unauthorized'));
+//     }
 
-router.get('/users/:id', /*authorize,*/ (req, res, next) => {
-  const { id } = req.params;
+//     res.verify = true;
+//     req.token = decoded;
 
-  knex('users')
-    .where('id', id)
-    .first()
-    .then((row) => {
-      if (!row) {
-        return next(boom.create(400, `No user at id ${id}`));
-      }
+//     next();
+//   });
+// };
 
-      res.send(camelizeKeys(row));
-    })
-    .catch((err) => {
-      next(err);
-    });
-});
-
-router.post('/users', (req, res, next) => {
+router.post('/users', ev(validations.post), (req, res, next) => {
   const { username, email, password } = req.body;
 
-  if (!username || !username.trim()) {
-    return next(boom.create(400, 'Username must not be blank'));
-  }
+  // if (!username || !username.trim()) {
+  //   return next(boom.create(400, 'Username must not be blank'));
+  // }
 
-  if (!email || !email.trim() || email.length < 8) {
-    return next(boom.create(400, 'Email must not be blank'));
-  }
+  // if (!email || !email.trim() || email.length < 8) {
+  //   return next(boom.create(400, 'Email must not be blank'));
+  // }
 
-  if (!password || !password.trim()) {
-    return next(boom.create(400, 'Password must not be blank'));
-  }
+  // if (!password || !password.trim()) {
+  //   return next(boom.create(400, 'Password must not be blank'));
+  // }
 
   bcrypt.hash(password, 12)
     .then((hashedPassword) => {
@@ -83,7 +71,40 @@ router.post('/users', (req, res, next) => {
     });
 });
 
+router.get('/users', (req, res, next) => {
+  knex('users')
+    .orderBy('id')
+    .then((rows) => {
+      const users = camelizeKeys(rows);
+
+      res.send(users);
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+router.get('/users/:id', /*authorize,*/ (req, res, next) => {
+  // const { userId } = req.token;
+  const { id } = req.params;
+
+  knex('users')
+    .where('id', id)
+    .first()
+    .then((row) => {
+      if (!row) {
+        return next(boom.create(400, `No user at id ${id}`));
+      }
+
+      res.send(camelizeKeys(row));
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
 router.patch('/users/:id', (req, res, next) => {
+  // const { userId } = req.token
   const id = Number.parseInt(req.params.id);
 
   if (Number.isNaN(id)) {
@@ -137,6 +158,7 @@ router.patch('/users/:id', (req, res, next) => {
 });
 
 router.delete('/users', (req, res, next) => {
+  const { userId } = req.token;
   let user;
 
   const { username } = req.body;
@@ -147,6 +169,10 @@ router.delete('/users', (req, res, next) => {
     .then((row) => {
       if (!row) {
         return next(boom.create(404, `User not found at id ${username}`));
+      }
+
+      if (userId !== Number(row.user_id)) {
+        return next(boom.create(400, `userId ${userId} and row.user_id ${row.user_id} fail strictly equal.`));
       }
 
       user = camelizeKeys(row);
@@ -166,7 +192,6 @@ router.delete('/users', (req, res, next) => {
     .catch((err) => {
       next(err);
     });
-
 });
 
 module.exports = router;
