@@ -50,6 +50,25 @@ $(document).ready(() => {
     ]
   });
 
+  // Take this out if we can't figure out how to use it at specific coordinates
+  function addCircle() {
+      var $circle = $('<div class="circle"></div>');
+      $circle.animate({
+          'width': '300px',
+          'height': '300px',
+          'margin-top': '-150px',
+          'margin-left': '-150px',
+          'opacity': '0'
+      }, 4000, () => {
+        console.log('circle!');
+      });
+      $('body').append($circle);
+
+      setTimeout(function __remove() {
+          $circle.remove();
+      }, 4000);
+  }
+
 
   const heatmap = new HeatmapOverlay(map,
     {
