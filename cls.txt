@@ -1,0 +1,12 @@
+http post localhost:8000/token email='my2@email.com' password=12345678912
+
+http post localhost:8000/favorites searchId=1 'Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTQ3NjkxMDIyMX0.y999tG4unmQURh3tu9ffGAYo6TKt0s33iPb1hLlHppg;'
+
+http get 'localhost:8000/favorites/ucheck?userId=1' 'Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTQ3NjkwODU1OH0.d0___GwzUoaDNyiPXr-VyW1UMhjvTMSoCF2Mlaihx_I;'
+
+
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTQ3NjkwODY3OX0.taLh6L46MDuRHuSmer4fyCuG2pyvw2KlwmxB9LCIAiU;
+
+http patch 'localhost:8000/favorites/1' searchId=1 count=20 'Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTQ3NjkxMDc0NH0.ed_p3TeCkk1AEdjX6rvA1f6wnmE1N9cZyNIvlwwCmPI;'
+
+http post localhost:8000/favorites_users favoriteId=1 'Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTQ3NjkxMTE5M30.7Cu6uqfvP7VbwkGtEA0wywcXgz9SzDVP51uNl23xULE;'

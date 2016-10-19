@@ -26,34 +26,6 @@ const router = express.Router();
 //   });
 // };
 
-// router.post('/searches', (req, res, next) => {
-//   const { searchTerm } = req.body;
-
-//   if (!searchTerm || !searchTerm.trim()) {
-//     return next(boom.create(400, 'SearchTerm must not be blank'));
-//   }
-
-//   return knex('searches')
-//     .where('search_term', searchTerm)
-//     .first()
-//     .then((row) => {
-//       if (row) {
-//         return next(boom.create(400, 'Search already exists'));
-//       }
-//     })
-//     .then(() => {
-//       return knex('searches').insert(decamelizeKeys(searchTerm), '*');
-//     })
-//     .then((rows) => {
-//       const currentSearch = camelizeKeys(rows[0]);
-
-//       res.send(currentSearch);
-//     })
-//     .catch((err) => {
-//       next(err);
-//     });
-// });
-
 router.get('/searches', (req, res, next) => {
   knex('searches')
     .orderBy('id')
@@ -61,20 +33,13 @@ router.get('/searches', (req, res, next) => {
       const searches = camelizeKeys(rows);
 
       res.send(searches);
-
-// router.get('/searches', /*authorize,*/ (req, res, next) => {
-//   knex('searches')
-//     .orderBy('search_term')
-//     .then((searches) => {
-//       res.send(camelizeKeys(searches));
-
     })
     .catch((err) => {
       next(err);
     });
 });
 
-router.get('/searches/:id', /*authorize,*/ (req, res, next) => {
+router.get('/searches/:id', (req, res, next) => {
   const { id } = req.params;
 
   if (!Number(id)) {
@@ -96,8 +61,9 @@ router.get('/searches/:id', /*authorize,*/ (req, res, next) => {
     });
 });
 
-router.post('/searches', /*authorize,*/ (req, res, next) => {
+router.post('/searches', (req, res, next) => {
   const { searchTerm } = req.body;
+
   if (!searchTerm || !searchTerm.trim()) {
     throw boom.create(400, 'searchTerm must not be blank')
   }
@@ -141,7 +107,7 @@ router.post('/searches', /*authorize,*/ (req, res, next) => {
     });
 });
 
-router.patch('/searches/:id', /*authorize,*/ (req, res, next) => {
+router.patch('/searches/:id', (req, res, next) => {
   const { id } = req.params;
 
   if (!id) {
@@ -184,7 +150,7 @@ router.patch('/searches/:id', /*authorize,*/ (req, res, next) => {
     });
 });
 
-router.delete('/searches/:id', /*authorize,*/ (req, res, next) => {
+router.delete('/searches/:id', (req, res, next) => {
   const searchId = req.params.id;
 
   if (Number.parseInt(Number(searchId)) !== Number(searchId)) {
