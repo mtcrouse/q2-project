@@ -1,6 +1,13 @@
 $(document).ready(() => {
   'use strict';
 
+  $('.float-box').delay(4000).fadeIn(1000);
+  $('#title-box').delay(3000).fadeOut(1000);
+
+  $('#map').click(() => {
+    $('#search-menu').hide();
+  });
+
   var testData = {
     max: 5,
     data: []
@@ -98,7 +105,6 @@ $(document).ready(() => {
   });
 
   $('#search-icon').click(() => {
-    $('#search-icon').fadeOut();
     $('#search-menu').fadeIn();
   });
 
@@ -108,7 +114,6 @@ $(document).ready(() => {
     const searchTerm = $('#search-term').val().trim();
 
     $('#search-menu').fadeOut();
-    $('#search-icon').fadeIn();
 
     $.getJSON(`/tweets/${searchTerm}`)
       .done((tweets) => {
