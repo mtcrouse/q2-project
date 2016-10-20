@@ -53,7 +53,7 @@ router.get('/tweets/:searchid', (req, res, next) => {
         } else {
           for (let row of rows) {
             row = row.split('\t');
-            let currentScore = natural.JaroWinklerDistance(tweet.user.location.split(',')[0], row[1]);
+            let currentScore = natural.JaroWinklerDistance(tweet.user.location.split(',')[0].trim(), row[1]);
             let currentScorePopulation = row[14];
             if (currentScore > maxScore || ((currentScore === maxScore) && (currentScorePopulation > maxScorePopulation))) {
               maxScore = currentScore;
