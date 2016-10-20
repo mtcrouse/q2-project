@@ -48,14 +48,18 @@ router.post('/favorites_users/', authorize, /*ev(validations.post),*/ (req, res,
 		});
 });
 
-// Get user's own favorites
-router.get('/favorites_users/ucheck', authorize, (req, res, next) => {
-	const { userId } = req.token;
+// Get particular user's favorites
+router.get('/favorites_users/ucheck/:id', /*authorize,*/ (req, res, next) => {
+	const userId = req.params.id;
+
+	// console.log("UserId is");
+	// console.log(userId);
 
 	knex('favorites_users')
-		.innerJoin('favorites', 'favorites.id', 'favorites_users.favorite_id')
-		.innerJoin('users', 'users.id', userId)
-		.innerJoin('searches', 'searches.id', 'favorites.search_id')
+		.where('favorites_users.user_id', userId)
+		// .innerJoin('favorites', 'favorites.id', 'favorites_users.favorite_id')
+		// .innerJoin('users', 'users.id', userId)
+		// .innerJoin('searches', 'searches.id', 'favorites.search_id')
 		.then((rows) => {
 			const favoritesUsers = camelizeKeys(rows);
 
@@ -66,7 +70,7 @@ router.get('/favorites_users/ucheck', authorize, (req, res, next) => {
 		});
 });
 
-// Get a particulr user's particular favorite
+// Get particular user's particular favorite
 router.get('/favorites_users/userfav/:id', authorize, (req, res, next) => {
 
 	const userId = req.params.id;
@@ -90,8 +94,8 @@ router.get('/favorites_users/userfav/:id', authorize, (req, res, next) => {
 });
 
 // Get favorites not already present in a user's favorites
-router.get('/favorites_users/outercheck', authorize, (req, res, next) => {
-	const { userId } = req.token;
+router.get('/favorites_users/outercheck/:id', authorize, (req, res, next) => {
+	const userId = req.params.id;
 
 	knex('favorites_users')
 		.whereNot('user_id', userId)
@@ -108,15 +112,15 @@ router.get('/favorites_users/outercheck', authorize, (req, res, next) => {
 });
 
 
-// Get a list of all favorites for particular searchId
-router.get('/favorites_users/favorite/:id', authorize, (req, res, next) => {
+// Get a list of all favorites for particular searchId with user info
+router.get('/favorites_users/favsforsearch/:id', authorize, (req, res, next) => {
 	const searchId = req.params.id;
 
-	knex('favorites')
+	knex('searches')
 		.where('search_id', searchId)
+		.innerJoin('favorites', 'searches.id', 'favorites.search_id')
 		.innerJoin('favorites_users', 'favorites.id', 'favorites_users.favorite_id')
 		.innerJoin('users', 'users.id', 'favorites_users.user_id')
-		.innerJoin('searches', 'searches.id', 'favorites.search_id')
 		.then((row) => {
 			if (row === []) {
 				throw boom.create(404, `searchId ${searchId} isn't in favorites`)
@@ -133,9 +137,9 @@ router.get('/favorites_users/favorite/:id', authorize, (req, res, next) => {
 // router.get(/favorites_users/***, authorize, (req, res, next) => {
 // })
 
-router.patch('/favorites_users/:id', authorize, (req, res, next) => {
-	const { userId } = req.token;
-	const favoriteId = req.params.id;
+//Patch
+router.patch('/favorites_users/', authorize, (req, res, next) => {
+	const {userId, favoriteId, newUserId, newFavoriteId } = req.body;
 
 	// if (!userId || !favoriteId) {
 	// 	throw boom.create(400, `Not enough patch information provided. userId (${userID}) and favoriteId(${favoriteId}) both required.`);
@@ -146,37 +150,49 @@ router.patch('/favorites_users/:id', authorize, (req, res, next) => {
 		.where('user_id', userId)
 		.first()
 		.then((row) => {
+			console.log(row);
 			if (!row) {
 				throw boom.create(404, `favoriteId ${favoriteId} for userId ${userId} not found in favorites_users`)
 			}
 
 			let updateFavorite = {};
-			const { favoriteId, userId } = req.body;
+			// const { favoriteId, userId } = req.body;
 
-			if (favoriteId) {
-				updateFavorite.favorite_id = favoriteId;
+			if (newFavoriteId) {
+				updateFavorite.favorite_id = newFavoriteId;
 			} 
 
-			if (userId) {
-				updateFavorite.user_id = userId;
+			if (newUserId) {
+				updateFavorite.user_id = newUserId;
 			}
 
 			console.log(updateFavorite);
 
-			// return knex('favorites_users')
-			// 	.where('favorite_id', favoriteId)
-			// 	.where('user_id', userId)
-			// 	.first()
-			// 	.update(updateFavorite, '*')
+			// Check for duplicate?
+			// 	knex('favorites_users')
+			// .where(updateFavorite)
+			// .first()
+			// .then((row) => {
+			// 	if (!row) {
+			// 		throw boom.create(400, `favoriteId ${favoriteId} for userId ${userId} already exists`)
+			// 	}
+			// })
+			// .catch((err) => {
+			// 	next(err);
+			// })
+
+			return knex('favorites_users')
+				.where({favorite_id: favoriteId, user_id: userId})
+				.first()
+				.update(updateFavorite, '*')
 		})
 		.then((row) => {
 			res.send(camelizeKeys(row));
+			console.log(camelizeKeys(row));
 		})
 		.catch((err) => {
 			next(err);
 		})
-
-
 });
 
 router.delete('/favorites_users/:id', /*authorize,*/(req, res, next) => {

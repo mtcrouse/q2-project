@@ -9,7 +9,7 @@ $(document).ready(() => {
   });
 
   var testData = {
-    max: 5,
+    max: 7,
     data: []
   };
 
@@ -80,48 +80,48 @@ $(document).ready(() => {
       lngField: 'lng',
       valueField: 'count',
       gradient: {
-        '.5': 'blue',
-        '.8': 'green',
+        '.5': '#aaaaff',
+        '.8': '#5555aa',
         '.95': 'red'
       }
     });
 
   var socket = io();
 
-  socket.on('tweety', function(msg){
-    if (msg.geo){
-      // console.log(msg.geo);
-      let coords = msg.geo;
-      testData.data.push({lat: coords.coordinates[0], lng: coords.coordinates[1], count: 1});
-      // console.log(testData);
-      heatmap.setData(testData);
-    }
+  // socket.on('tweety', function(msg){
+  //   if (msg.geo){
+  //     // console.log(msg.geo);
+  //     let coords = msg.geo;
+  //     testData.data.push({lat: coords.coordinates[0], lng: coords.coordinates[1], count: 1});
+  //     // console.log(testData);
+  //     heatmap.setData(testData);
+  //   }
 
-    else if (msg.user.location) {
-      let theaddress = msg.user.location;
-      theaddress = theaddress.split('');
-      theaddress = theaddress.map(function(val){
-        if (val === ' '){
-          return '+';
-        } else {
-          return val;
-        }
-      });
-      theaddress = theaddress.join('');
-      let $xhr = $.getJSON(`https://maps.googleapis.com/maps/api/geocode/json?address=${theaddress}&key=----------------`);
-      $xhr.done(function(xhrdata) {
-        if (xhrdata !== undefined && xhrdata.results[0].formatted_address !== undefined) {
-          let lat = xhrdata.results[0].geometry.location.lat;
-          let lng = xhrdata.results[0].geometry.location.lng;
-          let newData = {lat: lat, lng: lng, count: 1};
-          let loc = testData.data.indexOf(newData);
-          // console.log(`Loc is ${loc}`);
-          testData.data.push({lat: lat, lng: lng, count: 1});
-          heatmap.setData(testData);
-        }
-      });
-    }
-  });
+  //   else if (msg.user.location) {
+  //     let theaddress = msg.user.location;
+  //     theaddress = theaddress.split('');
+  //     theaddress = theaddress.map(function(val){
+  //       if (val === ' '){
+  //         return '+';
+  //       } else {
+  //         return val;
+  //       }
+  //     });
+  //     theaddress = theaddress.join('');
+  //     let $xhr = $.getJSON(`https://maps.googleapis.com/maps/api/geocode/json?address=${theaddress}&key=----------------`);
+  //     $xhr.done(function(xhrdata) {
+  //       if (xhrdata !== undefined && xhrdata.results[0].formatted_address !== undefined) {
+  //         let lat = xhrdata.results[0].geometry.location.lat;
+  //         let lng = xhrdata.results[0].geometry.location.lng;
+  //         let newData = {lat: lat, lng: lng, count: 1};
+  //         let loc = testData.data.indexOf(newData);
+  //         // console.log(`Loc is ${loc}`);
+  //         testData.data.push({lat: lat, lng: lng, count: 1});
+  //         heatmap.setData(testData);
+  //       }
+  //     });
+  //   }
+  // });
 
   $('#search-icon').click(() => {
     $('#search-menu').fadeIn();

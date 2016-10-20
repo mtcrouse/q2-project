@@ -85,9 +85,9 @@ router.get('/favorites', (req, res, next) => {
 });
 
 // Returns all instances of a favorite with userId n
-router.get('/favorites/ucheck', authorize, ev(validations.ucheck), (req, res, next) => {
+router.get('/favorites/ucheck', authorize, /*ev(validations.ucheck),*/ (req, res, next) => {
 	const { userId } = req.token;
-	const favoriteId = Number(req.query.favoriteId);
+	const { favoriteId } = req.body;
 
 	// ev(validations)
 	// if (isNaN(favoriteId)) {
@@ -95,6 +95,7 @@ router.get('/favorites/ucheck', authorize, ev(validations.ucheck), (req, res, ne
 	// }
 
 	knex('users')
+		.where('users.id', userId)
 		.innerJoin('favorites_users', 'users.id', 'favorites_users.user_id')
 		.innerJoin('favorites', 'favorites.id', 'favorites_users.favorite_id')
 		.innerJoin('searches', 'favorites.search_id', 'searches.id')

@@ -1,0 +1,103 @@
+<!--Functioning sign-up page-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Galvanize Bookshelf</title>
+    <!--Import Google Icon Font-->
+   <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css" media="screen,projection"/>
+
+    <!-- Import styles.css -->
+    <link type="text/css" rel="stylesheet" href="/css/styles.css"/>
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  </head>
+  <body class="blue-grey lighten-5">
+    <div class="navbar-fixed">
+      <nav class="blue-grey darken-2">
+        <div class="nav-wrapper">
+          <a href="/" class="brand-logo">
+            <span>
+              <img class="logo-png" src="" />
+            </span>
+            <span class="logo-text"></span>
+          </a>
+
+          <a class="button-collapse" data-activates="mobileNav">
+            <i class="material-icons">menu</i>
+          </a>
+
+          <ul class="right hide-on-med-and-down">
+            <li><a href="/index.html">Index</a></li>
+            <li class="firstNavItem"></li>
+            <li class="secondNavItem"></li>
+          </ul>
+
+          <ul id="mobileNav" class="side-nav">
+            <li><a href="/index.html">Index</a></li>
+            <li class="firstNavItem"></li>
+            <li class="secondNavItem"></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <main>
+      <div id="container" class="container">
+        <div class="row">
+          <form id="signUpForm" class="col offset-s2 s8">
+            <div class="card">
+              <div class="card-content">
+                <p class="card-title">Sign up</p>
+
+                <div class="row">
+                  <div class="input-field col s12">
+                    <input placeholder="Username" id="username" type="text" class="validate">
+                    <label for="username">Username</label>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="input-field col s12">
+                    <input placeholder="Email" id="email" type="text" class="validate">
+                    <label for="email">Email</label>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="input-field col s12">
+                    <input placeholder="Password" id="password" type="password" class="validate">
+                    <label for="password">Password</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-action">
+                <button class="waves-effect waves-light btn-large" type="submit" name="action">
+                  <i class="material-icons left">perm_identity</i>
+                  Sign up
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <footer class="page-footer blue-grey">
+      <div class="footer-copyright">
+        <small>©</small>
+      </div>
+    </footer>
+
+    <!--Import jQuery before materialize.js-->
+   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+    <script src="/js/nav.js"></script>
+    <script src="/js/signup.js"></script>
+  </body>
+</html>
