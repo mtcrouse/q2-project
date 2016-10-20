@@ -127,12 +127,18 @@ $(document).ready(() => {
     $('#search-menu').fadeIn();
   });
 
+  $('#exit-tweet-box').click(() => {
+    $('#tweet-box').fadeOut();
+    $('#exit-tweet-box').fadeOut();
+  });
+
   $('#search-form').submit((event) => {
     event.preventDefault();
 
     const searchTerm = $('#search-term').val().trim();
 
     $('#search-menu').fadeOut();
+    $('#tweet-box-content').empty();
 
     $.getJSON(`/tweets/${searchTerm}`)
       .done((tweets) => {
@@ -141,6 +147,12 @@ $(document).ready(() => {
 
         for (var i = 0; i < tweets.statuses.length; i++) {
           let tweet = tweets.statuses[i];
+
+          $('#tweet-box-content').append(`<p>${tweet.text}</p>`);
+
+          if (i < tweets.statuses.length - 1) {
+            $('#tweet-box-content').append('<hr>');
+          }
 
           if (tweet.coordinates){
             // console.log('Geo!');
@@ -177,6 +189,9 @@ $(document).ready(() => {
             });
           }
         }
+
+        $('#tweet-box').fadeIn();
+        $('#exit-tweet-box').fadeIn();
       })
       .fail(() => {
         console.log('Unable to retrieve tweets');

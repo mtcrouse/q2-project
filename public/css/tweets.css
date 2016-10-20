@@ -10,7 +10,7 @@ html, body {
   background-color: aliceblue;
   color: black;
   z-index: 1;
-  opacity: 0.7;
+  opacity: 0.85;
   display: none;
 }
 
@@ -48,7 +48,6 @@ html, body {
   width: 300px;
   right: 37.5%;
   top: 25%;
-  opacity: 0.85;
 }
 
 #search-icon {
@@ -93,6 +92,31 @@ html, body {
   border-radius: 200px;
   cursor: pointer;
   line-height: 64px;
+}
+
+#tweet-box {
+  left: 13px;
+  top: 13px;
+  bottom: 13px;
+  width: 300px;
+  display: none;
+  position: absolute;
+  background-color: aliceblue;
+  color: black;
+  z-index: 1;
+  opacity: 0.85;
+  display: none;
+  overflow: auto;
+}
+
+#exit-tweet-box {
+  position: absolute;
+  left: 13px;
+  top:13px;
+  display: none;
+  z-index: 2;
+  cursor: pointer;
+  background: none;
 }
 
 @media (max-height: 400px) {
