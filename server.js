@@ -59,40 +59,40 @@ var client = new Twitter({
   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
-const knexFn = function(message) {
-    return knex('tweets').insert([{
-      tweet: message
-    }])
-    .then(() => {
-      return knex('tweets').count('*');
-    })
-    .then((count) => {
-      if (count[0].count > 1000) {
-        console.log('greater than 1000');
-      } else {
-        console.log(count[0].count);
-      }
-      return;
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-};
-
-io.on('connection', function(socket){
-  let stream = client.stream('statuses/sample');
-  stream.on('data', function(event) {
-    if (event.text) {
-        io.emit('tweety', event);
-        knexFn(event);
-    }
-  });
-
-  console.log('a user connected');
-  socket.on('disconnect', function(){
-    console.log('user disconnected');
-  });
-});
+// const knexFn = function(message) {
+//     return knex('tweets').insert([{
+//       tweet: message
+//     }])
+//     .then(() => {
+//       return knex('tweets').count('*');
+//     })
+//     .then((count) => {
+//       if (count[0].count > 1000) {
+//         console.log('greater than 1000');
+//       } else {
+//         console.log(count[0].count);
+//       }
+//       return;
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//     });
+// };
+//
+// io.on('connection', function(socket){
+//   let stream = client.stream('statuses/sample');
+//   stream.on('data', function(event) {
+//     if (event.text) {
+//         io.emit('tweety', event);
+//         knexFn(event);
+//     }
+//   });
+//
+//   console.log('a user connected');
+//   socket.on('disconnect', function(){
+//     console.log('user disconnected');
+//   });
+// });
 
 // eslint-disable-next-line max-params
 app.use((err, _req, res, _next) => {

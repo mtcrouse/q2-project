@@ -5,7 +5,9 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const express = require('express');
-var Twitter = require('twitter');
+const Twitter = require('twitter');
+const natural = require('natural');
+const fs = require('fs');
 
 // eslint-disable-next-line new-cap
 const router = express.Router();
@@ -19,13 +21,36 @@ var client = new Twitter({
 
 router.get('/tweets/:searchid', (req, res, next) => {
   const searchid = req.params.searchid;
+  let responseArray = [];
 
-  client.get('search/tweets', {q: searchid}, function(error, tweet, response) {
-    if (error) {
-      throw error;
-    }
+  fs.readFile('cities15000.txt', 'utf8', (err, data) => {
+    if (err) throw err;
+    let rows = data.split(/\r?\n/);
 
-    res.send(tweet);
+    client.get('search/tweets', {q: searchid, count: 50}, function(error, tweets, response) {
+      if (error) {
+        throw error;
+      }
+      for (let tweet of tweets.statuses) {
+        let maxScore = 0;
+        let bestGuess;
+
+        for (let row of rows) {
+          row = row.split('\t');
+          if (row[1]) {
+            let currentScore = natural.JaroWinklerDistance(tweet.user.location, row[1]);
+            if (currentScore > maxScore) {
+              maxScore = currentScore;
+              bestGuess = row[1];
+            }
+          }
+        }
+        responseArray.push([tweet.text, tweet.user.location, bestGuess]);
+        if (responseArray.length === tweets.statuses.length) {
+          res.send(responseArray);
+        }
+      }
+    });
   });
 });
 

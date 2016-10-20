@@ -30,6 +30,7 @@
     "jsonwebtoken": "^7.1.9",
     "knex": "^0.12.5",
     "morgan": "^1.7.0",
+    "natural": "^0.4.0",
     "pg": "^6.1.0",
     "socket.io": "^1.5.0",
     "twitter": "^1.4.0"
