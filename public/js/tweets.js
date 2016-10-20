@@ -9,7 +9,7 @@ $(document).ready(() => {
   });
 
   var testData = {
-    max: 5,
+    max: 7,
     data: []
   };
 
@@ -80,8 +80,8 @@ $(document).ready(() => {
       lngField: 'lng',
       valueField: 'count',
       gradient: {
-        '.5': 'blue',
-        '.8': 'green',
+        '.5': '#aaaaff',
+        '.8': '#5555aa',
         '.95': 'red'
       }
     });

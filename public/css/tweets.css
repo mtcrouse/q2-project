@@ -50,6 +50,14 @@ html, body {
   top: 25%;
 }
 
+#profile-box {
+  height: 250px;
+  width: 300px;
+  right: 37.5%;
+  top: 25%;
+  opacity: 0.85;
+}
+
 #search-icon {
   top: 75px;
   right: 13px;
@@ -119,6 +127,16 @@ html, body {
   background: none;
 }
 
+#user-box2 {
+  top: 13px;
+  height: 50px;
+  width: 50px;
+  right: 90px;
+  border-radius: 200px;
+  cursor: pointer;
+  line-height: 64px;
+}
+
 @media (max-height: 400px) {
   #search-directions {
     display: none;
@@ -126,5 +144,9 @@ html, body {
 
   #search-menu {
     height: 150px;
+  }
+
+  #profile-box {
+    height: 300px;
   }
 }
