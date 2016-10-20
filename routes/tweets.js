@@ -23,7 +23,7 @@ var client = new Twitter({
 //   if (err) throw err;
 //   let rows = data.split(/\r?\n/);
 //
-//   console.log(rows[rows.length-70].split('\t'));
+//   console.log(rows[129].split('\t')[14]);
 // });
 
 router.get('/tweets/:searchid', (req, res, next) => {
@@ -40,17 +40,31 @@ router.get('/tweets/:searchid', (req, res, next) => {
       }
       for (let tweet of tweets.statuses) {
         let maxScore = 0;
+        let maxScorePopulation = 0;
         let bestGuess;
+        let latitude;
+        let longitude;
 
-        for (let row of rows) {
-          row = row.split('\t');
-          let currentScore = natural.JaroWinklerDistance(tweet.user.location.split(',')[0], row[1]);
-          if (currentScore > maxScore) {
-            maxScore = currentScore;
-            bestGuess = row[1];
+        if (tweet.user.location === '') {
+          bestGuess = null;
+          maxScore = null;
+          latitude = null;
+          longitude = null;
+        } else {
+          for (let row of rows) {
+            row = row.split('\t');
+            let currentScore = natural.JaroWinklerDistance(tweet.user.location.split(',')[0], row[1]);
+            let currentScorePopulation = row[14];
+            if (currentScore > maxScore || ((currentScore === maxScore) && (currentScorePopulation > maxScorePopulation))) {
+              maxScore = currentScore;
+              bestGuess = row[1];
+              latitude = row[4];
+              longitude = row[5]
+            }
           }
         }
-        responseArray.push([tweet.text, tweet.user.location, bestGuess, maxScore]);
+
+        responseArray.push([tweet.text, tweet.user.location, bestGuess, maxScore, latitude, longitude]);
         if (responseArray.length === tweets.statuses.length) {
           res.send(responseArray);
         }

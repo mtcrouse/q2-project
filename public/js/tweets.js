@@ -151,14 +151,14 @@ $(document).ready(() => {
 
         console.log(tweets);
 
-        // for (let tweet of tweets) {
-          // let tweet = tweets.statuses[i];
-          //
-          // $('#tweet-box-content').append(`<p>${tweet.text}</p>`);
-          //
-          // if (i < tweets.statuses.length - 1) {
-          //   $('#tweet-box-content').append('<hr>');
-          // }
+        // for (let i = 0; i < tweets.statuses.length; i++) {
+        //   let tweet = tweets.statuses[i];
+        //
+        //   $('#tweet-box-content').append(`<p>${tweet.text}</p>`);
+        //
+        //   if (i < tweets.statuses.length - 1) {
+        //     $('#tweet-box-content').append('<hr>');
+        //   }
           // console.log(tweet);
 
           // if (tweet.coordinates){
