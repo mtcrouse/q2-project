@@ -102,7 +102,6 @@ html, body {
   line-height: 64px;
 }
 
-<<<<<<< HEAD
 #tweet-box {
   left: 13px;
   top: 13px;
@@ -126,7 +125,8 @@ html, body {
   z-index: 2;
   cursor: pointer;
   background: none;
-=======
+}
+
 #user-box2 {
   top: 13px;
   height: 50px;
@@ -135,7 +135,6 @@ html, body {
   border-radius: 200px;
   cursor: pointer;
   line-height: 64px;
->>>>>>> 36e3fb9b60b5a1ea27b6398bfce5684bbf8b118a
 }
 
 @media (max-height: 400px) {
