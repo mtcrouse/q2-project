@@ -23,7 +23,7 @@ router.get('/tweets/:searchid', (req, res, next) => {
   const searchid = req.params.searchid;
   let responseArray = [];
 
-  fs.readFile('cities15000.txt', 'utf8', (err, data) => {
+  fs.readFile('cities.txt', 'utf8', (err, data) => {
     if (err) throw err;
     let rows = data.split(/\r?\n/);
 
