@@ -44,15 +44,13 @@ router.get('/tweets/:searchid', (req, res, next) => {
 
         for (let row of rows) {
           row = row.split('\t');
-          if (row[1]) {
-            let currentScore = natural.JaroWinklerDistance(tweet.user.location, row[1]);
-            if (currentScore > maxScore) {
-              maxScore = currentScore;
-              bestGuess = row[1];
-            }
+          let currentScore = natural.JaroWinklerDistance(tweet.user.location.split(',')[0], row[1]);
+          if (currentScore > maxScore) {
+            maxScore = currentScore;
+            bestGuess = row[1];
           }
         }
-        responseArray.push([tweet.text, tweet.user.location, bestGuess]);
+        responseArray.push([tweet.text, tweet.user.location, bestGuess, maxScore]);
         if (responseArray.length === tweets.statuses.length) {
           res.send(responseArray);
         }
