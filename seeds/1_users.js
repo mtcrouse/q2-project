@@ -12,6 +12,34 @@ exports.seed = function(knex) {
         hashed_password: '$2a$12$FEzd5CFnDnrCt91p.fcrL.r.fAOVR76.9YzGi4f5U6pB01I4HzYYC',
         created_at: new Date('2016-10-13 16:17:12 UTC'),
         updated_at: new Date('2016-10-13 16:17:12 UTC')
+      }, {
+        id: 2,
+        username: 'sam',
+        email: 'smk267@gmail.com',
+        hashed_password: '$2a$12$FEzd5CFnDnrCt91p.fcrL.r.fAOVR76.9YzGi4f5U6pB01I4HzYYC',
+        created_at: new Date('2016-10-13 16:17:12 UTC'),
+        updated_at: new Date('2016-10-13 16:17:12 UTC')
+      }, {
+        id: 3,
+        username: 'bob',
+        email: 'whataboutme@gmail.com',
+        hashed_password: '$2a$12$FEzd5CFnDnrCt91p.fcrL.r.fAOVR76.9YzGi4f5U6pB01I4HzYYC',
+        created_at: new Date('2016-10-13 16:17:12 UTC'),
+        updated_at: new Date('2016-10-13 16:17:12 UTC')
+      }, {
+        id: 4,
+        username: 'bill',
+        email: 'whataboutbill@gmail.com',
+        hashed_password: '$2a$12$FEzd5CFnDnrCt91p.fcrL.r.fAOVR76.9YzGi4f5U6pB01I4HzYYC',
+        created_at: new Date('2016-10-13 16:17:12 UTC'),
+        updated_at: new Date('2016-10-13 16:17:12 UTC')
+      }, {
+        id: 5,
+        username: 'thecat',
+        email: 'opus@gmail.com',
+        hashed_password: '$2a$12$FEzd5CFnDnrCt91p.fcrL.r.fAOVR76.9YzGi4f5U6pB01I4HzYYC',
+        created_at: new Date('2016-10-13 16:17:12 UTC'),
+        updated_at: new Date('2016-10-13 16:17:12 UTC')
       }]);
     })
     .then(() => {
