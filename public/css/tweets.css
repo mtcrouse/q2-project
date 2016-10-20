@@ -102,6 +102,10 @@ html, body {
   line-height: 64px;
 }
 
+#user-link {
+  text-decoration: none;
+}
+
 #tweet-box {
   left: 13px;
   top: 13px;

@@ -8,6 +8,10 @@ $(document).ready(() => {
     $('#search-menu').hide();
   });
 
+  // $('#user-box').click(() => {
+  //
+  // });
+
   // var testData = {
   //   max: 7,
   //   data: []
