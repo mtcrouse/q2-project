@@ -59,7 +59,7 @@ router.get('/tweets/:searchid', (req, res, next) => {
               maxScore = currentScore;
               bestGuess = row[1];
               latitude = row[4];
-              longitude = row[5]
+              longitude = row[5];
             }
           }
         }
