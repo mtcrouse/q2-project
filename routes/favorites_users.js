@@ -29,23 +29,31 @@ const authorize = function(req, res, next) {
 
 router.post('/favorites_users/', authorize, /*ev(validations.post),*/ (req, res, next) => {
 	const { userId } = req.token; 
-	const { favoriteId } = knex.raw(`SELECT currval('favorites_users_id_seq')`);
 
 	// ev(validations)
 	// if (!favoriteId || !favoriteId.trim() || Number(favoriteId) !== Number.parseInt(Number(favoriteId))) {
 	// 	throw boom.create(400, `favoriteId ${favoriteid} is blank or not an integer`)
 	// }
 
-	const newEntry = { userId: userId, favoriteId: favoriteId };
+	knex('favorites').max('id').first()
+		.then((row) => {
+			const favoriteId = Number(row.max);
+				const newEntry = { userId: userId, favoriteId: favoriteId };
 
-	knex('favorites_users')
-		.insert (decamelizeKeys(newEntry), '*')
-		.then((rows) => {
-			res.send(decamelizeKeys(newEntry))
+				knex('favorites_users')
+					.insert (decamelizeKeys(newEntry), '*')
+					.then((rows) => {
+						res.send(decamelizeKeys(newEntry))
+					})
+					.catch((err) => {
+						next(err);
+					});
 		})
 		.catch((err) => {
-			next(err);
-		});
+			next(err)
+		})
+
+
 });
 
 // Get particular user's favorites
