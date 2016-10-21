@@ -127,6 +127,10 @@ io.on('connection', function(socket) {
     }
   });
 
+  stream.on('error', function(error) {
+    console.log(error);
+  });
+
   // socket.on('disconnect', function(){
   //   console.log('user disconnected');
   // });
