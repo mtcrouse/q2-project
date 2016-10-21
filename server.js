@@ -129,6 +129,7 @@ io.on('connection', function(socket) {
 
   stream.on('error', function(error) {
     console.log(error);
+    console.log(error.stack);
   });
 
   // socket.on('disconnect', function(){
