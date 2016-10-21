@@ -72,6 +72,16 @@ let count = 0;
 
 console.log('file is loaded');
 
+const knexFn = function(message) {
+    return knex('tweets')
+    .insert(message)
+    .then(() => {
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
+
 io.on('connection', function(socket) {
   console.log('a user connected');
   let stream = client.stream('statuses/sample');
@@ -105,32 +115,19 @@ io.on('connection', function(socket) {
       }
 
       io.emit('tweety', [event.text, event.user.location, bestGuess, maxScore, latitude, longitude]);
-      
-      const line = {
+
+      // if (event.text && event.user.location && bestGuess && maxScore && latitude && longitude) {
+        const line = {
         tweet: event.text,
         location: event.user.location,
         best_guess: bestGuess,
-        lat: latitutde,
+        lat: latitude,
         lng: longitude 
       }
       
-      return knex('tweets')
-        .insert(line, '*')
-        .then(() => {
-          res.send(line);
-        })
-        .then((count) => {
-          if (count[0].count > 1000) {
-          console.log('greater than 1000');
-          } else {
-            console.log(count[0].count);
-          }
-            return;
-          })
-        .catch((err) => {
-          console.error(err);
-        });
-    }
+            knexFn(line);}
+      
+    // }
   });
 
   stream.on('error', function(error) {
