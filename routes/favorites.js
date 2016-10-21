@@ -30,42 +30,69 @@ const authorize = function(req, res, next) {
 // I need to add count
 router.post('/favorites', authorize, /*ev(validations.post),*/ (req, res, next) => {
 	// const { userId } = req.token;
-	const { searchId } = req.body;
+	let { searchId } = req.body;
 	const { tweet } = req.body;
-	const count = 1;
 
+  console.log(`SearchID is ${searchId}`);
+  console.log(`Tweet is ${tweet}`);
 	// ev(validations)
 	// if ( !searchId || !searchId.trim()) {
 	// 	return next(boom.create(400, 'no searchId'))
 	// }
 
-	knex('searches')
-		.where('id', searchId)
-		.first()
-		.then((row) => {
-			if (!row) {
-				return next(boom.create(404, `search not found at id ${searchId}`));
-			}
+  knex('searches')
+    .select('id')
+    .where('search_term', searchId)
+    .first()
+    .then((row) => {
+      searchId = (row.id);
+      console.log(`row.id is ${row.id}`);
 
-			return knex('favorites')
-				.insert({
-					search_id: searchId,
-					tweet: tweet
-					}, '*');
-		})
-		.then((row) => {
-			// FIX ME
-			// knex('favorites_users')
-			// 	.insert({favorite_id: row.id, user_id: userId}, '*');
+      return knex('favorites')
+        .where('search_id', searchId)
+        .first()
+        .then((row) => {
+          if (!row || row === [] ) {
+            console.log(`No row. Row is ${row}.`)
+            const newFavorite = { searchId: searchId, tweet: tweet };
+            console.log(`newFavorite is ${newFavorite}`);
+            knex('favorites') 
+            .insert(decamelizeKeys(newFavorite), '*')
+            .then((row) => {
+              console.log(camelizeKeys(row));
+            })
+            .catch((err) => {
+              next(err);
+            })
+          }
 
-			const favorite = camelizeKeys(row[0]);
+          else {
+            return knex('favorites')
+              .where('search_id', searchId)
+              .first()
+              .update({
+                'count': knex.raw('count + 1')}, '*')
+              .then((row) => {
+                // const incrementedRow = row;
+                // console.log(incrementedRow);
+                // row.count++;
+                // return knex('favorites')
+                //   .update(decamelizeKeys(incrementedRow), `*`)
+                //   .where('search_id', searchId)
+                //   .then((search) => {
+                console.log(camelizeKeys(row));
+                  // });
+              })
+              .catch((err) => {
+                next(err);
+              });
+          }
+        });
 
-			res.send(favorite);
-		})
-		.catch((err) => {
-			next(err);
-		});
-
+    })
+    .catch((err) => {
+      next(err);
+    })
 });
 
 // Returns all favorites.

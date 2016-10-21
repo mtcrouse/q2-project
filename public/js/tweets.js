@@ -238,9 +238,10 @@ $(document).ready(() => {
             .done((loggedin) => {
               if (loggedin) {
                 $(event.target).text('star');
+                console.log(`$($(event.target).parent().prev().children()[0]).text() is ${$($(event.target).parent().prev().children()[0]).text()}`);
 
                 //Create row in favorites >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Create row in favorites
-                const newFavorite = { tweet: $($(event.target).parent().parent().prev().children()[0]).text(), searchId: 1}
+                const newFavorite = {tweet: $($(event.target).parent().prev().children()[0]).text(), searchId: searchTerm};
                 const options = {
                   contentType: 'application/json',
                   data: JSON.stringify(newFavorite),
