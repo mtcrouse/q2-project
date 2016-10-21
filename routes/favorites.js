@@ -31,8 +31,8 @@ router.post('/favorites', authorize, /*ev(validations.post),*/ (req, res, next) 
 	let { searchId } = req.body;
 	const { tweet } = req.body;
 
-  console.log(`SearchID is ${searchId}`);
-  console.log(`Tweet is ${tweet}`);
+  // console.log(`SearchID is ${searchId}`);
+  // console.log(`Tweet is ${tweet}`);
 
 	// ev(validations)
 	// if ( !searchId || !searchId.trim()) {
@@ -54,7 +54,8 @@ router.post('/favorites', authorize, /*ev(validations.post),*/ (req, res, next) 
             knex('favorites') 
             .insert(decamelizeKeys(newFavorite))
             .then((row) => {
-              console.log(camelizeKeys(row));
+              res.send(row);
+              // console.log(camelizeKeys(row));
             })
             .catch((err) => {
               next(err);
@@ -68,7 +69,8 @@ router.post('/favorites', authorize, /*ev(validations.post),*/ (req, res, next) 
               .update({
                 'count': knex.raw('count + 1')})
               .then((row) => {
-                console.log(camelizeKeys(row));
+                res.send(row);
+                // console.log(camelizeKeys(row));
               })
               .catch((err) => {
                 next(err);
@@ -85,7 +87,7 @@ router.post('/favorites', authorize, /*ev(validations.post),*/ (req, res, next) 
 // Returns all favorites.
 router.get('/favorites', (req, res, next) => {
 	if (req.body.length > 0) {
-		return next(boom.create(400, `Bad query. Set :id in url.`));
+		return next(boom.creat(400, `Bad query. Set :id in url.`));
 	}
 
 	knex('favorites')
@@ -172,14 +174,14 @@ router.patch('/favorites/:id', authorize, /*ev(validations.patch),*/ (req, res, 
 			console.log()
 			if (!favorite) {
 				return next(boom.create(400, `Favorite ${favoriteId} not found for userId ${userId}`));
-			}
+			} 
 
 			return knex('favorites')
 				.where('id', favoriteId)
 				.first()
 				.then((row) => {
 					const updateFavorite = {};
-
+					
 					if (searchId) {
 						updateFavorite.searchId = searchId;
 					}
@@ -191,13 +193,13 @@ router.patch('/favorites/:id', authorize, /*ev(validations.patch),*/ (req, res, 
 					return knex('favorites')
 					.update(decamelizeKeys(updateFavorite), '*')
 					.where('id', favoriteId);
-				})
+				})					
 				.then((row) => {
 					res.send(camelizeKeys(row/*[0]*/));
 				})
 		})
 		.catch((err) => {
-			next(err);
+			next(err);			
 		});
 });
 

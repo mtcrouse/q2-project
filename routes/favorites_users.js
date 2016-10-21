@@ -29,8 +29,8 @@ const authorize = function(req, res, next) {
 
 router.post('/favorites_users', authorize, /*ev(validations.post),*/ (req, res, next) => {
 	const { userId } = req.token; 
-	const favoriteTweet = req.body;
-	console.log(`favoriteTweet ${favoriteTweet}`);
+	const { tweet } = req.body;
+	console.log( tweet);
 
 	// ev(validations)
 	// if (!favoriteId || !favoriteId.trim() || Number(favoriteId) !== Number.parseInt(Number(favoriteId))) {
@@ -38,10 +38,10 @@ router.post('/favorites_users', authorize, /*ev(validations.post),*/ (req, res, 
 	// }
 
 	knex('favorites')
-		.select('id')
-		.where('tweet', favoriteTweet)
+		.where('tweet', tweet)
 		.first()
 		.then((row) => {
+			console.log(row)
 			const favoriteId = Number(row.id);
 			console.log(favoriteId);
 			const newEntry = { userId: userId, favoriteId: favoriteId };
@@ -49,7 +49,7 @@ router.post('/favorites_users', authorize, /*ev(validations.post),*/ (req, res, 
 				knex('favorites_users')
 					.insert(decamelizeKeys(newEntry), '*')
 					.then((row) => {
-						res.send(row)
+						res.send(row);
 					})
 					.catch((err) => {
 						next(err);
