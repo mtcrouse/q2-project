@@ -163,7 +163,23 @@ $('#user-box').click(() => {
 
     $.getJSON(`/tweets/${searchTerm}`)
       .done((tweets) => {
-        ///SEARCHES
+        // Create searches row>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>    Searches
+          const options = {
+            contentType: 'application/json',
+            data: JSON.stringify({searchTerm: searchTerm}),
+            dataType: 'json',
+            type: 'POST',
+            url: '/searches'
+          }
+
+          $.ajax(options)
+            .done(() => {
+              console.log('search added')
+            })
+            .fail(($xhr) => {
+              Materialize.toast($xhr.responseText, 3000);
+            });  
+
     
         $('#search-term').val('');
     
@@ -190,10 +206,11 @@ $('#user-box').click(() => {
         });
 
         $('.add-favorite').click((event) => {
+          //Create favorites row>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   Favorites
           $.getJSON(`/token`)
             .done((loggedin) => {
               if (loggedin) {
-                const newFavorite = { tweet: tweet.text, search_id: 99}
+                const newFavorite = { tweet: $($(event.target).parent().parent().prev().children()[0]).text(), searchId: 1}
                 const options = {
                   contentType: 'application/json',
                   data: JSON.stringify(newFavorite),
@@ -204,12 +221,25 @@ $('#user-box').click(() => {
 
                 $.ajax(options)
                   .done(() => {
-                    (event.target).hide();
+                    Materialize.toast('Favorite added.', 3000);
                   })
                   .fail(($xhr) => {
                     Materialize.toast($xhr.responseText, 3000);
                   });                
 
+                const options2 = {
+                  contentType: 'application/json',
+                  type: 'POST',
+                  url: '/favorites_users'
+                }
+
+                $.ajax(options)
+                  .done(() => {
+                    Materialize.toast('Favorite_User added.', 3000);
+                  })
+                  .fail(($xhr) => {
+                    Materialize.toast($xhr.responseText, 3000);
+                  });                
               }
 
               else {
@@ -220,6 +250,9 @@ $('#user-box').click(() => {
               Materialize.toast('Unable to log out. Please try again.', 3000);
               Materialize.toast(err);
             })
+
+
+
           });
 
         $('#tweet-box').fadeIn();

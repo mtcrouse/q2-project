@@ -29,7 +29,7 @@ const authorize = function(req, res, next) {
 
 router.post('/favorites_users/', authorize, /*ev(validations.post),*/ (req, res, next) => {
 	const { userId } = req.token; 
-	const { favoriteId } = req.body;
+	const { favoriteId } = knex.raw(`SELECT currval('favorites_users_id_seq')`);
 
 	// ev(validations)
 	// if (!favoriteId || !favoriteId.trim() || Number(favoriteId) !== Number.parseInt(Number(favoriteId))) {
