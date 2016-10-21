@@ -87,12 +87,16 @@ let cities = fs.readFileSync('cities.txt', 'utf8', (err, data) => {
 
 cities = cities.split(/\r?\n/);
 
+let count = 0;
+
 console.log('file is loaded');
 
 io.on('connection', function(socket) {
+  console.log('a user connected');
   let stream = client.stream('statuses/sample');
   stream.on('data', function(event) {
-    console.log('going');
+    count += 1;
+    console.log(`streaming tweet #${count}`);
     if (event.text) {
       let maxScore = 0;
       let maxScorePopulation = 0;
@@ -122,6 +126,14 @@ io.on('connection', function(socket) {
       io.emit('tweety', [event.text, event.user.location, bestGuess, maxScore, latitude, longitude]);
     }
   });
+
+  // socket.on('disconnect', function(){
+  //   console.log('user disconnected');
+  // });
+  //
+  // socket.on('error', function(){
+  //   console.log('a socket.io error occurred!!!!');
+  // });
 });
 
 // eslint-disable-next-line max-params
