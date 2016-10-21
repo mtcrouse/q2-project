@@ -51,7 +51,7 @@ router.post('/favorites', authorize, /*ev(validations.post),*/ (req, res, next) 
         .then((row) => {
           if (!row || row === [] ) {
             const newFavorite = { searchId: searchId, tweet: tweet };
-            knex('favorites') 
+            knex('favorites')
             .insert(decamelizeKeys(newFavorite))
             .then((row) => {
               res.send(row);
@@ -177,14 +177,14 @@ router.patch('/favorites/:id', authorize, /*ev(validations.patch),*/ (req, res, 
 			console.log()
 			if (!favorite) {
 				return next(boom.create(400, `Favorite ${favoriteId} not found for userId ${userId}`));
-			} 
+			}
 
 			return knex('favorites')
 				.where('id', favoriteId)
 				.first()
 				.then((row) => {
 					const updateFavorite = {};
-					
+
 					if (searchId) {
 						updateFavorite.searchId = searchId;
 					}
@@ -196,13 +196,13 @@ router.patch('/favorites/:id', authorize, /*ev(validations.patch),*/ (req, res, 
 					return knex('favorites')
 					.update(decamelizeKeys(updateFavorite), '*')
 					.where('id', favoriteId);
-				})					
+				})
 				.then((row) => {
 					res.send(camelizeKeys(row/*[0]*/));
 				})
 		})
 		.catch((err) => {
-			next(err);			
+			next(err);
 		});
 });
 

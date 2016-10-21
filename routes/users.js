@@ -13,20 +13,20 @@ const validations = require('../validations/users');
 
 const router = express.Router();
 
-// const authorize = function(req, res, next) {
-//   jwt.verify(req.cookies.token, process.env.JWT_SECRET, (err, decoded) => {
-//     if (err) {
-//       res.verify = false;
+const authorize = function(req, res, next) {
+  jwt.verify(req.cookies.token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      res.verify = false;
 
-//       return next(boom.create(401, 'Unauthorized'));
-//     }
+      return next(boom.create(401, 'Unauthorized'));
+    }
 
-//     res.verify = true;
-//     req.token = decoded;
+    res.verify = true;
+    req.token = decoded;
 
-//     next();
-//   });
-// };
+    next();
+  });
+};
 
 router.post('/users', /*ev(validations.post),*/ (req, res, next) => {
   const { username, email, password } = req.body;
@@ -82,6 +82,14 @@ router.get('/users', (req, res, next) => {
     .catch((err) => {
       next(err);
     });
+});
+
+router.get('/users/id', authorize, (req, res, next) => {
+  let { userId } = req.token;
+
+  userId = JSON.stringify(userId);
+
+  res.send(userId);
 });
 
 router.get('/users/:id', /*authorize,*/ (req, res, next) => {
