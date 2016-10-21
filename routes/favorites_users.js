@@ -84,6 +84,28 @@ router.get('/favorites_users/ucheck/:id', /*authorize,*/ (req, res, next) => {
 		});
 });
 
+// Get particular user's favorites
+router.get('/favorites_users/mecheck/', authorize, (req, res, next) => {
+	const { userId } = req.token;
+
+	// console.log("UserId is");
+	// console.log(userId);
+
+	knex('favorites_users')
+		.where('favorites_users.user_id', userId)
+		.innerJoin('favorites', 'favorites.id', 'favorites_users.favorite_id')
+		// .innerJoin('users', 'users.id', userId)
+		.innerJoin('searches', 'searches.id', 'favorites.search_id')
+		.then((rows) => {
+			const favoritesUsers = camelizeKeys(rows);
+
+			res.send(favoritesUsers);
+		})
+		.catch((err) => {
+			next(err);
+		});
+});
+
 // Get particular user's particular favorite
 router.get('/favorites_users/userfav/:id', authorize, (req, res, next) => {
 

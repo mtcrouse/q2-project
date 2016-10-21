@@ -1,5 +1,9 @@
 $(document).ready(() => {
   'use strict';
+ 
+ const removeUserFavorites = function () {
+    $('.favorites-box').remove();
+ }
 
   $('#search-menu').delay(1000).fadeIn(1000);
   $('#user-box').delay(1000).fadeIn(1000);
@@ -80,20 +84,20 @@ $(document).ready(() => {
 
   var socket = io();
 
-  // Streaming
-  // socket.on('tweety', function(msg){
-  //   if (msg[4] !== null){
-  //     let coords = [msg[4], msg[5]];
-  //     testData.data.push({lat: coords[0], lng: coords[1], count: 1});
-  //     giantArray.push(msg[0]);
+  // Streaming >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Streaming
+  socket.on('tweety', function(msg){
+    if (msg[4] !== null){
+      let coords = [msg[4], msg[5]];
+      testData.data.push({lat: coords[0], lng: coords[1], count: 1});
 
-  //     heatmap.setData(testData);
-  //   }
-  //   console.log(msg);
-  // });
+      heatmap.setData(testData);
+    }
+    console.log(msg);
+  });
 
-  //Toggle search div
-  $('#search-icon').click(() => {
+  //Toggle search div >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Toggle search icon
+  $('#search-icon').click(() => { 
+    removeUserFavorites();
     $('#search-menu').fadeIn();
     $('#search-icon').fadeOut();
     $('.token-toggle').hide();
@@ -104,8 +108,9 @@ $(document).ready(() => {
     $
   });
 
-  // Toggle open log-in/sign-up div
+  // Toggle open log-in/sign-up div>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Toggle log-in/sign-up div
   $('#user-box').click(() => {
+      getUserFavorites();
       $('#tweet-box').hide();
       $('#exit-tweet-box').hide();
       $('#search-menu').hide();
@@ -116,6 +121,7 @@ $(document).ready(() => {
       $.getJSON('/token')
         .done((loggedin) => {
           if (loggedin) {
+            // Load profile>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Load profile info
             $('#profile-menu')
               .attr('display', 'inline')
               .fadeIn(1000);
@@ -133,8 +139,9 @@ $(document).ready(() => {
       })
   });
 
-  // Close tweet box on click
+  // Close tweet box on click >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Close tweet box on click
   $('#exit-tweet-box').click(() => {
+    removeUserFavorites();
     $('#tweet-box').fadeOut();
     $('#exit-tweet-box').fadeOut();
     $('#return-tweet-box').fadeIn();
@@ -142,6 +149,7 @@ $(document).ready(() => {
   });
 
   $('#twitter-icon').click(() => {
+    removeUserFavorites();
     $('#twitter-icon').hide();
     $('#return-tweet-box').hide();
     $('#tweet-box').fadeIn();
@@ -153,6 +161,7 @@ $(document).ready(() => {
 
   // Search form >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Search form
   $('#search-form').submit((event) => {
+    removeUserFavorites();
     event.preventDefault();
 
     let atLeastOneTweet = false;
@@ -286,6 +295,7 @@ $(document).ready(() => {
 
   // Login-form handling>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Login-form handling
   $('#loginForm').submit((event) => {
+    removeUserFavorites();
     event.preventDefault();
 
     const email = $('#email').val().trim();
@@ -320,6 +330,7 @@ $(document).ready(() => {
 
   // Logout >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Log out
   $('#logout').submit((event) => {
+    removeUserFavorites();
     event.preventDefault();
 
     const options = {
@@ -333,6 +344,7 @@ $(document).ready(() => {
         $('#profile-menu').hide();
         $('.add-favorite').attr('style', 'opacity:0.3;');
         $('.add-favorite').html('<i class="material-icons">star_border</i>');
+        removeUserFavorites();
       })
       .fail(() => {
         Materialize.toast('Unable to log out. Please try again.', 3000);
@@ -341,6 +353,7 @@ $(document).ready(() => {
 
   // Sign up >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Sign up
   $('#signUpForm').submit((event) => {
+    removeUserFavorites();
     event.preventDefault();
 
     const username = $('#username').val().trim();
@@ -399,6 +412,51 @@ $(document).ready(() => {
         console.log($xhr.responseText, 3000);
       });
   });
+
+// User's favorites
+
+// Favorites not in user's favorites
+
+// User information
+const getUserFavorites = function () {
+  removeUserFavorites();
+  const options2 = {
+    contentType: 'application/json',
+    dataType: 'json',
+    type: 'get',
+    url: '/favorites_users/mecheck/'
+  };
+
+  $.ajax(options2)
+    .done((contents) => {
+      // $('.add-favorite').attr('style', 'opacity:1;');
+      console.log(contents);
+      console.log(contents.length);
+      console.log(contents.keys());
+      console.log(contents[0]);
+      // content = JSON.stringify(contents);
+      // for (content in contents){
+
+        let $div = $(`<div class='favorites-box row'></div>`);
+        let $div2 = $(`<div class='favorite-searchTerm col l3'></div>`);
+        $div2.append(`<p>${contents[0].searchTerm}</p>`);
+        let $div3 = $(`<div class='favorite-tweet col l9'></div>`);
+        let $p = $(`<p>${contents[0].tweet}</p>`);
+        console.log($p);
+        $div3.append($p);
+        $div.append($div2);
+        $div.append($div3);
+        $(`#profile-menu`).append($div);
+      // }
+    })
+    .fail(($xhr) => {
+      console.log($xhr.responseText, 3000);
+    });
+      // $('#profile-menu')
+
+}
+
+
 });
 
 // Get all favorites
