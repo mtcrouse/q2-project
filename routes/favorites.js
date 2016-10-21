@@ -28,7 +28,7 @@ const authorize = function(req, res, next) {
 };
 
 // I need to add count
-router.post('/favorites', authorize, ev(validations.post), (req, res, next) => {
+router.post('/favorites', authorize, /*ev(validations.post),*/ (req, res, next) => {
 	// const { userId } = req.token;
 	const { searchId } = req.body;
 	const { tweet } = req.body;
