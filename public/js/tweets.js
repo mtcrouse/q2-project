@@ -241,9 +241,12 @@ $(document).ready(() => {
                   .done(() => {
                     Materialize.toast('Favorite added.', 3000);
 
+                    const newFavoriteUser = {favoriteTweet: $($(event.target).parent().prev().children()[0]).text()};
                     // Create row in favorites_users >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Create row in favorites_users
                     const options2 = {
                       contentType: 'application/json',
+                      data: JSON.stringify(newFavoriteUser),
+                      dataType: 'json',
                       type: 'POST',
                       url: '/favorites_users'
                     }
@@ -256,9 +259,6 @@ $(document).ready(() => {
                         Materialize.toast($xhr.responseText, 3000);
                       });
                   })
-                  .fail(($xhr) => {
-                    console.log($xhr.responseText, 3000);
-                  });
               }
 
               else {
