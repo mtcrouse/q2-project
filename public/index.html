@@ -30,11 +30,11 @@
     </div>
 
     <div id="user-box" class="z-depth-3 float-box tooltipped" data-position="left" data-delay="50" data-tooltip="Click here to go to your user account">
-      <a id="user-link" href="signup.html">
+      <!-- <a id="user-link" href="signup.html"> -->
         <div class="container center-align">
             <i class="small material-icons">perm_identity</i>
         </div>
-      </a>
+      <!-- </a> -->
     </div>
 
     <!--Duplicated so that I'm not modifying any of your work
@@ -64,6 +64,84 @@
         </form>
       </div>
     </div>
+
+    <div id="signin-menu" class="row z-depth-3 token-toggle">
+      <div class="col l12">
+        <p>Log in or sign up here Log in or sign up here Log in or sign up here Log in or sign up here Log in or sign up here Log in or sign up here Log in or sign up here </p>
+      </div>
+      <div id="signin-menu-container" class="col l12 center-align row">
+        <div id="login" class="col l6"> <!--login-->
+          <form id="loginForm" class="col l12">
+                <div class="row">
+                  <div class="input-field col l12">
+                    <input placeholder="Email" id="email" type="text" class="validate">
+                    <label for="email">Email</label>
+                  </div>
+                </div>
+
+                <div class="row ">
+                  <div class="input-field col l12">
+                    <input placeholder="Password" id="password" type="password" class="validate">
+                    <label for="password">Password</label>
+                  </div>
+                </div>
+
+                <button class="waves-effect waves-light btn-large" type="submit" name="action">
+                  <i class="material-icons left">lock</i>
+                  Log in
+                </button>
+          </form>
+        </div>
+        <!--login-->
+        <div id="signup" class="col l6">
+          <form id="signUpForm" class="col l12">
+                <div class="row">
+                  <div class="input-field col l12">
+                    <input placeholder="Username" id="username" type="text" class="validate">
+                    <label for="username">Username</label>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="input-field col l12">
+                    <input placeholder="Email" id="email-signup" type="text" class="validate">
+                    <label for="email-signup">Email</label>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="input-field col l12">
+                    <input placeholder="Password" id="password-signup" type="password" class="validate">
+                    <label for="password-signup">Password</label>
+                  </div>
+                </div>
+
+                <button class="waves-effect waves-light btn-large" type="submit" name="action">
+                  <i class="material-icons left">perm_identity</i>
+                  Sign up
+                </button>
+          </form>
+        </div>
+      </div>
+      <div class="col l12">
+        <p>Log in or sign up here Log in or sign up here Log in or sign up here Log in or sign up here Log in or sign up here Log in or sign up here Log in or sign up here </p>
+      </div>
+    </div>
+
+    <div id="profile-menu" class="z-depth-3 token-toggle">
+      <div id="profile-menu-container" class="container center-align">
+        <p id="profile-directions">
+          Profile will display here.
+          <form id="logout">
+            <button class="waves-effect waves-light btn-large" type="submit" name="action">
+            <i class="material-icons left">perm_identity</i>
+            Log out
+            </button>
+          </form>
+        </p>
+      </div>
+    </div>
+
 
  <!--   <div id="profile-box" class="z-depth-3 float-box">
       <div id="" class="container center-align">
