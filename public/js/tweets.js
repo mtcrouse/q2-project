@@ -1,6 +1,8 @@
 $(document).ready(() => {
   'use strict';
 
+  let giantArray = [];
+
   $('.float-box').delay(1000).fadeIn(1000);
   $('#title-box').delay(1000).fadeOut(1000);
 
@@ -95,6 +97,7 @@ $(document).ready(() => {
     if (msg[4] !== null){
       let coords = [msg[4], msg[5]];
       testData.data.push({lat: coords[0], lng: coords[1], count: 1});
+      giantArray.push(msg[0]);
 
       heatmap.setData(testData);
     }
@@ -136,32 +139,48 @@ $('#user-box').click(() => {
   $('#search-form').submit((event) => {
     event.preventDefault();
 
+    let atLeastOneTweet = false;
+
     const searchTerm = $('#search-term').val().trim();
 
     $('#search-menu').fadeOut();
     $('#tweet-box-content').empty();
 
-    $.getJSON(`/tweets/${searchTerm}`)
-      .done((tweets) => {
+    for (let tweet of giantArray) {
+      if (tweet.includes(searchTerm.toLowerCase())) {
+        $('#tweet-box-content').append(`<p>${tweet}</p>`);
+        atLeastOneTweet = true;
+      }
+    }
 
-        $('#search-term').val('');
+    if (atLeastOneTweet === false) {
+      $('#tweet-box-content').append(`<p>No matching tweets found! Try again in a few minutes.</p>`);
+    }
 
-        for (let i = 0; i < tweets.statuses.length; i++) {
-          let tweet = tweets.statuses[i];
+    $('#tweet-box').fadeIn();
+    $('#exit-tweet-box').fadeIn();
 
-          $('#tweet-box-content').append(`<p>${tweet.text}</p>`);
-
-          if (i < tweets.statuses.length - 1) {
-            $('#tweet-box-content').append('<hr>');
-          }
-        }
-
-        $('#tweet-box').fadeIn();
-        $('#exit-tweet-box').fadeIn();
-      })
-      .fail(() => {
-        console.log('Unable to retrieve tweets');
-      });
+    // $.getJSON(`/tweets/${searchTerm}`)
+    //   .done((tweets) => {
+    //
+    //     $('#search-term').val('');
+    //
+    //     for (let i = 0; i < tweets.statuses.length; i++) {
+    //       let tweet = tweets.statuses[i];
+    //
+    //       $('#tweet-box-content').append(`<p>${tweet.text}</p>`);
+    //
+    //       if (i < tweets.statuses.length - 1) {
+    //         $('#tweet-box-content').append('<hr>');
+    //       }
+    //     }
+    //
+    //     $('#tweet-box').fadeIn();
+    //     $('#exit-tweet-box').fadeIn();
+    //   })
+    //   .fail(() => {
+    //     console.log('Unable to retrieve tweets');
+    //   });
     return false;
   });
 
@@ -255,7 +274,7 @@ $('#user-box').click(() => {
     $.ajax(options)
       .done(() => {
         $('#signin-menu').hide();
-        
+
         const options2 = {
           contentType: 'application/json',
           data: JSON.stringify({ email, password }),
