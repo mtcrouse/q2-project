@@ -1,16 +1,20 @@
 $(document).ready(() => {
   'use strict';
 
-  let giantArray = [];
-
-  $('.float-box').delay(1000).fadeIn(1000);
+  $('#search-menu').delay(1000).fadeIn(1000);
+  $('#user-box').delay(1000).fadeIn(1000);
   $('#title-box').delay(1000).fadeOut(1000);
 
   $('#map').click(() => {
     $('#search-menu').hide();
     $('#signin-menu').hide();
     $('#profile-menu').hide();
+    $('#search-icon').show();
     $('.token-toggle').hide();
+    $('#tweet-box').fadeOut();
+    $('#exit-tweet-box').fadeOut();
+    $('#twitter-icon').fadeIn();
+    $('#return-tweet-box').fadeIn();
   });
 
   var testData = {
@@ -55,26 +59,6 @@ $(document).ready(() => {
     ]
   });
 
-  // Take this out if we can't figure out how to use it at specific coordinates
-  // function addCircle() {
-  //     var $circle = $('<div class="circle"></div>');
-  //     $circle.animate({
-  //         'width': '300px',
-  //         'height': '300px',
-  //         'margin-top': '-150px',
-  //         'margin-left': '-150px',
-  //         'opacity': '0'
-  //     }, 4000, () => {
-  //       console.log('circle!');
-  //     });
-  //     $('body').append($circle);
-  //
-  //     setTimeout(function __remove() {
-  //         $circle.remove();
-  //     }, 4000);
-  // }
-
-
   const heatmap = new HeatmapOverlay(map,
     {
       'radius': .5,
@@ -106,35 +90,55 @@ $(document).ready(() => {
 
   $('#search-icon').click(() => {
     $('#search-menu').fadeIn();
+    $('#search-icon').fadeOut();
     $('.token-toggle').hide();
+    $('#twitter-icon').fadeIn();
+    $('#tweet-box').fadeOut();
+    $('#exit-tweet-box').fadeOut();
   });
 
-// Open log-in/sign-up div
-$('#user-box').click(() => {
-    $('#search-menu').hide();
-    $.getJSON(`/token`)
-      .done((loggedin) => {
-        if (loggedin) {
-          $('#profile-menu')
-            .attr('display', 'inline')
-            .fadeIn(1000)
-          }
+  // Open log-in/sign-up div
+  $('#user-box').click(() => {
+      $('#tweet-box').hide();
+      $('#exit-tweet-box').hide();
+      $('#search-menu').hide();
+      $('#twitter-icon').show();
+      $('#return-tweet-box').show();
+      $.getJSON(`/token`)
+        .done((loggedin) => {
+          if (loggedin) {
+            $('#profile-menu')
+              .attr('display', 'inline')
+              .fadeIn(1000)
+            }
 
-        else {
-          $('#signin-menu')
-            .attr('display', 'inline')
-            .fadeIn(1000);
-      }
-    })
-    .fail((err) => {
-      Materialize.toast('Unable to log out. Please try again.', 3000);
-      Materialize.toast(err);
-    })
-});
+          else {
+            $('#signin-menu')
+              .attr('display', 'inline')
+              .fadeIn(1000);
+        }
+      })
+      .fail((err) => {
+        Materialize.toast('Unable to log out. Please try again.', 3000);
+        Materialize.toast(err);
+      })
+  });
 
   $('#exit-tweet-box').click(() => {
     $('#tweet-box').fadeOut();
     $('#exit-tweet-box').fadeOut();
+    $('#return-tweet-box').fadeIn();
+    $('#twitter-icon').fadeIn();
+  });
+
+  $('#twitter-icon').click(() => {
+    $('#twitter-icon').hide();
+    $('#return-tweet-box').hide();
+    $('#tweet-box').fadeIn();
+    $('#exit-tweet-box').fadeIn();
+    $('#profile-menu').hide();
+    $('#signin-menu').hide();
+    $('#search-menu').hide();
   });
 
   $('#search-form').submit((event) => {
@@ -145,19 +149,10 @@ $('#user-box').click(() => {
     const searchTerm = $('#search-term').val().trim();
 
     $('#search-menu').fadeOut();
+    $('#search-icon').fadeIn();
+    $('#twitter-icon').hide();
+    $('#return-tweet-box').hide();
     $('#tweet-box-content').empty();
-
-    for (let tweet of giantArray) {
-      if (tweet.includes(searchTerm.toLowerCase())) {
-        $('#tweet-box-content').append(`<p>${tweet}</p>`);
-        atLeastOneTweet = true;
-      }
-    }
-
-    if (atLeastOneTweet === false) {
-      $('#tweet-box-content').append(`<p>No matching tweets found! Try again in a few minutes.</p>`);
-    }
-
     $('#tweet-box').fadeIn();
     $('#exit-tweet-box').fadeIn();
 
@@ -178,22 +173,20 @@ $('#user-box').click(() => {
             })
             .fail(($xhr) => {
               Materialize.toast($xhr.responseText, 3000);
-            });  
+            });
 
-    
+
         $('#search-term').val('');
-    
+
         for (let i = 0; i < tweets.statuses.length; i++) {
           let tweet = tweets.statuses[i];
-    
-          let $div = $(`<div class='sidebox-tweet row'></div>`)
-          let $div2 = $(`<div class='tweet-div col l10'></div>`)
+
+          let $div = $(`<div class='sidebox-tweet row'></div>`);
+          let $div2 = $(`<div class='tweet-div col l10'></div>`);
           $div2.append(`<p>${tweet.text}</p>`);
-          let $div3 = $(`<div class="center-btn col l2"></div>`)
-          let $button = $(`<a class="btn-floating waves-effect waves-light"><i class="add-favorite material-icons">add</i></a>`);
-          $div3.append($button);
+          let $button = $(`<span class="add-favorite star-right"><i class="material-icons">star_border</i></span>`);
           $div.append($div2);
-          $div.append($div3);
+          $div.append($button);
           $('#tweet-box-content').append($div);
 
           if (i < tweets.statuses.length - 1) {
@@ -201,15 +194,13 @@ $('#user-box').click(() => {
           }
         }
 
-        $('.add-favorite').on('mouseover', function (event) {
-          Materialize.toast('Click to add to favorites.', 3000);
-        });
-
         $('.add-favorite').click((event) => {
           //Create favorites row>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   Favorites
           $.getJSON(`/token`)
             .done((loggedin) => {
               if (loggedin) {
+                $(event.target).text('star');
+
                 const newFavorite = { tweet: $($(event.target).parent().parent().prev().children()[0]).text(), searchId: 1}
                 const options = {
                   contentType: 'application/json',
@@ -224,8 +215,8 @@ $('#user-box').click(() => {
                     Materialize.toast('Favorite added.', 3000);
                   })
                   .fail(($xhr) => {
-                    Materialize.toast($xhr.responseText, 3000);
-                  });                
+                    console.log($xhr.responseText, 3000);
+                  });
 
                 const options2 = {
                   contentType: 'application/json',
@@ -238,8 +229,8 @@ $('#user-box').click(() => {
                     Materialize.toast('Favorite_User added.', 3000);
                   })
                   .fail(($xhr) => {
-                    Materialize.toast($xhr.responseText, 3000);
-                  });                
+                    console.log($xhr.responseText, 3000);
+                  });
               }
 
               else {
@@ -248,7 +239,7 @@ $('#user-box').click(() => {
             })
             .fail((err) => {
               Materialize.toast('Unable to log out. Please try again.', 3000);
-              Materialize.toast(err);
+              console.log(err);
             })
 
 
@@ -294,7 +285,7 @@ $('#user-box').click(() => {
         $('#signin-menu').hide();
       })
       .fail(($xhr) => {
-        Materialize.toast($xhr.responseText, 3000);
+        console.log($xhr.responseText, 3000);
       });
   });
 
@@ -367,11 +358,11 @@ $('#user-box').click(() => {
           .done(() => {
           })
           .fail(($xhr) => {
-            Materialize.toast($xhr.responseText, 3000);
+            console.log($xhr.responseText, 3000);
           });
       })
       .fail(($xhr) => {
-        Materialize.toast($xhr.responseText, 3000);
+        console.log($xhr.responseText, 3000);
       });
   });
 });

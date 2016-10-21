@@ -18,22 +18,19 @@ html, body {
   border-bottom: 1px solid blue;
 }
 
-/* Take this out if we're not using the circles */
-.circle {
-    width: 0px;
-    height: 0px;
-    margin-top: 0px;
-    margin-left: 0px;
-    border: 4px solid blue;
-    -webkit-border-radius: 300px;
-    -moz-border-radius: 300px;
-    border-radius: 300px;
-    background: none;
-    opacity: 0.6;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    z-index: 2;
+.input-field input[type=password]:focus {
+  border-bottom: 1px solid blue;
+}
+
+.clickable-buttons {
+  display: none;
+}
+
+.star-right {
+  float: right;
+  position: absolute;
+  right: 5px;
+  cursor: pointer;
 }
 
 #map {
@@ -51,36 +48,17 @@ html, body {
 }
 
 #signin-menu, #profile-menu {
-  right: 37.5%;
-  top: 25%;
-}
-
-#signin-menu {
-  position: absolute;
-  background-color: aliceblue;
-  color: black;
-  z-index: 1;
-  opacity: 0.95;
-  display: none;
-  width: 50%;
-  height: 60%;
   right: 25%;
-  top: 20%;
-}
-
-#profile-menu {
-  position: absolute;
-  background-color: aliceblue;
-  color: black;
-  z-index: 1;
-  opacity: 0.95;
+  height: 90%;
+  top: 5%;
+  width: 50%;
+  min-width: 500px;
   display: none;
-  width: 70%;
-  min-width: 600px;
-  min-height: 500px;
-  height: 70%;
-  right: 15%;
-  top: 15%; 
+  opacity: 0.95;
+  z-index: 1;
+  color: black;
+  background-color: aliceblue;
+  position: absolute;
 }
 
 #search-icon {
@@ -148,12 +126,34 @@ html, body {
 
 #exit-tweet-box {
   position: absolute;
-  left: 13px;
-  top:13px;
+  left: 14px;
+  top:14px;
   display: none;
   z-index: 2;
   cursor: pointer;
   background: none;
+}
+
+#return-tweet-box {
+  left: 13px;
+  top:13px;
+  z-index: 2;
+  cursor: pointer;
+  height: 50px;
+  width: 50px;
+  border-radius: 200px;
+  cursor: pointer;
+  line-height: 50px;
+  display: none;
+}
+
+#twitter-icon {
+  height: 63%;
+  width: 63%;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: none;
 }
 
 #user-box2 {
