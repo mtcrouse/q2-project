@@ -119,20 +119,6 @@ $(document).ready(() => {
             $('#profile-menu')
               .attr('display', 'inline')
               .fadeIn(1000);
-
-            $.getJSON('/users/id')
-            .done((idNumber) => {
-
-              $getJSON(`/favorites_users/ucheck/${idNumber}`)
-                .done((favorites) => {
-                  $getJSON(`/favorites/`)
-                })
-
-            })
-            .fail((err) => {
-              Materialize.toast('Unable to retrieve favorites.', 3000);
-              console.log(err);
-            });
           }
 
           else {
