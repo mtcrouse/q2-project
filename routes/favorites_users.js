@@ -35,7 +35,9 @@ router.post('/favorites_users/', authorize, /*ev(validations.post),*/ (req, res,
 	// 	throw boom.create(400, `favoriteId ${favoriteid} is blank or not an integer`)
 	// }
 
-	knex('favorites').max('id').first()
+	knex('favorites')
+		.max('id')
+		.first()
 		.then((row) => {
 			const favoriteId = Number(row.max);
 				const newEntry = { userId: userId, favoriteId: favoriteId };
