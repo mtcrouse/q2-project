@@ -113,13 +113,26 @@ $(document).ready(() => {
       $('#return-tweet-box').show();
       $('#search-icon').show();
 
-      $.getJSON(`/token`)
+      $.getJSON('/token')
         .done((loggedin) => {
           if (loggedin) {
             $('#profile-menu')
               .attr('display', 'inline')
-              .fadeIn(1000)
-            }
+              .fadeIn(1000);
+
+            $.getJSON('/favorites/ucheck')
+            .done((favorites) => {
+              for (let favorite in favorites) {
+                let $div = $(`<div class='sidebox-tweet row'></div>`);
+                let $div2 = $(`<div class='tweet-div col l10'></div>`);
+                $div2.append(`<p>${favorite.tweet}</p>`);
+              }
+            })
+            .fail((err) => {
+              Materialize.toast('Unable to retrieve favorites.', 3000);
+              console.log(err);
+            });
+          }
 
           else {
             $('#signin-menu')
@@ -311,7 +324,7 @@ $(document).ready(() => {
     $.ajax(options)
       .done(() => {
         $('#signin-menu').hide();
-        $('.add-favorite-disabler').removeClass('disabled');
+        $('.add-favorite').attr('style', 'opacity:1;');
         Materialize.toast('Thanks for logging in. You can now favorite tweets.', 7000);
       })
       .fail(($xhr) => {
@@ -332,7 +345,8 @@ $(document).ready(() => {
     $.ajax(options)
       .done(() => {
         $('#profile-menu').hide();
-        $('.add-favorite-disabler').addClass('disabled');
+        $('.add-favorite').attr('style', 'opacity:0.3;');
+        $('.add-favorite').html('<i class="material-icons">star_border</i>');
       })
       .fail(() => {
         Materialize.toast('Unable to log out. Please try again.', 3000);
@@ -388,6 +402,7 @@ $(document).ready(() => {
 
         $.ajax(options2)
           .done(() => {
+            $('.add-favorite').attr('style', 'opacity:1;');
             Materialize.toast(`Thanks for signing up, ${username}. You're now logged in. You can now add tweets to your favorites.`, 6000);
           })
           .fail(($xhr) => {
