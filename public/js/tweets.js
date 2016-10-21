@@ -109,6 +109,7 @@ $(document).ready(() => {
     $('.token-toggle').hide();
   });
 
+// Open log-in/sign-up div
 $('#user-box').click(() => {
     $('#search-menu').hide();
     $.getJSON(`/token`)
@@ -162,6 +163,7 @@ $('#user-box').click(() => {
 
     $.getJSON(`/tweets/${searchTerm}`)
       .done((tweets) => {
+        ///SEARCHES
     
         $('#search-term').val('');
     
@@ -191,26 +193,34 @@ $('#user-box').click(() => {
           $.getJSON(`/token`)
             .done((loggedin) => {
               if (loggedin) {
-                console.log(loggedin)
+                const newFavorite = { tweet: tweet.text, search_id: 99}
+                const options = {
+                  contentType: 'application/json',
+                  data: JSON.stringify(newFavorite),
+                  dataType: 'json',
+                  type: 'POST',
+                  url: '/favorites'
+                }
+
+                $.ajax(options)
+                  .done(() => {
+                    (event.target).hide();
+                  })
+                  .fail(($xhr) => {
+                    Materialize.toast($xhr.responseText, 3000);
+                  });                
+
               }
 
               else {
                 Materialize.toast('Log in or create an account.', 3000);
-
               }
             })
-    .fail((err) => {
-      Materialize.toast('Unable to log out. Please try again.', 3000);
-      Materialize.toast(err);
-    })
-          // return knex('tweets')
-          //     .insert(message)
-            //   .then(() => {
-            //   })  
-            // .catch((err) => {
-          //     console.error(err);
-            // });
-        });
+            .fail((err) => {
+              Materialize.toast('Unable to log out. Please try again.', 3000);
+              Materialize.toast(err);
+            })
+          });
 
         $('#tweet-box').fadeIn();
         $('#exit-tweet-box').fadeIn();
