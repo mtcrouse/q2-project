@@ -13,11 +13,13 @@ $(document).ready(() => {
     $('.token-toggle').hide();
   });
 
+  // Heatmap options
   var testData = {
     max: 7,
     data: []
   };
 
+  // Map options>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Map style
   let map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 40, lng: -90},
     zoom: 4,
@@ -75,6 +77,7 @@ $(document).ready(() => {
   // }
 
 
+  // More heatmap options >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Heatmap style
   const heatmap = new HeatmapOverlay(map,
     {
       'radius': .5,
@@ -93,6 +96,7 @@ $(document).ready(() => {
 
   var socket = io();
 
+  // Streaming
   // socket.on('tweety', function(msg){
   //   if (msg[4] !== null){
   //     let coords = [msg[4], msg[5]];
@@ -104,39 +108,42 @@ $(document).ready(() => {
   //   console.log(msg);
   // });
 
+  //Toggle search div
   $('#search-icon').click(() => {
     $('#search-menu').fadeIn();
     $('.token-toggle').hide();
   });
 
-// Open log-in/sign-up div
-$('#user-box').click(() => {
-    $('#search-menu').hide();
-    $.getJSON(`/token`)
-      .done((loggedin) => {
-        if (loggedin) {
-          $('#profile-menu')
-            .attr('display', 'inline')
-            .fadeIn(1000)
-          }
+  // Toggle open log-in/sign-up div
+  $('#user-box').click(() => {
+      $('#search-menu').hide();
+      $.getJSON(`/token`)
+        .done((loggedin) => {
+          if (loggedin) {
+            $('#profile-menu')
+              .attr('display', 'inline')
+              .fadeIn(1000)
+            }
 
-        else {
-          $('#signin-menu')
-            .attr('display', 'inline')
-            .fadeIn(1000);
-      }
-    })
-    .fail((err) => {
-      Materialize.toast('Unable to log out. Please try again.', 3000);
-      Materialize.toast(err);
-    })
-});
+          else {
+            $('#signin-menu')
+              .attr('display', 'inline')
+              .fadeIn(1000);
+        }
+      })
+      .fail((err) => {
+        Materialize.toast('Unable to log out. Please try again.', 3000);
+        Materialize.toast(err);
+      })
+  });
 
+  // Close tweet box on click
   $('#exit-tweet-box').click(() => {
     $('#tweet-box').fadeOut();
     $('#exit-tweet-box').fadeOut();
   });
 
+  // Search form >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Search form
   $('#search-form').submit((event) => {
     event.preventDefault();
 
@@ -163,7 +170,7 @@ $('#user-box').click(() => {
 
     $.getJSON(`/tweets/${searchTerm}`)
       .done((tweets) => {
-        // Create searches row>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>    Searches
+        // Create row in searches row>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Create searches row
           const options = {
             contentType: 'application/json',
             data: JSON.stringify({searchTerm: searchTerm}),
@@ -175,7 +182,7 @@ $('#user-box').click(() => {
           $.ajax(options)
             .done(() => {
               Materialize.toast('Search added', 3000);
-
+              // Create row in searches_users >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Create searches_users row
               const options2 = {
                 contentType: 'application/json',
                 type: 'POST',
@@ -197,6 +204,7 @@ $('#user-box').click(() => {
     
         $('#search-term').val('');
     
+        // Display tweets>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Display tweets
         for (let i = 0; i < tweets.statuses.length; i++) {
           let tweet = tweets.statuses[i];
     
@@ -219,11 +227,12 @@ $('#user-box').click(() => {
           Materialize.toast('Click to add to favorites.', 3000);
         });
 
+
         $('.add-favorite').click((event) => {
-          //Create favorites row>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   Favorites
           $.getJSON(`/token`)
             .done((loggedin) => {
               if (loggedin) {
+                //Create row in favorites >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Create row in favorites
                 const newFavorite = { tweet: $($(event.target).parent().parent().prev().children()[0]).text(), searchId: 1}
                 const options = {
                   contentType: 'application/json',
@@ -237,19 +246,20 @@ $('#user-box').click(() => {
                   .done(() => {
                     Materialize.toast('Favorite added.', 3000);
 
-                  const options2 = {
-                    contentType: 'application/json',
-                    type: 'POST',
-                    url: '/favorites_users'
-                  }
+                    // Create row in favorites_users >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Create row in favorites_users
+                    const options2 = {
+                      contentType: 'application/json',
+                      type: 'POST',
+                      url: '/favorites_users'
+                    }
 
-                  $.ajax(options2)
-                    .done(() => {
-                      Materialize.toast('Favorite_User added.', 3000);
-                    })
-                    .fail(($xhr) => {
-                      Materialize.toast($xhr.responseText, 3000);
-                    });                
+                    $.ajax(options2)
+                      .done(() => {
+                        Materialize.toast('Favorite_User added.', 3000);
+                      })
+                      .fail(($xhr) => {
+                        Materialize.toast($xhr.responseText, 3000);
+                      });                
                   })
                   .fail(($xhr) => {
                     Materialize.toast($xhr.responseText, 3000);
@@ -265,9 +275,6 @@ $('#user-box').click(() => {
               Materialize.toast('Unable to log out. Please try again.', 3000);
               Materialize.toast(err);
             })
-
-
-
           });
 
         $('#tweet-box').fadeIn();
@@ -279,9 +286,11 @@ $('#user-box').click(() => {
     return false;
   });
 
+  // Needed(?)
   $('#signin-menu').hide();
   $('#profile-menu').hide();
 
+  // Login-form handling>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Login-form handling
   $('#loginForm').submit((event) => {
     event.preventDefault();
 
@@ -313,7 +322,7 @@ $('#user-box').click(() => {
       });
   });
 
-
+  // Logout >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Log out
   $('#logout').submit((event) => {
     event.preventDefault();
 
@@ -332,61 +341,62 @@ $('#user-box').click(() => {
       });
   });
 
-    $('#signUpForm').submit((event) => {
-    event.preventDefault();
+  // Sign up >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Sign up
+  $('#signUpForm').submit((event) => {
+  event.preventDefault();
 
-    const username = $('#username').val().trim();
-    const email = $('#email-signup').val().trim();
-    const password = $('#password-signup').val();
+  const username = $('#username').val().trim();
+  const email = $('#email-signup').val().trim();
+  const password = $('#password-signup').val();
 
-    if (!username) {
-      return Materialize.toast('Username name must not be blank', 3000);
-    }
+  if (!username) {
+    return Materialize.toast('Username name must not be blank', 3000);
+  }
 
-    if (!email) {
-      return Materialize.toast('Email must not be blank', 3000);
-    }
+  if (!email) {
+    return Materialize.toast('Email must not be blank', 3000);
+  }
 
-    if (email.indexOf('@') < 0) {
-      return Materialize.toast('Email must be valid', 3000);
-    }
+  if (email.indexOf('@') < 0) {
+    return Materialize.toast('Email must be valid', 3000);
+  }
 
-    if (!password || password.length < 8) {
-      return Materialize.toast(
-        'Password must be at least 8 characters long',
-        3000
-      );
-    }
+  if (!password || password.length < 8) {
+    return Materialize.toast(
+      'Password must be at least 8 characters long',
+      3000
+    );
+  }
 
-    const options = {
-      contentType: 'application/json',
-      data: JSON.stringify({ username, email, password }),
-      dataType: 'json',
-      type: 'POST',
-      url: '/users'
-    };
+  const options = {
+    contentType: 'application/json',
+    data: JSON.stringify({ username, email, password }),
+    dataType: 'json',
+    type: 'POST',
+    url: '/users'
+  };
 
-    $.ajax(options)
-      .done(() => {
-        $('#signin-menu').hide();
+  $.ajax(options)
+    .done(() => {
+      $('#signin-menu').hide();
 
-        const options2 = {
-          contentType: 'application/json',
-          data: JSON.stringify({ email, password }),
-          dataType: 'json',
-          type: 'POST',
-          url: '/token'
-        };
+      const options2 = {
+        contentType: 'application/json',
+        data: JSON.stringify({ email, password }),
+        dataType: 'json',
+        type: 'POST',
+        url: '/token'
+      };
 
-        $.ajax(options2)
-          .done(() => {
-          })
-          .fail(($xhr) => {
-            Materialize.toast($xhr.responseText, 3000);
-          });
-      })
-      .fail(($xhr) => {
-        Materialize.toast($xhr.responseText, 3000);
-      });
+      $.ajax(options2)
+        .done(() => {
+        })
+        .fail(($xhr) => {
+          Materialize.toast($xhr.responseText, 3000);
+        });
+    })
+    .fail(($xhr) => {
+      Materialize.toast($xhr.responseText, 3000);
+    });
   });
 });
