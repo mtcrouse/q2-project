@@ -261,6 +261,7 @@ $(document).ready(() => {
               }
 
               else {
+                $('.add-favorite-disabler').addClass('disabled');
                 Materialize.toast('Log in or create an account.', 3000);
               }
             })
@@ -283,7 +284,7 @@ $(document).ready(() => {
   $('#signin-menu').hide();
   $('#profile-menu').hide();
 
-  // Login-form handling>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Login-form handling
+  // Login-form handling>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Login-form handling
   $('#loginForm').submit((event) => {
     event.preventDefault();
 
@@ -309,13 +310,14 @@ $(document).ready(() => {
     $.ajax(options)
       .done(() => {
         $('#signin-menu').hide();
+        Materialize.toast('Thanks for logging in. You can now favorite tweets.', 7000);
       })
       .fail(($xhr) => {
         console.log($xhr.responseText, 3000);
       });
   });
 
-  // Logout >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Log out
+  // Logout >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Log out
   $('#logout').submit((event) => {
     event.preventDefault();
 
@@ -336,60 +338,61 @@ $(document).ready(() => {
 
   // Sign up >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Sign up
   $('#signUpForm').submit((event) => {
-  event.preventDefault();
+    event.preventDefault();
 
-  const username = $('#username').val().trim();
-  const email = $('#email-signup').val().trim();
-  const password = $('#password-signup').val();
+    const username = $('#username').val().trim();
+    const email = $('#email-signup').val().trim();
+    const password = $('#password-signup').val();
 
-  if (!username) {
-    return Materialize.toast('Username name must not be blank', 3000);
-  }
+    if (!username) {
+      return Materialize.toast('Username name must not be blank', 3000);
+    }
 
-  if (!email) {
-    return Materialize.toast('Email must not be blank', 3000);
-  }
+    if (!email) {
+      return Materialize.toast('Email must not be blank', 3000);
+    }
 
-  if (email.indexOf('@') < 0) {
-    return Materialize.toast('Email must be valid', 3000);
-  }
+    if (email.indexOf('@') < 0) {
+      return Materialize.toast('Email must be valid', 3000);
+    }
 
-  if (!password || password.length < 8) {
-    return Materialize.toast(
-      'Password must be at least 8 characters long',
-      3000
-    );
-  }
+    if (!password || password.length < 8) {
+      return Materialize.toast(
+        'Password must be at least 8 characters long',
+        3000
+      );
+    }
 
-  const options = {
-    contentType: 'application/json',
-    data: JSON.stringify({ username, email, password }),
-    dataType: 'json',
-    type: 'POST',
-    url: '/users'
-  };
+    const options = {
+      contentType: 'application/json',
+      data: JSON.stringify({ username, email, password }),
+      dataType: 'json',
+      type: 'POST',
+      url: '/users'
+    };
 
-  $.ajax(options)
-    .done(() => {
-      $('#signin-menu').hide();
+    $.ajax(options)
+      .done(() => {
+        $('#signin-menu').hide();
 
-      const options2 = {
-        contentType: 'application/json',
-        data: JSON.stringify({ email, password }),
-        dataType: 'json',
-        type: 'POST',
-        url: '/token'
-      };
+        const options2 = {
+          contentType: 'application/json',
+          data: JSON.stringify({ email, password }),
+          dataType: 'json',
+          type: 'POST',
+          url: '/token'
+        };
 
-      $.ajax(options2)
-        .done(() => {
-        })
-        .fail(($xhr) => {
-          console.log($xhr.responseText, 3000);
-        });
-    })
-    .fail(($xhr) => {
-      console.log($xhr.responseText, 3000);
-    });
+        $.ajax(options2)
+          .done(() => {
+            Materialize.toast(`Thanks for signing up, ${username}. You're now logged in. You can now add tweets to your favorites.`, 6000);
+          })
+          .fail(($xhr) => {
+            Materialize.toast($xhr.responseText, 3000);
+          });
+      })
+      .fail(($xhr) => {
+        Materialize.toast($xhr.responseText, 3000);
+      });
   });
 });
