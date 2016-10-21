@@ -102,34 +102,37 @@ router.get('/favorites', (req, res, next) => {
 		});
 });
 
-// Returns all instances of a favorite with userId n
-router.get('/favorites/ucheck', authorize, /*ev(validations.ucheck),*/ (req, res, next) => {
-	const { userId } = req.token;
-	const { favoriteId } = req.body;
+// FUCKED 
+//
+//Returns all instances of a favorite with userId n
+// 
+// router.get('/favorites/ucheck', authorize, /*ev(validations.ucheck),*/ (req, res, next) => {
+// 	const { userId } = req.token;
+// 	const { favoriteId } = req.body;
 
-	// ev(validations)
-	// if (isNaN(favoriteId)) {
-	// 	return next(boom.create(400, `favoriteId (currently ${favoriteId}) must be an integer`))
-	// }
+// 	// ev(validations)
+// 	// if (isNaN(favoriteId)) {
+// 	// 	return next(boom.create(400, `favoriteId (currently ${favoriteId}) must be an integer`))
+// 	// }
 
-	knex('users')
-		.where('users.id', userId)
-		.innerJoin('favorites_users', 'users.id', 'favorites_users.user_id')
-		.innerJoin('favorites', 'favorites.id', 'favorites_users.favorite_id')
-		.innerJoin('searches', 'favorites.search_id', 'searches.id')
-		.then((rows) => {
-			if (!rows || rows === []) {
-				res.status(200);
-				res.send(`Favorite at id ${favoriteId} does not exist`)
-			} else {
-				res.status(200);
-				res.send(rows);
-			}
-		})
-		.catch((err) => {
-			next(err);
-		});
-});
+// 	knex('users')
+// 		.where('users.id', userId)
+// 		.innerJoin('favorites_users', 'users.id', 'favorites_users.user_id')
+// 		.innerJoin('favorites', 'favorites.id', 'favorites_users.favorite_id')
+// 		.innerJoin('searches', 'favorites.search_id', 'searches.id')
+// 		.then((rows) => {
+// 			if (!rows || rows === []) {
+// 				res.status(200);
+// 				res.send(`Favorite at id ${favoriteId} does not exist`)
+// 			} else {
+// 				res.status(200);
+// 				res.send(rows);
+// 			}
+// 		})
+// 		.catch((err) => {
+// 			next(err);
+// 		});
+// });
 
 // Returns all instances of favorite with favoriteId n
 router.get('/favorites/fcheck', ev(validations.fcheck), (req, res, next) => {

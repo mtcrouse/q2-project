@@ -63,8 +63,8 @@ router.post('/favorites_users', authorize, /*ev(validations.post),*/ (req, res, 
 });
 
 // Get particular user's favorites
-router.get('/favorites_users/ucheck/:id', /*authorize,*/ (req, res, next) => {
-	const userId = req.params.id;
+router.get('/favorites_users/ucheck/', /*authorize,*/ (req, res, next) => {
+	const { userId } = req.body;
 
 	// console.log("UserId is");
 	// console.log(userId);

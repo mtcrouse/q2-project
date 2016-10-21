@@ -430,3 +430,5 @@ $(document).ready(() => {
 //   .fail(($xhr) => {
 //     Materialize.toast($xhr.responseText, 3000);
 //   });
+
+// Returns all instances of a favorite with userId n --- seems broken and stupid
