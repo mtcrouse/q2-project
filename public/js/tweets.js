@@ -174,7 +174,21 @@ $('#user-box').click(() => {
 
           $.ajax(options)
             .done(() => {
-              console.log('search added')
+              Materialize.toast('Search added', 3000);
+
+              const options2 = {
+                contentType: 'application/json',
+                type: 'POST',
+                url: '/searches_users'
+              }
+
+              $.ajax(options2)
+                .done(() => {
+                  Materialize.toast('Searches_users added', 3000)
+                })
+                .fail(($xhr) => {
+                  Materialize.toast($xhr.responseText, 3000);
+                });  
             })
             .fail(($xhr) => {
               Materialize.toast($xhr.responseText, 3000);
@@ -222,24 +236,25 @@ $('#user-box').click(() => {
                 $.ajax(options)
                   .done(() => {
                     Materialize.toast('Favorite added.', 3000);
+
+                  const options2 = {
+                    contentType: 'application/json',
+                    type: 'POST',
+                    url: '/favorites_users'
+                  }
+
+                  $.ajax(options2)
+                    .done(() => {
+                      Materialize.toast('Favorite_User added.', 3000);
+                    })
+                    .fail(($xhr) => {
+                      Materialize.toast($xhr.responseText, 3000);
+                    });                
                   })
                   .fail(($xhr) => {
                     Materialize.toast($xhr.responseText, 3000);
                   });                
 
-                const options2 = {
-                  contentType: 'application/json',
-                  type: 'POST',
-                  url: '/favorites_users'
-                }
-
-                $.ajax(options)
-                  .done(() => {
-                    Materialize.toast('Favorite_User added.', 3000);
-                  })
-                  .fail(($xhr) => {
-                    Materialize.toast($xhr.responseText, 3000);
-                  });                
               }
 
               else {

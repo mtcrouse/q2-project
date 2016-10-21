@@ -48,7 +48,7 @@ app.use(favorites);
 app.use(favorites_users);
 app.use(tweets);
 app.use(token);
-// app.use(searches_users);
+app.use(searches_users);
 
 app.use((_req, res) => {
   res.sendStatus(404);
