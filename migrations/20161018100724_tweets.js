@@ -3,7 +3,14 @@
 exports.up = function(knex) {
   return knex.schema.createTable('tweets', (table) => {
     table.increments();
-    table.text('tweet').defaultTo('');
+    table.text('tweet')
+    	.defaultTo('');
+    table.text('location')
+    	.defaultTo('');
+    table.text('best_guess')
+    	.defaultTo('');
+    table.float('lat');
+    table.float('lng');
     table.timestamps(true, true);
   });
 };

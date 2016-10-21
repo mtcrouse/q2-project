@@ -61,25 +61,6 @@ var client = new Twitter({
   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
-// const knexFn = function(message) {
-//     return knex('tweets').insert([{
-//       tweet: message
-//     }])
-//     .then(() => {
-//       return knex('tweets').count('*');
-//     })
-//     .then((count) => {
-//       if (count[0].count > 1000) {
-//         console.log('greater than 1000');
-//       } else {
-//         console.log(count[0].count);
-//       }
-//       return;
-//     })
-//     .catch((err) => {
-//       console.error(err);
-//     });
-// };
 
 let cities = fs.readFileSync('cities.txt', 'utf8', (err, data) => {
   if (err) throw err;
@@ -120,6 +101,31 @@ io.on('connection', function(socket) {
       }
 
       io.emit('tweety', [event.text, event.user.location, bestGuess, maxScore, latitude, longitude]);
+      
+      const line = {
+        tweet: event.text,
+        location: event.user.location,
+        best_guess: bestGuess,
+        lat: latitutde,
+        lng: longitude 
+      }
+      
+      return knex('tweets')
+        .insert(line, '*')
+        .then(() => {
+          res.send(line);
+        })
+        .then((count) => {
+          if (count[0].count > 1000) {
+          console.log('greater than 1000');
+          } else {
+            console.log(count[0].count);
+          }
+            return;
+          })
+        .catch((err) => {
+          console.error(err);
+        });
     }
   });
 });
