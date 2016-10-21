@@ -12,7 +12,7 @@ $(document).ready(() => {
   });
 
   var testData = {
-    max: 1,
+    max: 3,
     data: []
   };
 
@@ -83,8 +83,8 @@ $(document).ready(() => {
       lngField: 'lng',
       valueField: 'count',
       gradient: {
-        '.5': '#aaaaff',
-        '.8': '#5555aa',
+        '.5': 'blue',
+        '.8': 'yellow',
         '.95': 'red'
       }
     });
@@ -92,13 +92,12 @@ $(document).ready(() => {
   var socket = io();
 
   socket.on('tweety', function(msg){
-    // if (msg.geo){
-    //   // console.log(msg.geo);
-    //   let coords = msg.geo;
-    //   testData.data.push({lat: coords.coordinates[0], lng: coords.coordinates[1], count: 1});
-    //   // console.log(testData);
-    //   heatmap.setData(testData);
-    // }
+    if (msg[4] !== null){
+      let coords = [msg[4], msg[5]];
+      testData.data.push({lat: coords[0], lng: coords[1], count: 1});
+
+      heatmap.setData(testData);
+    }
     console.log(msg);
   });
 
@@ -147,23 +146,13 @@ $('#user-box').click(() => {
 
         $('#search-term').val('');
 
-        for (let i = 0; i < tweets.length; i++) {
-          let tweet = tweets[i];
+        for (let i = 0; i < tweets.statuses.length; i++) {
+          let tweet = tweets.statuses[i];
 
-          $('#tweet-box-content').append(`<p>${tweet[0]}</p>`);
+          $('#tweet-box-content').append(`<p>${tweet.text}</p>`);
 
-          if (i < tweets.length - 1) {
+          if (i < tweets.statuses.length - 1) {
             $('#tweet-box-content').append('<hr>');
-          }
-
-          if (tweet[4] !== null){
-            // console.log('Geo!');
-            // console.log(tweet.coordinates);
-            let coords = [tweet[4], tweet[5]];
-            console.log([Number(tweet[4]), Number(tweet[5])]);
-            testData.data.push({lat: coords[0], lng: coords[1], count: 1});
-            // console.log(testData);
-            heatmap.setData(testData);
           }
         }
 

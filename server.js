@@ -14,6 +14,8 @@ const morgan = require('morgan');
 const path = require('path');
 const Twitter = require('twitter');
 const knex = require('./knex');
+const fs = require('fs');
+const natural = require('natural');
 
 app.disable('x-powered-by');
 
@@ -78,21 +80,49 @@ var client = new Twitter({
 //       console.error(err);
 //     });
 // };
-//
-// io.on('connection', function(socket){
-//   let stream = client.stream('statuses/sample');
-//   stream.on('data', function(event) {
-//     if (event.text) {
-//         io.emit('tweety', event);
-//         knexFn(event);
-//     }
-//   });
-//
-//   console.log('a user connected');
-//   socket.on('disconnect', function(){
-//     console.log('user disconnected');
-//   });
-// });
+
+let cities = fs.readFileSync('cities.txt', 'utf8', (err, data) => {
+  if (err) throw err;
+});
+
+cities = cities.split(/\r?\n/);
+
+console.log('file is loaded');
+
+io.on('connection', function(socket) {
+  let stream = client.stream('statuses/sample');
+  stream.on('data', function(event) {
+    console.log('going');
+    if (event.text) {
+      let maxScore = 0;
+      let maxScorePopulation = 0;
+      let bestGuess;
+      let latitude;
+      let longitude;
+
+      if (event.user.location === '' || event.user.location === null) {
+        bestGuess = null;
+        maxScore = null;
+        latitude = null;
+        longitude = null;
+      } else {
+        for (let row of cities) {
+          row = row.split('\t');
+          let currentScore = natural.JaroWinklerDistance(event.user.location.split(',')[0].trim(), row[1]);
+          let currentScorePopulation = row[14];
+          if (currentScore > maxScore || ((currentScore === maxScore) && (currentScorePopulation > maxScorePopulation))) {
+            maxScore = currentScore;
+            bestGuess = row[1];
+            latitude = row[4];
+            longitude = row[5];
+          }
+        }
+      }
+
+      io.emit('tweety', [event.text, event.user.location, bestGuess, maxScore, latitude, longitude]);
+    }
+  });
+});
 
 // eslint-disable-next-line max-params
 app.use((err, _req, res, _next) => {
