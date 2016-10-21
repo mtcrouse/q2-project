@@ -55,7 +55,7 @@ html, body {
   top: 25%;
 }
 
-#signin-menu, #profile-menu {
+#signin-menu {
   position: absolute;
   background-color: aliceblue;
   color: black;
@@ -64,6 +64,23 @@ html, body {
   display: none;
   width: 50%;
   height: 60%;
+  right: 25%;
+  top: 20%;
+}
+
+#profile-menu {
+  position: absolute;
+  background-color: aliceblue;
+  color: black;
+  z-index: 1;
+  opacity: 0.95;
+  display: none;
+  width: 70%;
+  min-width: 600px;
+  min-height: 500px;
+  height: 70%;
+  right: 15%;
+  top: 15%; 
 }
 
 #search-icon {
@@ -118,7 +135,7 @@ html, body {
   left: 13px;
   top: 13px;
   bottom: 13px;
-  width: 300px;
+  width: 600px;
   display: none;
   position: absolute;
   background-color: aliceblue;

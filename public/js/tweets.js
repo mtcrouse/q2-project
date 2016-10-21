@@ -14,7 +14,7 @@ $(document).ready(() => {
   });
 
   var testData = {
-    max: 3,
+    max: 7,
     data: []
   };
 
@@ -93,16 +93,16 @@ $(document).ready(() => {
 
   var socket = io();
 
-  socket.on('tweety', function(msg){
-    if (msg[4] !== null){
-      let coords = [msg[4], msg[5]];
-      testData.data.push({lat: coords[0], lng: coords[1], count: 1});
-      giantArray.push(msg[0]);
+  // socket.on('tweety', function(msg){
+  //   if (msg[4] !== null){
+  //     let coords = [msg[4], msg[5]];
+  //     testData.data.push({lat: coords[0], lng: coords[1], count: 1});
+  //     giantArray.push(msg[0]);
 
-      heatmap.setData(testData);
-    }
-    console.log(msg);
-  });
+  //     heatmap.setData(testData);
+  //   }
+  //   console.log(msg);
+  // });
 
   $('#search-icon').click(() => {
     $('#search-menu').fadeIn();
@@ -160,27 +160,64 @@ $('#user-box').click(() => {
     $('#tweet-box').fadeIn();
     $('#exit-tweet-box').fadeIn();
 
-    // $.getJSON(`/tweets/${searchTerm}`)
-    //   .done((tweets) => {
-    //
-    //     $('#search-term').val('');
-    //
-    //     for (let i = 0; i < tweets.statuses.length; i++) {
-    //       let tweet = tweets.statuses[i];
-    //
-    //       $('#tweet-box-content').append(`<p>${tweet.text}</p>`);
-    //
-    //       if (i < tweets.statuses.length - 1) {
-    //         $('#tweet-box-content').append('<hr>');
-    //       }
-    //     }
-    //
-    //     $('#tweet-box').fadeIn();
-    //     $('#exit-tweet-box').fadeIn();
-    //   })
-    //   .fail(() => {
-    //     console.log('Unable to retrieve tweets');
-    //   });
+    $.getJSON(`/tweets/${searchTerm}`)
+      .done((tweets) => {
+    
+        $('#search-term').val('');
+    
+        for (let i = 0; i < tweets.statuses.length; i++) {
+          let tweet = tweets.statuses[i];
+    
+          let $div = $(`<div class='sidebox-tweet row'></div>`)
+          let $div2 = $(`<div class='tweet-div col l10'></div>`)
+          $div2.append(`<p>${tweet.text}</p>`);
+          let $div3 = $(`<div class="center-btn col l2"></div>`)
+          let $button = $(`<a class="btn-floating waves-effect waves-light"><i class="add-favorite material-icons">add</i></a>`);
+          $div3.append($button);
+          $div.append($div2);
+          $div.append($div3);
+          $('#tweet-box-content').append($div);
+
+          if (i < tweets.statuses.length - 1) {
+            $('#tweet-box-content').append('<hr>');
+          }
+        }
+
+        $('.add-favorite').on('mouseover', function (event) {
+          Materialize.toast('Click to add to favorites.', 3000);
+        });
+
+        $('.add-favorite').click((event) => {
+          $.getJSON(`/token`)
+            .done((loggedin) => {
+              if (loggedin) {
+                console.log(loggedin)
+              }
+
+              else {
+                Materialize.toast('Log in or create an account.', 3000);
+
+              }
+            })
+    .fail((err) => {
+      Materialize.toast('Unable to log out. Please try again.', 3000);
+      Materialize.toast(err);
+    })
+          // return knex('tweets')
+          //     .insert(message)
+            //   .then(() => {
+            //   })  
+            // .catch((err) => {
+          //     console.error(err);
+            // });
+        });
+
+        $('#tweet-box').fadeIn();
+        $('#exit-tweet-box').fadeIn();
+      })
+      .fail(() => {
+        console.log('Unable to retrieve tweets');
+      });
     return false;
   });
 

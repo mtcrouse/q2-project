@@ -18,6 +18,7 @@ const authorize = function(req, res, next) {
       res.verify = false;
     } else {
       res.verify = true;
+      return res;
     }
 
     next();
@@ -30,8 +31,9 @@ router.delete('/token', (req, res, next) => {
   res.status(200);
   res.send('true');
 });
+
 router.get('/token', authorize, (req, res, next) => {
-  res.send(res.verify);
+  return res.send(res.verify);
 });
 
 router.post('/token', /*ev(validations.post),*/ (req, res, next) => {
