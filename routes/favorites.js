@@ -56,7 +56,7 @@ router.post('/favorites', authorize, /*ev(validations.post),*/ (req, res, next) 
             console.log(`No row. Row is ${row}.`)
             const newFavorite = { searchId: searchId, tweet: tweet };
             console.log(`newFavorite is ${newFavorite}`);
-            knex('favorites') 
+            knex('favorites')
             .insert(decamelizeKeys(newFavorite), '*')
             .then((row) => {
               console.log(camelizeKeys(row));

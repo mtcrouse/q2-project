@@ -120,13 +120,14 @@ $(document).ready(() => {
               .attr('display', 'inline')
               .fadeIn(1000);
 
-            $.getJSON('/favorites/ucheck')
-            .done((favorites) => {
-              for (let favorite in favorites) {
-                let $div = $(`<div class='sidebox-tweet row'></div>`);
-                let $div2 = $(`<div class='tweet-div col l10'></div>`);
-                $div2.append(`<p>${favorite.tweet}</p>`);
-              }
+            $.getJSON('/users/id')
+            .done((idNumber) => {
+
+              $getJSON(`/favorites_users/ucheck/${idNumber}`)
+                .done((favorites) => {
+                  $getJSON(`/favorites/`)
+                })
+
             })
             .fail((err) => {
               Materialize.toast('Unable to retrieve favorites.', 3000);
@@ -193,7 +194,7 @@ $(document).ready(() => {
 
           $.ajax(options)
             .done(() => {
-              Materialize.toast('Search added', 3000);
+              console.log('Search added', 3000);
               // Create row in searches_users >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Create searches_users row
               const options2 = {
                 contentType: 'application/json',
@@ -203,10 +204,10 @@ $(document).ready(() => {
 
               $.ajax(options2)
                 .done(() => {
-                  Materialize.toast('Searches_users added', 3000)
+                  console.log('Searches_users added', 3000)
                 })
                 .fail(($xhr) => {
-                  Materialize.toast($xhr.responseText, 3000);
+                  console.log($xhr.responseText, 3000);
                 });
             })
             .fail(($xhr) => {
@@ -263,10 +264,10 @@ $(document).ready(() => {
 
                     $.ajax(options2)
                       .done(() => {
-                        Materialize.toast('Favorite_User added.', 3000);
+                        console.log('Favorite_User added.', 3000);
                       })
                       .fail(($xhr) => {
-                        Materialize.toast($xhr.responseText, 3000);
+                        console.log($xhr.responseText, 3000);
                       });
                   })
                   .fail(($xhr) => {
@@ -406,11 +407,11 @@ $(document).ready(() => {
             Materialize.toast(`Thanks for signing up, ${username}. You're now logged in. You can now add tweets to your favorites.`, 6000);
           })
           .fail(($xhr) => {
-            Materialize.toast($xhr.responseText, 3000);
+            console.log($xhr.responseText, 3000);
           });
       })
       .fail(($xhr) => {
-        Materialize.toast($xhr.responseText, 3000);
+        console.log($xhr.responseText, 3000);
       });
   });
 });
