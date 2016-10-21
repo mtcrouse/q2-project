@@ -27,14 +27,13 @@ const authorize = function(req, res, next) {
   });
 };
 
-// I need to add count
 router.post('/favorites', authorize, /*ev(validations.post),*/ (req, res, next) => {
-	// const { userId } = req.token;
 	let { searchId } = req.body;
 	const { tweet } = req.body;
 
-  console.log(`SearchID is ${searchId}`);
-  console.log(`Tweet is ${tweet}`);
+  // console.log(`SearchID is ${searchId}`);
+  // console.log(`Tweet is ${tweet}`);
+
 	// ev(validations)
 	// if ( !searchId || !searchId.trim()) {
 	// 	return next(boom.create(400, 'no searchId'))
@@ -46,20 +45,17 @@ router.post('/favorites', authorize, /*ev(validations.post),*/ (req, res, next) 
     .first()
     .then((row) => {
       searchId = (row.id);
-      console.log(`row.id is ${row.id}`);
-
       return knex('favorites')
         .where('search_id', searchId)
         .first()
         .then((row) => {
           if (!row || row === [] ) {
-            console.log(`No row. Row is ${row}.`)
             const newFavorite = { searchId: searchId, tweet: tweet };
-            console.log(`newFavorite is ${newFavorite}`);
             knex('favorites')
-            .insert(decamelizeKeys(newFavorite), '*')
+            .insert(decamelizeKeys(newFavorite))
             .then((row) => {
-              console.log(camelizeKeys(row));
+              res.send(row);
+              // console.log(camelizeKeys(row));
             })
             .catch((err) => {
               next(err);
@@ -71,17 +67,10 @@ router.post('/favorites', authorize, /*ev(validations.post),*/ (req, res, next) 
               .where('search_id', searchId)
               .first()
               .update({
-                'count': knex.raw('count + 1')}, '*')
+                'count': knex.raw('count + 1')})
               .then((row) => {
-                // const incrementedRow = row;
-                // console.log(incrementedRow);
-                // row.count++;
-                // return knex('favorites')
-                //   .update(decamelizeKeys(incrementedRow), `*`)
-                //   .where('search_id', searchId)
-                //   .then((search) => {
-                console.log(camelizeKeys(row));
-                  // });
+                res.send(row);
+                // console.log(camelizeKeys(row));
               })
               .catch((err) => {
                 next(err);
@@ -98,7 +87,7 @@ router.post('/favorites', authorize, /*ev(validations.post),*/ (req, res, next) 
 // Returns all favorites.
 router.get('/favorites', (req, res, next) => {
 	if (req.body.length > 0) {
-		return next(boom.create(400, `Bad query. Set :id in url.`));
+		return next(boom.creat(400, `Bad query. Set :id in url.`));
 	}
 
 	knex('favorites')

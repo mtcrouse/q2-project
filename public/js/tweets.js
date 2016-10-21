@@ -239,7 +239,7 @@ $(document).ready(() => {
             .done((loggedin) => {
               if (loggedin) {
                 $(event.target).text('star');
-                console.log(`$($(event.target).parent().prev().children()[0]).text() is ${$($(event.target).parent().prev().children()[0]).text()}`);
+                // console.log(`$($(event.target).parent().prev().children()[0]).text() is ${$($(event.target).parent().prev().children()[0]).text()}`);
 
                 //Create row in favorites >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Create row in favorites
                 const newFavorite = {tweet: $($(event.target).parent().prev().children()[0]).text(), searchId: searchTerm};
@@ -258,6 +258,8 @@ $(document).ready(() => {
                     // Create row in favorites_users >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Create row in favorites_users
                     const options2 = {
                       contentType: 'application/json',
+                      data: JSON.stringify(newFavorite),
+                      dataType: 'json',
                       type: 'POST',
                       url: '/favorites_users'
                     }
@@ -270,9 +272,6 @@ $(document).ready(() => {
                         console.log($xhr.responseText, 3000);
                       });
                   })
-                  .fail(($xhr) => {
-                    console.log($xhr.responseText, 3000);
-                  });
               }
 
               else {

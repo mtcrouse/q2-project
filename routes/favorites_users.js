@@ -27,8 +27,10 @@ const authorize = function(req, res, next) {
   });
 };
 
-router.post('/favorites_users/', authorize, /*ev(validations.post),*/ (req, res, next) => {
+router.post('/favorites_users', authorize, /*ev(validations.post),*/ (req, res, next) => {
 	const { userId } = req.token; 
+	const { tweet } = req.body;
+	console.log( tweet);
 
 	// ev(validations)
 	// if (!favoriteId || !favoriteId.trim() || Number(favoriteId) !== Number.parseInt(Number(favoriteId))) {
@@ -36,16 +38,18 @@ router.post('/favorites_users/', authorize, /*ev(validations.post),*/ (req, res,
 	// }
 
 	knex('favorites')
-		.max('id')
+		.where('tweet', tweet)
 		.first()
 		.then((row) => {
-			const favoriteId = Number(row.max);
-				const newEntry = { userId: userId, favoriteId: favoriteId };
-
+			console.log(row)
+			const favoriteId = Number(row.id);
+			console.log(favoriteId);
+			const newEntry = { userId: userId, favoriteId: favoriteId };
+			console.log(newEntry);
 				knex('favorites_users')
-					.insert (decamelizeKeys(newEntry), '*')
-					.then((rows) => {
-						res.send(decamelizeKeys(newEntry))
+					.insert(decamelizeKeys(newEntry), '*')
+					.then((row) => {
+						res.send(row);
 					})
 					.catch((err) => {
 						next(err);
