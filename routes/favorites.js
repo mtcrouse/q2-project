@@ -133,7 +133,7 @@ router.get('/favorites/ucheck', authorize, /*ev(validations.ucheck),*/ (req, res
 
 // Returns all instances of favorite with favoriteId n
 router.get('/favorites/fcheck', ev(validations.fcheck), (req, res, next) => {
-	const favoriteId = Number(req.query.favoriteId);
+	const { favoriteId } = req.body;
 
 	// if (isNaN(favoriteId)) {
 	// 	return next(boom.create(400, `favoriteId (currently ${favoriteId}) must be an integer`))
@@ -203,10 +203,10 @@ router.patch('/favorites/:id', authorize, /*ev(validations.patch),*/ (req, res, 
 		});
 });
 
-router.delete('/favorites/:id', authorize, (req, res, next) => {
+router.delete('/favorites/:favoriteId', authorize, (req, res, next) => {
 	let favorite;
   const { userId } = req.token;
-  const { favoriteId } = req.body
+  const { favoriteId } = req.body;
 
 	if(typeof favoriteId !== 'number') {
 		return next(boom.create(400, `favorite ${favoriteId} invalid, must be integer`))

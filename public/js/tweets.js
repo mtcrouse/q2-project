@@ -400,3 +400,20 @@ $(document).ready(() => {
       });
   });
 });
+
+// Get all favorites
+//
+// const options = {
+//   contentType: 'application/json',
+//   dataType: 'json',
+//   type: 'GET',
+//   url: '/favorites'
+// }
+
+// $.ajax(options)
+//   .done((favorites) => {
+//     consoe.log(favorites);
+//   })
+//   .fail(($xhr) => {
+//     Materialize.toast($xhr.responseText, 3000);
+//   });
