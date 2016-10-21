@@ -317,6 +317,7 @@ $(document).ready(() => {
     $.ajax(options)
       .done(() => {
         $('#signin-menu').hide();
+        $('.add-favorite-disabler').removeClass('disabled');
         Materialize.toast('Thanks for logging in. You can now favorite tweets.', 7000);
       })
       .fail(($xhr) => {
@@ -337,6 +338,7 @@ $(document).ready(() => {
     $.ajax(options)
       .done(() => {
         $('#profile-menu').hide();
+        $('.add-favorite-disabler').addClass('disabled');
       })
       .fail(() => {
         Materialize.toast('Unable to log out. Please try again.', 3000);
