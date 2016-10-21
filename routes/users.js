@@ -28,7 +28,7 @@ const router = express.Router();
 //   });
 // };
 
-router.post('/users', ev(validations.post), (req, res, next) => {
+router.post('/users', /*ev(validations.post),*/ (req, res, next) => {
   const { username, email, password } = req.body;
 
   // if (!username || !username.trim()) {

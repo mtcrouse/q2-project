@@ -10,7 +10,7 @@ html, body {
   background-color: aliceblue;
   color: black;
   z-index: 1;
-  opacity: 0.85;
+  opacity: 0.95;
   display: none;
 }
 
@@ -50,12 +50,20 @@ html, body {
   top: 25%;
 }
 
-#profile-box {
-  height: 250px;
-  width: 300px;
+#signin-menu, #profile-menu {
   right: 37.5%;
   top: 25%;
-  opacity: 0.85;
+}
+
+#signin-menu, #profile-menu {
+  position: absolute;
+  background-color: aliceblue;
+  color: black;
+  z-index: 1;
+  opacity: 0.95;
+  display: none;
+  width: 50%;
+  height: 60%;
 }
 
 #search-icon {
@@ -142,7 +150,7 @@ html, body {
 }
 
 @media (max-height: 400px) {
-  #search-directions {
+  #search-directions, #profile-directions, #signin-directions {
     display: none;
   }
 

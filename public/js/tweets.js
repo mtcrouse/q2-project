@@ -1,11 +1,14 @@
 $(document).ready(() => {
   'use strict';
 
-  $('.float-box').delay(4000).fadeIn(1000);
-  $('#title-box').delay(3000).fadeOut(1000);
+  $('.float-box').delay(1000).fadeIn(1000);
+  $('#title-box').delay(1000).fadeOut(1000);
 
   $('#map').click(() => {
     $('#search-menu').hide();
+    $('#signin-menu').hide();
+    $('#profile-menu').hide();
+    $('.token-toggle').hide();
   });
 
   var testData = {
@@ -101,7 +104,30 @@ $(document).ready(() => {
 
   $('#search-icon').click(() => {
     $('#search-menu').fadeIn();
+    $('.token-toggle').hide();
   });
+
+$('#user-box').click(() => {
+    $('#search-menu').hide();
+    $.getJSON(`/token`)
+      .done((loggedin) => {
+        if (loggedin) {
+          $('#profile-menu')
+            .attr('display', 'inline')
+            .fadeIn(1000)
+          }
+
+        else {
+          $('#signin-menu')
+            .attr('display', 'inline')
+            .fadeIn(1000);
+      }
+    })
+    .fail((err) => {
+      Materialize.toast('Unable to log out. Please try again.', 3000);
+      Materialize.toast(err);
+    })
+});
 
   $('#exit-tweet-box').click(() => {
     $('#tweet-box').fadeOut();
@@ -148,5 +174,116 @@ $(document).ready(() => {
         console.log('Unable to retrieve tweets');
       });
     return false;
+  });
+
+  $('#signin-menu').hide();
+  $('#profile-menu').hide();
+
+  $('#loginForm').submit((event) => {
+    event.preventDefault();
+
+    const email = $('#email').val().trim();
+    const password = $('#password').val();
+
+    if (!email) {
+      return Materialize.toast('Email must not be blank', 3000);
+    }
+
+    if (!password) {
+      return Materialize.toast('Password must not be blank', 3000);
+    }
+
+    const options = {
+      contentType: 'application/json',
+      data: JSON.stringify({ email, password }),
+      dataType: 'json',
+      type: 'POST',
+      url: '/token'
+    };
+
+    $.ajax(options)
+      .done(() => {
+        $('#signin-menu').hide();
+      })
+      .fail(($xhr) => {
+        Materialize.toast($xhr.responseText, 3000);
+      });
+  });
+
+
+  $('#logout').submit((event) => {
+    event.preventDefault();
+
+    const options = {
+      dataType: 'json',
+      type: 'DELETE',
+      url: '/token'
+    };
+
+    $.ajax(options)
+      .done(() => {
+        $('#profile-menu').hide();
+      })
+      .fail(() => {
+        Materialize.toast('Unable to log out. Please try again.', 3000);
+      });
+  });
+
+    $('#signUpForm').submit((event) => {
+    event.preventDefault();
+
+    const username = $('#username').val().trim();
+    const email = $('#email-signup').val().trim();
+    const password = $('#password-signup').val();
+
+    if (!username) {
+      return Materialize.toast('Username name must not be blank', 3000);
+    }
+
+    if (!email) {
+      return Materialize.toast('Email must not be blank', 3000);
+    }
+
+    if (email.indexOf('@') < 0) {
+      return Materialize.toast('Email must be valid', 3000);
+    }
+
+    if (!password || password.length < 8) {
+      return Materialize.toast(
+        'Password must be at least 8 characters long',
+        3000
+      );
+    }
+
+    const options = {
+      contentType: 'application/json',
+      data: JSON.stringify({ username, email, password }),
+      dataType: 'json',
+      type: 'POST',
+      url: '/users'
+    };
+
+    $.ajax(options)
+      .done(() => {
+        $('#signin-menu').hide();
+        
+        const options2 = {
+          contentType: 'application/json',
+          data: JSON.stringify({ email, password }),
+          dataType: 'json',
+          type: 'POST',
+          url: '/token'
+        };
+
+        $.ajax(options2)
+          .done(() => {
+          })
+          .fail(($xhr) => {
+            Materialize.toast($xhr.responseText, 3000);
+          });
+      })
+      .fail(($xhr) => {
+        Materialize.toast($xhr.responseText, 3000);
+      });
   });
 });

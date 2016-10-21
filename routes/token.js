@@ -24,14 +24,14 @@ const authorize = function(req, res, next) {
   });
 };
 
-router.get('/token', authorize, (req, res, next) => {
-  res.send(res.verify);
-});
 
 router.delete('/token', (req, res, next) => {
   res.clearCookie('token');
   res.status(200);
   res.send('true');
+});
+router.get('/token', authorize, (req, res, next) => {
+  res.send(res.verify);
 });
 
 router.post('/token', /*ev(validations.post),*/ (req, res, next) => {
