@@ -5,10 +5,10 @@ exports.up = function(knex) {
     table.increments();
     table.text('tweet')
     	.defaultTo('');
-    table.text('location')
-    	.defaultTo('');
     table.text('best_guess')
     	.defaultTo('');
+    table.text('location')
+      .defaultTo('');
     table.float('lat');
     table.float('lng');
     table.timestamps(true, true);
