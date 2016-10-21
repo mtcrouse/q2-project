@@ -119,6 +119,19 @@ $(document).ready(() => {
             $('#profile-menu')
               .attr('display', 'inline')
               .fadeIn(1000);
+
+            $.getJSON('/favorites/ucheck')
+            .done((favorites) => {
+              for (let favorite in favorites) {
+                let $div = $(`<div class='sidebox-tweet row'></div>`);
+                let $div2 = $(`<div class='tweet-div col l10'></div>`);
+                $div2.append(`<p>${favorite.tweet}</p>`);
+              }
+            })
+            .fail((err) => {
+              Materialize.toast('Unable to retrieve favorites.', 3000);
+              console.log(err);
+            });
           }
 
           else {
@@ -180,7 +193,7 @@ $(document).ready(() => {
 
           $.ajax(options)
             .done(() => {
-              console.log('Search added', 3000);
+              Materialize.toast('Search added', 3000);
               // Create row in searches_users >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Create searches_users row
               const options2 = {
                 contentType: 'application/json',
@@ -190,10 +203,10 @@ $(document).ready(() => {
 
               $.ajax(options2)
                 .done(() => {
-                  console.log('Searches_users added', 3000)
+                  Materialize.toast('Searches_users added', 3000)
                 })
                 .fail(($xhr) => {
-                  console.log($xhr.responseText, 3000);
+                  Materialize.toast($xhr.responseText, 3000);
                 });
             })
             .fail(($xhr) => {
@@ -242,7 +255,7 @@ $(document).ready(() => {
                     Materialize.toast('Favorite added.', 3000);
 
                     // Create row in favorites_users >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Create row in favorites_users
-                    const options2 = {
+                    const options = {
                       contentType: 'application/json',
                       data: JSON.stringify(newFavorite),
                       dataType: 'json',
@@ -252,10 +265,10 @@ $(document).ready(() => {
 
                     $.ajax(options2)
                       .done(() => {
-                        console.log('Favorite_User added.', 3000);
+                        Materialize.toast('Favorite_User added.', 3000);
                       })
                       .fail(($xhr) => {
-                        console.log($xhr.responseText, 3000);
+                        Materialize.toast($xhr.responseText, 3000);
                       });
                   })
               }
@@ -392,30 +405,11 @@ $(document).ready(() => {
             Materialize.toast(`Thanks for signing up, ${username}. You're now logged in. You can now add tweets to your favorites.`, 6000);
           })
           .fail(($xhr) => {
-            console.log($xhr.responseText, 3000);
+            Materialize.toast($xhr.responseText, 3000);
           });
       })
       .fail(($xhr) => {
-        console.log($xhr.responseText, 3000);
+        Materialize.toast($xhr.responseText, 3000);
       });
   });
 });
-
-// Get all favorites
-//
-// const options = {
-//   contentType: 'application/json',
-//   dataType: 'json',
-//   type: 'GET',
-//   url: '/favorites'
-// }
-
-// $.ajax(options)
-//   .done((favorites) => {
-//     consoe.log(favorites);
-//   })
-//   .fail(($xhr) => {
-//     Materialize.toast($xhr.responseText, 3000);
-//   });
-
-// Returns all instances of a favorite with userId n --- seems broken and stupid

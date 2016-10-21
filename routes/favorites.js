@@ -51,10 +51,10 @@ router.post('/favorites', authorize, /*ev(validations.post),*/ (req, res, next) 
         .then((row) => {
           if (!row || row === [] ) {
             const newFavorite = { searchId: searchId, tweet: tweet };
-            knex('favorites')
+            knex('favorites') 
             .insert(decamelizeKeys(newFavorite))
             .then((row) => {
-              res.send(row);
+              // res.send(row);
               // console.log(camelizeKeys(row));
             })
             .catch((err) => {
@@ -69,7 +69,7 @@ router.post('/favorites', authorize, /*ev(validations.post),*/ (req, res, next) 
               .update({
                 'count': knex.raw('count + 1')})
               .then((row) => {
-                res.send(row);
+                // res.send(row);
                 // console.log(camelizeKeys(row));
               })
               .catch((err) => {
@@ -102,41 +102,38 @@ router.get('/favorites', (req, res, next) => {
 		});
 });
 
-// FUCKED 
-//
-//Returns all instances of a favorite with userId n
-// 
-// router.get('/favorites/ucheck', authorize, /*ev(validations.ucheck),*/ (req, res, next) => {
-// 	const { userId } = req.token;
-// 	const { favoriteId } = req.body;
+// Returns all instances of a favorite with userId n
+router.get('/favorites/ucheck', authorize, /*ev(validations.ucheck),*/ (req, res, next) => {
+	const { userId } = req.token;
+	const { favoriteId } = req.body;
 
-// 	// ev(validations)
-// 	// if (isNaN(favoriteId)) {
-// 	// 	return next(boom.create(400, `favoriteId (currently ${favoriteId}) must be an integer`))
-// 	// }
+	// ev(validations)
+	// if (isNaN(favoriteId)) {
+	// 	return next(boom.create(400, `favoriteId (currently ${favoriteId}) must be an integer`))
+	// }
 
-// 	knex('users')
-// 		.where('users.id', userId)
-// 		.innerJoin('favorites_users', 'users.id', 'favorites_users.user_id')
-// 		.innerJoin('favorites', 'favorites.id', 'favorites_users.favorite_id')
-// 		.innerJoin('searches', 'favorites.search_id', 'searches.id')
-// 		.then((rows) => {
-// 			if (!rows || rows === []) {
-// 				res.status(200);
-// 				res.send(`Favorite at id ${favoriteId} does not exist`)
-// 			} else {
-// 				res.status(200);
-// 				res.send(rows);
-// 			}
-// 		})
-// 		.catch((err) => {
-// 			next(err);
-// 		});
-// });
+	knex('users')
+		.where('users.id', userId)
+		.innerJoin('favorites_users', 'users.id', 'favorites_users.user_id')
+		.innerJoin('favorites', 'favorites.id', 'favorites_users.favorite_id')
+		.innerJoin('searches', 'favorites.search_id', 'searches.id')
+		.then((rows) => {
+			if (!rows || rows === []) {
+				res.status(200);
+				res.send(`Favorite at id ${favoriteId} does not exist`)
+			} else {
+				res.status(200);
+				res.send(rows);
+			}
+		})
+		.catch((err) => {
+			next(err);
+		});
+});
 
 // Returns all instances of favorite with favoriteId n
 router.get('/favorites/fcheck', ev(validations.fcheck), (req, res, next) => {
-	const { favoriteId } = req.body;
+	const favoriteId = Number(req.query.favoriteId);
 
 	// if (isNaN(favoriteId)) {
 	// 	return next(boom.create(400, `favoriteId (currently ${favoriteId}) must be an integer`))
@@ -177,14 +174,14 @@ router.patch('/favorites/:id', authorize, /*ev(validations.patch),*/ (req, res, 
 			console.log()
 			if (!favorite) {
 				return next(boom.create(400, `Favorite ${favoriteId} not found for userId ${userId}`));
-			}
+			} 
 
 			return knex('favorites')
 				.where('id', favoriteId)
 				.first()
 				.then((row) => {
 					const updateFavorite = {};
-
+					
 					if (searchId) {
 						updateFavorite.searchId = searchId;
 					}
@@ -196,20 +193,20 @@ router.patch('/favorites/:id', authorize, /*ev(validations.patch),*/ (req, res, 
 					return knex('favorites')
 					.update(decamelizeKeys(updateFavorite), '*')
 					.where('id', favoriteId);
-				})
+				})					
 				.then((row) => {
 					res.send(camelizeKeys(row/*[0]*/));
 				})
 		})
 		.catch((err) => {
-			next(err);
+			next(err);			
 		});
 });
 
-router.delete('/favorites/:favoriteId', authorize, (req, res, next) => {
+router.delete('/favorites/:id', authorize, (req, res, next) => {
 	let favorite;
   const { userId } = req.token;
-  const { favoriteId } = req.body;
+  const { favoriteId } = req.body
 
 	if(typeof favoriteId !== 'number') {
 		return next(boom.create(400, `favorite ${favoriteId} invalid, must be integer`))

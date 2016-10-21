@@ -47,7 +47,7 @@ router.post('/favorites_users', authorize, /*ev(validations.post),*/ (req, res, 
 			const newEntry = { userId: userId, favoriteId: favoriteId };
 			console.log(newEntry);
 				knex('favorites_users')
-					.insert(decamelizeKeys(newEntry), '*')
+					.insert(decamelizeKeys(newEntry))
 					.then((row) => {
 						res.send(row);
 					})
@@ -63,8 +63,8 @@ router.post('/favorites_users', authorize, /*ev(validations.post),*/ (req, res, 
 });
 
 // Get particular user's favorites
-router.get('/favorites_users/ucheck/', /*authorize,*/ (req, res, next) => {
-	const { userId } = req.body;
+router.get('/favorites_users/ucheck/:id', /*authorize,*/ (req, res, next) => {
+	const userId = req.params.id;
 
 	// console.log("UserId is");
 	// console.log(userId);
