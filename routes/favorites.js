@@ -29,8 +29,9 @@ const authorize = function(req, res, next) {
 
 // I need to add count
 router.post('/favorites', authorize, ev(validations.post), (req, res, next) => {
-	const { userId } = req.token;
+	// const { userId } = req.token;
 	const { searchId } = req.body;
+	const { tweet } = req.body;
 	const count = 1;
 
 	// ev(validations)
@@ -48,7 +49,8 @@ router.post('/favorites', authorize, ev(validations.post), (req, res, next) => {
 
 			return knex('favorites')
 				.insert({
-					search_id: searchId
+					search_id: searchId,
+					tweet: tweet
 					}, '*');
 		})
 		.then((row) => {

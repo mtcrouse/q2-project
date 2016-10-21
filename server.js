@@ -82,67 +82,66 @@ const knexFn = function(message) {
     });
 };
 
-io.on('connection', function(socket) {
-  console.log('a user connected');
-  let stream = client.stream('statuses/sample');
-  stream.on('data', function(event) {
-    count += 1;
-    console.log(`streaming tweet #${count}`);
-    if (event.text) {
-      let maxScore = 0;
-      let maxScorePopulation = 0;
-      let bestGuess;
-      let latitude;
-      let longitude;
+// io.on('connection', function(socket) {
+//   console.log('a user connected');
+//   let stream = client.stream('statuses/sample');
+//   stream.on('data', function(event) {
+//     count += 1;
+//     console.log(`streaming tweet #${count}`);
+//     if (event.text) {
+//       let maxScore = 0;
+//       let maxScorePopulation = 0;
+//       let bestGuess;
+//       let latitude;
+//       let longitude;
 
-      if (event.user.location === '' || event.user.location === null) {
-        bestGuess = null;
-        maxScore = null;
-        latitude = null;
-        longitude = null;
-      } else {
-        for (let row of cities) {
-          row = row.split('\t');
-          let currentScore = natural.JaroWinklerDistance(event.user.location.split(',')[0].trim(), row[1]);
-          let currentScorePopulation = row[14];
-          if (currentScore > maxScore || ((currentScore === maxScore) && (currentScorePopulation > maxScorePopulation))) {
-            maxScore = currentScore;
-            bestGuess = row[1];
-            latitude = row[4];
-            longitude = row[5];
-          }
-        }
-      }
+//       if (event.user.location === '' || event.user.location === null) {
+//         bestGuess = null;
+//         maxScore = null;
+//         latitude = null;
+//         longitude = null;
+//       } else {
+//         for (let row of cities) {
+//           row = row.split('\t');
+//           let currentScore = natural.JaroWinklerDistance(event.user.location.split(',')[0].trim(), row[1]);
+//           let currentScorePopulation = row[14];
+//           if (currentScore > maxScore || ((currentScore === maxScore) && (currentScorePopulation > maxScorePopulation))) {
+//             maxScore = currentScore;
+//             bestGuess = row[1];
+//             latitude = row[4];
+//             longitude = row[5];
+//           }
+//         }
+//       }
 
-      io.emit('tweety', [event.text, event.user.location, bestGuess, maxScore, latitude, longitude]);
+//       io.emit('tweety', [event.text, event.user.location, bestGuess, maxScore, latitude, longitude]);
 
-      // if (event.text && event.user.location && bestGuess && maxScore && latitude && longitude) {
-        const line = {
-        tweet: event.text,
-        location: event.user.location,
-        best_guess: bestGuess,
-        lat: latitude,
-        lng: longitude 
-      }
-      
-            knexFn(line);}
-      
-    // }
-  });
+//       // if (event.text && event.user.location && bestGuess && maxScore && latitude && longitude) {
+//         const line = {
+//         tweet: event.text,
+//         location: event.user.location,
+//         best_guess: bestGuess,
+//         lat: latitude,
+//         lng: longitude
+//       }
 
-  stream.on('error', function(error) {
-    console.log(error);
-    console.log(error.stack);
-  });
+//             knexFn(line);}
 
-  // socket.on('disconnect', function(){
-  //   console.log('user disconnected');
-  // });
-  //
-  // socket.on('error', function(){
-  //   console.log('a socket.io error occurred!!!!');
-  // });
-});
+//     // }
+//   });
+
+//   stream.on('error', function(error) {
+//     console.log(error);
+//   });
+
+//   // socket.on('disconnect', function(){
+//   //   console.log('user disconnected');
+//   // });
+//   //
+//   // socket.on('error', function(){
+//   //   console.log('a socket.io error occurred!!!!');
+//   // });
+// });
 
 // eslint-disable-next-line max-params
 app.use((err, _req, res, _next) => {
