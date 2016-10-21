@@ -122,11 +122,11 @@ const knexFn = function(message) {
 //         location: event.user.location,
 //         best_guess: bestGuess,
 //         lat: latitude,
-//         lng: longitude 
+//         lng: longitude
 //       }
-      
+
 //             knexFn(line);}
-      
+
 //     // }
 //   });
 

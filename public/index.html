@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Tweets</title>
+    <title>Twitter Fever</title>
 
     <link rel="shortcut icon" type="img/x-icon" href="images/favicon.ico">
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
@@ -15,10 +15,14 @@
       <i class="small material-icons z-depth-0">clear</i>
     </div>
 
+    <div id="return-tweet-box" class="z-depth-3 float-box center-align">
+      <img id="twitter-icon" src="images/twitter.png">
+    </div>
+
     <div id="tweet-box" class="z-depth-3">
       <div class="container">
         <div id="tweet-box-content">
-
+          <p>Search for something to view tweets here!</p>
         </div>
       </div>
     </div>
@@ -75,18 +79,16 @@
                 <div class="row">
                   <div class="input-field col l12">
                     <input placeholder="Email" id="email" type="text" class="validate">
-                    <label for="email">Email</label>
                   </div>
                 </div>
 
                 <div class="row ">
                   <div class="input-field col l12">
                     <input placeholder="Password" id="password" type="password" class="validate">
-                    <label for="password">Password</label>
                   </div>
                 </div>
 
-                <button class="waves-effect waves-light btn-large" type="submit" name="action">
+                <button class="waves-effect waves-light btn blue" type="submit" name="action">
                   <i class="material-icons left">lock</i>
                   Log in
                 </button>
@@ -98,25 +100,22 @@
                 <div class="row">
                   <div class="input-field col l12">
                     <input placeholder="Username" id="username" type="text" class="validate">
-                    <label for="username">Username</label>
                   </div>
                 </div>
 
                 <div class="row">
                   <div class="input-field col l12">
                     <input placeholder="Email" id="email-signup" type="text" class="validate">
-                    <label for="email-signup">Email</label>
                   </div>
                 </div>
 
                 <div class="row">
                   <div class="input-field col l12">
                     <input placeholder="Password" id="password-signup" type="password" class="validate">
-                    <label for="password-signup">Password</label>
                   </div>
                 </div>
 
-                <button class="waves-effect waves-light btn-large" type="submit" name="action">
+                <button class="waves-effect waves-light btn blue" type="submit" name="action">
                   <i class="material-icons left">perm_identity</i>
                   Sign up
                 </button>
@@ -133,7 +132,7 @@
         <p id="profile-directions">
           Profile will display here.
           <form id="logout">
-            <button class="waves-effect waves-light btn-large" type="submit" name="action">
+            <button class="waves-effect waves-light btn blue" type="submit" name="action">
             <i class="material-icons left">perm_identity</i>
             Log out
             </button>
