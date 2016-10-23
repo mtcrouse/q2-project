@@ -406,7 +406,6 @@ $(document).ready(() => {
       });
   });
 
-
   // Display user's favorites
   const getUserFavorites = function () {
     $('.favoritesBox').remove();
@@ -470,5 +469,4 @@ $(document).ready(() => {
         console.log('Failure');
       });
   };
-
 });
