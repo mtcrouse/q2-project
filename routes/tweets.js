@@ -22,11 +22,11 @@ var client = new Twitter({
 router.get('/tweets/:searchid', (req, res, next) => {
   const searchid = req.params.searchid;
 
-    client.get('search/tweets', {q: searchid}, function(error, tweets, response) {
-      if (error) throw error;
+  client.get('search/tweets', {q: searchid}, function(error, tweets, response) {
+    if (error) throw error;
 
-      res.send(tweets);
-    });
+    res.send(tweets);
+  });
 });
 
 module.exports = router;

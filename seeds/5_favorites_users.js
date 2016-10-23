@@ -5,8 +5,7 @@
 exports.seed = function(knex) {
   return knex('favorites_users').del()
     .then(() => {
-      return knex('favorites_users').insert([
-        ]);
+      return knex('favorites_users').insert([]);
     })
     .then(() => {
       return knex.raw(

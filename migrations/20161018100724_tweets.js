@@ -4,9 +4,9 @@ exports.up = function(knex) {
   return knex.schema.createTable('tweets', (table) => {
     table.increments();
     table.text('tweet')
-    	.defaultTo('');
+      .defaultTo('');
     table.text('best_guess')
-    	.defaultTo('');
+      .defaultTo('');
     table.text('location')
       .defaultTo('');
     table.float('lat');

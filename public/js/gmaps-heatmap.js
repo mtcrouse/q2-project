@@ -5,7 +5,7 @@
 * Dual-licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
 * and the Beerware (http://en.wikipedia.org/wiki/Beerware) license.
 */
-;(function (name, context, factory) {
+(function (name, context, factory) {
   // Supports UMD. AMD, CommonJS/Node.js and browser context
   if (typeof module !== "undefined" && module.exports) {
     module.exports = factory(
@@ -250,27 +250,29 @@
   // experimential. not ready yet.
   HeatmapOverlay.prototype.addData = function(pointOrArray) {
     if (pointOrArray.length > 0) {
-        var len = pointOrArray.length;
-        while(len--) {
-          this.addData(pointOrArray[len]);
-        }
-      } else {
-        var latField = this.cfg.latField || 'lat';
-        var lngField = this.cfg.lngField || 'lng';
-        var valueField = this.cfg.valueField || 'value';
-        var entry = pointOrArray;
-        var latlng = new gmaps.LatLng(entry[latField], entry[lngField]);
-        var dataObj = { latlng: latlng };
-
-        dataObj[valueField] = entry[valueField];
-        if (entry.radius) {
-          dataObj.radius = entry.radius;
-        }
-        this.max = Math.max(this.max, dataObj[valueField]);
-        this.min = Math.min(this.min, dataObj[valueField]);
-        this.data.push(dataObj);
-        this.update();
+      var len = pointOrArray.length;
+      while(len--) {
+        this.addData(pointOrArray[len]);
       }
+    } else {
+      var latField = this.cfg.latField || 'lat';
+      var lngField = this.cfg.lngField || 'lng';
+      var valueField = this.cfg.valueField || 'value';
+      var entry = pointOrArray;
+      var latlng = new gmaps.LatLng(entry[latField], entry[lngField]);
+      var dataObj = { latlng: latlng };
+
+      dataObj[valueField] = entry[valueField];
+
+      if (entry.radius) {
+      dataObj.radius = entry.radius;
+      }
+
+      this.max = Math.max(this.max, dataObj[valueField]);
+      this.min = Math.min(this.min, dataObj[valueField]);
+      this.data.push(dataObj);
+      this.update();
+    }
   };
 
   return HeatmapOverlay;

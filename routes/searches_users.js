@@ -38,42 +38,36 @@ router.post('/searches_users', authorize, (req, res, next) => {
   knex('searches').max('id').first()
     .then((row) => {
       const searchId = Number(row.max);
-        const newEntry = { userId: userId, searchId: searchId };
+      const newEntry = { userId: userId, searchId: searchId };
 
-        knex('searches_users')
-          .insert (decamelizeKeys(newEntry), '*')
-          .then((rows) => {
-            res.send(decamelizeKeys(newEntry))
-          })
-          .catch((err) => {
-            next(err);
-          });
+      knex('searches_users')
+        .insert (decamelizeKeys(newEntry), '*')
+        .then((rows) => {
+          res.send(decamelizeKeys(newEntry));
+        })
+        .catch((err) => {
+          next(err);
+        });
     })
     .catch((err) => {
-      next(err)
-    })
-
-
+      next(err);
+    });
 });
 
 router.get('/searches_users', /*authorize,*/ (req, res, next) => {
-  
-})
-
-router.get('/searches_users/:id', /*authorize,*/ (req, res, next) => {
-
-})
+  return next(boom.create(400, `No route handler defined.`));
+});
 
 router.post('/searches_users', /*authorize,*/ (req, res, next) => {
-
-})
+  return next(boom.create(400, `No route handler defined.`));
+});
 
 router.patch('/searches_users/:id', /*authorize,*/ (req, res, next) => {
-
-})
+  return next(boom.create(400, `No route handler defined.`));
+});
 
 router.delete('/searches_users/:id', /*authorize,*/ (req, res, next) => {
-
-})
+  return next(boom.create(400, `No route handler defined.`));
+});
 
 module.exports = router;
