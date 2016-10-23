@@ -5,6 +5,11 @@ html, body {
   font-family: sans-serif;
 }
 
+td, tr {
+  padding: 10px 0px;
+  line-height: 16px;
+  margin: 0px;
+}
 .float-box {
   position: absolute;
   background-color: aliceblue;
@@ -33,6 +38,25 @@ html, body {
   opacity: 0.3;
 }
 
+.column-one {
+  width: 10%
+}
+
+.column-two {
+  width: 85%;
+}
+
+.column-three {
+  width: 5%;
+}
+
+.favoritesBox {
+  margin: 10px;
+  height: 250px;
+  overflow: scroll;
+  border: 1px solid #ffcdd2;
+}
+
 #map {
   height: 100%;
   width:100%;
@@ -48,10 +72,10 @@ html, body {
 }
 
 #signin-menu, #profile-menu {
-  right: 25%;
+  right: 15%;
   height: 90%;
   top: 5%;
-  width: 50%;
+  width: 70%;
   min-width: 500px;
   display: none;
   opacity: 0.95;

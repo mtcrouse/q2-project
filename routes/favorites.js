@@ -28,7 +28,7 @@ const authorize = function(req, res, next) {
 };
 
 router.post('/favorites', authorize, /*ev(validations.post),*/ (req, res, next) => {
-	let { searchId } = req.body;
+	let { searchTerm } = req.body;
 	const { tweet } = req.body;
 
   // console.log(`SearchID is ${searchId}`);
@@ -40,44 +40,43 @@ router.post('/favorites', authorize, /*ev(validations.post),*/ (req, res, next) 
 	// }
 
   knex('searches')
-    .select('id')
-    .where('search_term', searchId)
+  	.join('favorites', 'search_id', 'searches.id')
+    .where({'tweet': tweet, 'search_term': searchTerm})
     .first()
     .then((row) => {
-      searchId = (row.id);
-      return knex('favorites')
-        .where('search_id', searchId)
-        .first()
-        .then((row) => {
-          if (!row || row === [] ) {
-            const newFavorite = { searchId: searchId, tweet: tweet };
-            knex('favorites')
-            .insert(decamelizeKeys(newFavorite))
-            .then((row) => {
-              res.send(row);
-              // console.log(camelizeKeys(row));
-            })
-            .catch((err) => {
-              next(err);
-            })
-          }
-
-          else {
-            return knex('favorites')
-              .where('search_id', searchId)
-              .first()
-              .update({
-                'count': knex.raw('count + 1')})
-              .then((row) => {
-                res.send(row);
-                // console.log(camelizeKeys(row));
-              })
-              .catch((err) => {
-                next(err);
-              });
-          }
-        });
-
+      if (!row || row === [] ) {
+      	knex('searches')
+      		.where('search_term', searchTerm)
+      		.orderBy('created_at', 'DESC')
+      		.first()
+      		.then((row) => {
+						console.log(`Row is ${row}`);
+      			knex('favorites')
+      				.insert(decamelizeKeys({searchId: row.id, tweet: tweet}),'*')
+      				.then((row) => {
+      					res.send(camelizeKeys(row));
+			        })
+        	})
+			    .catch((err) => {
+			      next(err);
+	  			});
+    	}
+  
+      else {
+  	    let searchId = (row.id);
+        return knex('favorites')
+          .where('search_id', searchId)
+          .where('tweet', tweet)
+          .first()
+          .update({
+            'count': knex.raw('count + 1')})
+          .then((row) => {
+            res.send(row);
+          })
+          .catch((err) => {
+            next(err);
+          });
+      }
     })
     .catch((err) => {
       next(err);
@@ -102,10 +101,9 @@ router.get('/favorites', (req, res, next) => {
 		});
 });
 
-// Returns all instances of a favorite with userId n
+// Returns all instances of the current user's favorites
 router.get('/favorites/ucheck', authorize, /*ev(validations.ucheck),*/ (req, res, next) => {
 	const { userId } = req.token;
-	const { favoriteId } = req.body;
 
 	// ev(validations)
 	// if (isNaN(favoriteId)) {
@@ -120,7 +118,33 @@ router.get('/favorites/ucheck', authorize, /*ev(validations.ucheck),*/ (req, res
 		.then((rows) => {
 			if (!rows || rows === []) {
 				res.status(200);
-				res.send(`Favorite at id ${favoriteId} does not exist`)
+			} else {
+				res.status(200);
+				res.send(rows);
+			}
+		})
+		.catch((err) => {
+			next(err);
+		});
+});
+
+// Returns all instances of the current user's favorites
+router.get('/favorites/notucheck', authorize, /*ev(validations.ucheck),*/ (req, res, next) => {
+	const { userId } = req.token;
+
+	// ev(validations)
+	// if (isNaN(favoriteId)) {
+	// 	return next(boom.create(400, `favoriteId (currently ${favoriteId}) must be an integer`))
+	// }
+
+	knex('users')
+		.whereNot('users.id', userId)
+		.joinRaw('join favorites_users on users.id=favorites_users.user_id')
+		.joinRaw('join favorites on favorites.id=favorites_users.favorite_id')
+		.joinRaw('join searches on favorites.search_id=searches.id')
+		.then((rows) => {
+			if (!rows || rows === []) {
+				res.status(200);
 			} else {
 				res.status(200);
 				res.send(rows);

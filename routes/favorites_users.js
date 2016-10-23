@@ -84,7 +84,7 @@ router.get('/favorites_users/ucheck/:id', /*authorize,*/ (req, res, next) => {
 		});
 });
 
-// Get particular user's favorites
+// Get users' favorites
 router.get('/favorites_users/mecheck/', authorize, (req, res, next) => {
 	const { userId } = req.token;
 
@@ -137,6 +137,7 @@ router.get('/favorites_users/outercheck/:id', authorize, (req, res, next) => {
 		.whereNot('user_id', userId)
 		.innerJoin('favorites', 'favorites.id', 'favorites_users.favorite_id')
 		.innerJoin('searches', 'searches.id', 'favorites.search_id')
+		.innerJoin('users', 'users.id', 'favorites_users.user_id')
 		.then((rows) => {
 			const favoritesUsers = camelizeKeys(rows);
 

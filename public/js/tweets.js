@@ -2,7 +2,7 @@ $(document).ready(() => {
   'use strict';
  
  const removeUserFavorites = function () {
-    $('.favorites-box').remove();
+    $('.favoritesBox').remove();
  }
 
   $('#search-menu').delay(1000).fadeIn(1000);
@@ -230,14 +230,18 @@ $(document).ready(() => {
         }
 
         $('.add-favorite').click((event) => {
+          console.log('1 trying to add favorite');
           $.getJSON(`/token`)
             .done((loggedin) => {
+              console.log('2 done and adding favorite');
               if (loggedin) {
+                console.log('3 done and adding favorite')
                 $(event.target).text('star');
                 // console.log(`$($(event.target).parent().prev().children()[0]).text() is ${$($(event.target).parent().prev().children()[0]).text()}`);
 
                 //Create row in favorites >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Create row in favorites
-                const newFavorite = {tweet: $($(event.target).parent().prev().children()[0]).text(), searchId: searchTerm};
+                const newFavorite = {tweet: $($(event.target).parent().prev().children()[0]).text(), searchTerm: searchTerm};
+                console.log(`newFavorite is ${JSON.stringify(newFavorite)}`)
                 const options = {
                   contentType: 'application/json',
                   data: JSON.stringify(newFavorite),
@@ -413,65 +417,72 @@ $(document).ready(() => {
       });
   });
 
-// User's favorites
 
-// Favorites not in user's favorites
+  // Populate profile w/ user favorites >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> User Favorites
+  const getUserFavorites = function () {
+    removeUserFavorites();
+    const options = {
+      contentType: 'application/json',
+      dataType: 'json',
+      type: 'get',
+      url: '/favorites/ucheck/'
+    };
 
-// User information
-const getUserFavorites = function () {
-  removeUserFavorites();
-  const options2 = {
-    contentType: 'application/json',
-    dataType: 'json',
-    type: 'get',
-    url: '/favorites_users/mecheck/'
-  };
+    $.ajax(options)
+      .done((contents) => {
+        // $('.add-favorite').attr('style', 'opacity:1;');
+        // content = JSON.stringify(contents);
+          let div = document.createElement('div')
+          div.className='userfavorites-box favoritesBox row';
+          div.innerHTML = `<p>Tweets you favorited:`
+          let table = document.createElement('table');
+          table.className = 'userFavorites bordered highlight';
+          table.innerHTML = `<col class="column-one"><col class="column-two"><col class="column-three"><thead class=><tr><th>Search</th><th>Tweet</th><th>Delete</th></tr></thead><tbody id="uf-tbody"></tbody>`;
+          div.appendChild(table);
+          document.getElementById('profile-menu').appendChild(div);
+        for (let i = 0; i < contents.length; i++){
+          let trow = document.createElement('tr')
+          trow.className = `user-row data-searchId=${contents[i].search_id} data-favoriteId=${contents[i].favorite_id}`
+          trow.innerHTML = `<td><p>${contents[i].search_term}</td><td>${contents[i].tweet}</td><td><a class="delete" href=""><i class="small material-icons red-text accent-4">clear</i></a></td>`
+          document.getElementById('uf-tbody').appendChild(trow);
+        }
+        // }
+      })
+      .fail(($xhr) => {
+        console.log($xhr.responseText);
+        console.log('Failure');
+      });
 
-  $.ajax(options2)
-    .done((contents) => {
-      // $('.add-favorite').attr('style', 'opacity:1;');
-      console.log(contents);
-      console.log(contents.length);
-      console.log(contents.keys());
-      console.log(contents[0]);
-      // content = JSON.stringify(contents);
-      // for (content in contents){
+    // Other users' favorites >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Other users' favorites
+    const options2 = {
+      contentType: 'application/json',
+      dataType: 'json',
+      type: 'get',
+      url: '/favorites/notucheck/'
+    };  
 
-        let $div = $(`<div class='favorites-box row'></div>`);
-        let $div2 = $(`<div class='favorite-searchTerm col l3'></div>`);
-        $div2.append(`<p>${contents[0].searchTerm}</p>`);
-        let $div3 = $(`<div class='favorite-tweet col l9'></div>`);
-        let $p = $(`<p>${contents[0].tweet}</p>`);
-        console.log($p);
-        $div3.append($p);
-        $div.append($div2);
-        $div.append($div3);
-        $(`#profile-menu`).append($div);
-      // }
-    })
-    .fail(($xhr) => {
-      console.log($xhr.responseText, 3000);
-    });
-      // $('#profile-menu')
-
-}
-
+    $.ajax(options2)
+      .done((contents) => {
+        // $('.add-favorite').attr('style', 'opacity:1;');
+        console.log(JSON.stringify(contents));
+          let div = document.createElement('div')
+          div.className='otherUserfavorites-box favoritesBox row';
+          div.innerHTML = `<p>Tweets you favorited:`
+          let table = document.createElement('table');
+          table.className = 'otherUserFavorites bordered highlight';
+          table.innerHTML = `<col class="column-one"><col class="column-two"><col class="column-three"><thead class=><tr><th>Search</th><th>Tweet</th></tr></thead><tbody id="nuf-tbody"></tbody>`;
+          div.appendChild(table);
+          document.getElementById('profile-menu').appendChild(div);
+        for (let i = 0; i < contents.length; i++){
+          let trow = document.createElement('tr')
+          trow.innerHTML = `<td><p>${contents[i].search_term}</td><td>${contents[i].tweet}</td><td>`
+          document.getElementById('nuf-tbody').appendChild(trow);
+        }
+        // }
+      })
+      .fail(($xhr) => {
+        console.log($xhr.responseText, 3000);
+      });
+  }
 
 });
-
-// Get all favorites
-//
-// const options = {
-//   contentType: 'application/json',
-//   dataType: 'json',
-//   type: 'GET',
-//   url: '/favorites'
-// }
-
-// $.ajax(options)
-//   .done((favorites) => {
-//     consoe.log(favorites);
-//   })
-//   .fail(($xhr) => {
-//     Materialize.toast($xhr.responseText, 3000);
-//   });

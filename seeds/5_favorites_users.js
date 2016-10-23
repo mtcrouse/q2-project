@@ -5,79 +5,8 @@
 exports.seed = function(knex) {
   return knex('favorites_users').del()
     .then(() => {
-      return knex('favorites_users').insert([{
-        id: 1,
-        favorite_id: 1,
-        user_id: 2,
-        created_at: new Date('2016-10-13 16:17:12 UTC'),
-        updated_at: new Date('2016-10-13 16:17:12 UTC')
-      },{
-        id: 2,
-        favorite_id: 3,
-        user_id: 1,
-        created_at: new Date('2016-10-13 16:17:12 UTC'),
-        updated_at: new Date('2016-10-13 16:17:12 UTC')
-      },{
-        id: 3,
-        favorite_id: 2,
-        user_id: 4,
-        created_at: new Date('2016-10-13 16:17:12 UTC'),
-        updated_at: new Date('2016-10-13 16:17:12 UTC')
-      },{
-        id: 4,
-        favorite_id: 3,
-        user_id: 4,
-        created_at: new Date('2016-10-13 16:17:12 UTC'),
-        updated_at: new Date('2016-10-13 16:17:12 UTC')
-      },{
-        id: 5,
-        favorite_id: 5,
-        user_id: 4,
-        created_at: new Date('2016-10-13 16:17:12 UTC'),
-        updated_at: new Date('2016-10-13 16:17:12 UTC')
-      },{
-        id: 6,
-        favorite_id: 1,
-        user_id: 5,
-        created_at: new Date('2016-10-13 16:17:12 UTC'),
-        updated_at: new Date('2016-10-13 16:17:12 UTC')
-      },{
-        id: 7,
-        favorite_id: 4,
-        user_id: 5,
-        created_at: new Date('2016-10-13 16:17:12 UTC'),
-        updated_at: new Date('2016-10-13 16:17:12 UTC')
-      },{
-        id: 8,
-        favorite_id: 1,
-        user_id: 3,
-        created_at: new Date('2016-10-13 16:17:12 UTC'),
-        updated_at: new Date('2016-10-13 16:17:12 UTC')
-      },{
-        id: 9,
-        favorite_id: 2,
-        user_id: 2,
-        created_at: new Date('2016-10-13 16:17:12 UTC'),
-        updated_at: new Date('2016-10-13 16:17:12 UTC')
-      },{
-        id: 10,
-        favorite_id: 3,
-        user_id: 2,
-        created_at: new Date('2016-10-13 16:17:12 UTC'),
-        updated_at: new Date('2016-10-13 16:17:12 UTC')
-      },{
-        id: 11,
-        favorite_id: 5,
-        user_id: 2,
-        created_at: new Date('2016-10-13 16:17:12 UTC'),
-        updated_at: new Date('2016-10-13 16:17:12 UTC')
-      },{
-        id: 12,
-        favorite_id: 5,
-        user_id: 1,
-        created_at: new Date('2016-10-13 16:17:12 UTC'),
-        updated_at: new Date('2016-10-13 16:17:12 UTC')
-      }]);
+      return knex('favorites_users').insert([
+        ]);
     })
     .then(() => {
       return knex.raw(
