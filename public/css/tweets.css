@@ -43,10 +43,6 @@ td, tr {
   cursor: pointer;
 }
 
-.add-favorite {
-  opacity: 0.3;
-}
-
 .column-one {
   width: 10%
 }
