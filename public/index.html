@@ -11,15 +11,14 @@
   </head>
   <body>
 
-    <div id="exit-tweet-box" class="z-depth-0">
-      <i class="small material-icons z-depth-0">clear</i>
+    <div id="return-tweet-box" class="z-depth-3 float-box center-align pop-out-icon">
+      <img id="twitter-icon" src="images/twitter.png" class="pop-out-icon">
     </div>
 
-    <div id="return-tweet-box" class="z-depth-3 float-box center-align">
-      <img id="twitter-icon" src="images/twitter.png">
-    </div>
-
-    <div id="tweet-box" class="z-depth-3">
+    <div id="tweet-box" class="z-depth-3 pop-out-box">
+      <div id="exit-tweet-box" class="z-depth-0">
+        <i class="small material-icons z-depth-0">clear</i>
+      </div>
       <div class="container">
         <div id="tweet-box-content">
           <p>Search for something to view tweets here!</p>
@@ -27,13 +26,13 @@
       </div>
     </div>
 
-    <div id="search-icon" class="z-depth-3 float-box tooltipped" data-position="left" data-delay="50" data-tooltip="Click here to search again">
+    <div id="search-icon" class="z-depth-3 float-box tooltipped pop-out-icon" data-position="left" data-delay="50" data-tooltip="Click here to search again">
       <div class="container center-align">
           <i class="small material-icons">search</i>
       </div>
     </div>
 
-    <div id="user-box" class="z-depth-3 float-box tooltipped" data-position="left" data-delay="50" data-tooltip="Click here to go to your user account">
+    <div id="user-box" class="z-depth-3 float-box tooltipped pop-out-icon" data-position="left" data-delay="50" data-tooltip="Click here to go to your user account">
         <div class="container center-align">
             <i class="small material-icons">perm_identity</i>
         </div>
@@ -46,7 +45,7 @@
       </div>
     </div>
 
-    <div id="search-menu" class="z-depth-3 float-box">
+    <div id="search-menu" class="z-depth-3 float-box pop-out-box">
       <div id="search-menu-container" class="container center-align">
         <p id="search-directions">
           Enter a search term to view tweets matching a specific topic, or click anywhere on the map to watch all tweets!
@@ -60,7 +59,7 @@
       </div>
     </div>
 
-    <div id="signin-menu" class="row z-depth-3 token-toggle">
+    <div id="signin-menu" class="row z-depth-3 pop-out-box">
       <div class="col l12">
       </div>
       <div id="signin-menu-container" class="col l12 center-align row">
@@ -116,7 +115,7 @@
       </div>
     </div>
 
-    <div id="profile-menu" class="z-depth-3 token-toggle">
+    <div id="profile-menu" class="z-depth-3 pop-out-box">
       <div id="profile-menu-data"></div>
       <div id="profile-menu-container" class="container center-align">
         <p id="profile-directions">

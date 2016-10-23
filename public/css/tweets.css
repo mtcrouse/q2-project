@@ -10,6 +10,7 @@ td, tr {
   line-height: 16px;
   margin: 0px;
 }
+
 .float-box {
   position: absolute;
   background-color: aliceblue;
@@ -160,7 +161,6 @@ td, tr {
   position: absolute;
   left: 14px;
   top:14px;
-  display: none;
   z-index: 2;
   cursor: pointer;
   background: none;
@@ -186,16 +186,6 @@ td, tr {
   top: 10px;
   left: 10px;
   display: none;
-}
-
-#user-box2 {
-  top: 13px;
-  height: 50px;
-  width: 50px;
-  right: 90px;
-  border-radius: 200px;
-  cursor: pointer;
-  line-height: 64px;
 }
 
 @media (max-height: 400px) {

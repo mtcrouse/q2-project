@@ -1,25 +1,86 @@
 $(document).ready(() => {
   'use strict';
- 
- // Clear .favoritesBox so that it can be recreated dynamically
+
+  // const isUserSignedIn = function () {
+  //   let loggedIn = false;
+  //   $.getJSON('/token')
+  //     .done((loggedin) => {
+  //       if (loggedin) {
+  //         return true;
+  //       } else {
+  //         return false;
+  //       }
+  //     })
+  //     .fail((err) => {
+  //       console.error(err);
+  //     });
+  // };
+
+  // if (isUserSignedIn()) {
+  //   console.log('It is so.');
+  // }
+  // else {
+  //   console.log('It is not so.');
+  // }
+
+  // Clear .favoritesBox so that it can be recreated dynamically
   const removeUserFavorites = function () {
     $('.favoritesBox').remove();
   };
 
   $('#search-menu').delay(1000).fadeIn(1000);
-  $('#user-box').delay(1000).fadeIn(1000);
+  $('.pop-out-icon').delay(1000).fadeIn(1000);
   $('#title-box').delay(1000).fadeOut(1000);
 
   $('#map').click(() => {
-    $('#search-menu').hide();
-    $('#signin-menu').hide();
-    $('#profile-menu').hide();
-    $('#search-icon').show();
-    $('.token-toggle').hide();
-    $('#tweet-box').fadeOut();
-    $('#exit-tweet-box').fadeOut();
-    $('#twitter-icon').fadeIn();
-    $('#return-tweet-box').fadeIn();
+    $('.pop-out-box').hide();
+    $('.pop-out-icon').show();
+  });
+
+  $('#exit-tweet-box').click(() => {
+    $('#tweet-box').hide();
+    $('.pop-out-icon').show();
+  });
+
+  $('#twitter-icon').click(() => {
+    $('.pop-out-box').hide();
+    $('#return-tweet-box').hide();
+    $('#tweet-box').fadeIn();
+  });
+
+  //Toggle search-result view
+  $('#search-icon').click(() => {
+    $('.pop-out-box').hide();
+    $('.pop-out-icon').show();
+    $('#search-menu').fadeIn();
+  });
+
+  // Toggle open log-in/sign-up view
+  $('#user-box').click(() => {
+    $('.pop-out-box').hide();
+    $('.pop-out-icon').show();
+
+    $.getJSON('/token')
+      .done((loggedin) => {
+        // If logged in, show profile
+        getUserFavorites();
+        if (loggedin) {
+          $('#profile-menu')
+            .attr('display', 'inline')
+            .fadeIn(1000);
+        }
+
+        // else show sign-in/-up
+        else {
+          $('#signin-menu')
+            .attr('display', 'inline')
+            .fadeIn(1000);
+        }
+      })
+      .fail((err) => {
+        Materialize.toast('Unable to log out. Please try again.', 3000);
+        Materialize.toast(err);
+      });
   });
 
   // Delete favorite from user account
@@ -40,10 +101,10 @@ $(document).ready(() => {
 
     $.ajax(options)
       .done(() => {
-        Materialize.toast(`Favorite deleted`, 3000);
+        Materialize.toast(`Favorite deleted`, 2000);
       })
       .fail(($xhr) => {
-        Materialize.toast($xhr.responseText, 3000);
+        Materialize.toast($xhr.responseText, 2000);
       });
   });
 
@@ -108,9 +169,9 @@ $(document).ready(() => {
       }
     });
 
+  // Streaming
   var socket = io();
 
-  // Streaming
   socket.on('tweety', function(msg){
     if (msg[4] !== null){
       let coords = [msg[4], msg[5]];
@@ -120,86 +181,17 @@ $(document).ready(() => {
     }
   });
 
-  //Toggle search-result view
-  $('#search-icon').click(() => { 
-    removeUserFavorites();
-    $('#search-menu').fadeIn();
-    $('#search-icon').fadeOut();
-    $('.token-toggle').hide();
-    $('#twitter-icon').show();
-    $('#return-tweet-box').show();
-    $('#tweet-box').fadeOut();
-    $('#exit-tweet-box').fadeOut();
-  });
-
-  // Toggle open log-in/sign-up view
-  $('#user-box').click(() => {
-    getUserFavorites();
-    $('#tweet-box').hide();
-    $('#exit-tweet-box').hide();
-    $('#search-menu').hide();
-    $('#twitter-icon').show();
-    $('#return-tweet-box').show();
-    $('#search-icon').show();
-
-    $.getJSON('/token')
-      .done((loggedin) => {
-        // If logged in, show profile
-        if (loggedin) {
-          $('#profile-menu')
-            .attr('display', 'inline')
-            .fadeIn(1000);
-        }
-
-        // else show sign-in/-up
-        else {
-          $('#signin-menu')
-            .attr('display', 'inline')
-            .fadeIn(1000);
-        }
-      })
-      .fail((err) => {
-        Materialize.toast('Unable to log out. Please try again.', 3000);
-        Materialize.toast(err);
-      });
-  });
-
-  // Close tweet box on click 
-  $('#exit-tweet-box').click(() => {
-    removeUserFavorites();
-    $('#tweet-box').fadeOut();
-    $('#exit-tweet-box').fadeOut();
-    $('#return-tweet-box').fadeIn();
-    $('#twitter-icon').fadeIn();
-  });
-
-  $('#twitter-icon').click(() => {
-    removeUserFavorites();
-    $('#twitter-icon').hide();
-    $('#return-tweet-box').hide();
-    $('#tweet-box').fadeIn();
-    $('#exit-tweet-box').fadeIn();
-    $('#profile-menu').hide();
-    $('#signin-menu').hide();
-    $('#search-menu').hide();
-  });
-
   // Search form and search results
   $('#search-form').submit((event) => {
-    removeUserFavorites();
     event.preventDefault();
-
-    let atLeastOneTweet = false;
 
     const searchTerm = $('#search-term').val().trim();
 
     $('#search-menu').fadeOut();
-    $('#search-icon').fadeIn();
     $('#twitter-icon').hide();
     $('#return-tweet-box').hide();
     $('#tweet-box-content').empty();
     $('#tweet-box').fadeIn();
-    $('#exit-tweet-box').fadeIn();
 
     $.getJSON(`/tweets/${searchTerm}`)
       .done((tweets) => {
@@ -224,10 +216,10 @@ $(document).ready(() => {
 
             $.ajax(options2)
               .done(() => {
-                res.send('Searches_users added');
+                console.log('Searches_users added');
               })
               .fail(($xhr) => {
-                res.send($xhr.responseText);
+                console.log($xhr.responseText);
               });
           })
           .fail(($xhr) => {
@@ -256,7 +248,7 @@ $(document).ready(() => {
 
         // When user clicks on favorite button, enter favorite in favorites and favorites_users tables
         $('.add-favorite').click((event) => {
-          $.getJSON(`/token`)
+          $.getJSON('/token')
             .done((loggedin) => {
               if (loggedin) {
                 $(event.target).text('star');
@@ -286,10 +278,10 @@ $(document).ready(() => {
 
                     $.ajax(options2)
                       .done(() => {
-                        res.send('Favorite_User added.');
+                        console.log('Favorite_User added.');
                       })
                       .fail(($xhr) => {
-                        res.send($xhr.responseText);
+                        console.log($xhr.responseText);
                       });
                   });
               }
@@ -301,25 +293,20 @@ $(document).ready(() => {
             })
             .fail((err) => {
               Materialize.toast('Unable to log out. Please try again.', 3000);
-              res.send(err);
+              console.log(err);
             });
         });
 
         $('#tweet-box').fadeIn();
-        $('#exit-tweet-box').fadeIn();
       })
       .fail(() => {
-        res.send('Unable to retrieve tweets');
+        console.log('Unable to retrieve tweets');
       });
     return false;
   });
 
-  $('#signin-menu').hide();
-  $('#profile-menu').hide();
-
   // Login form
   $('#loginForm').submit((event) => {
-    removeUserFavorites();
     event.preventDefault();
 
     const email = $('#email').val().trim();
@@ -349,13 +336,12 @@ $(document).ready(() => {
         Materialize.toast('Thanks for logging in. You can now favorite tweets.', 7000);
       })
       .fail(($xhr) => {
-        res.send($xhr.responseText);
+        Materialize.toast($xhr.responseText);
       });
   });
 
   // Logout
   $('#logout').submit((event) => {
-    removeUserFavorites();
     event.preventDefault();
 
     const options = {
@@ -369,7 +355,6 @@ $(document).ready(() => {
         $('#profile-menu').hide();
         $('.add-favorite').attr('style', 'opacity:0.3;');
         $('.add-favorite').html('<i class="material-icons">star_border</i>');
-        removeUserFavorites();
       })
       .fail(() => {
         Materialize.toast('Unable to log out. Please try again.', 3000);
@@ -378,7 +363,6 @@ $(document).ready(() => {
 
   // Sign up and add user to users table
   $('#signUpForm').submit((event) => {
-    removeUserFavorites();
     event.preventDefault();
 
     const username = $('#username').val().trim();
@@ -430,11 +414,11 @@ $(document).ready(() => {
             Materialize.toast(`Thanks for signing up, ${username}. You're now logged in. You can now add tweets to your favorites.`, 6000);
           })
           .fail(($xhr) => {
-            res.send($xhr.responseText);
+            console.log($xhr.responseText);
           });
       })
       .fail(($xhr) => {
-        res.send($xhr.responseText);
+        console.log($xhr.responseText);
       });
   });
 
@@ -474,7 +458,7 @@ $(document).ready(() => {
           dataType: 'json',
           type: 'get',
           url: '/favorites/notucheck/'
-        };  
+        };
 
         $.ajax(options2)
           .done((contents) => {
@@ -486,7 +470,7 @@ $(document).ready(() => {
             table.innerHTML = `<col class="column-one"><col class="column-two"><col class="column-three"><thead class=><tr><th>Search</th><th>Tweet</th></tr></thead><tbody id="nuf-tbody"></tbody>`;
             div.appendChild(table);
             document.getElementById('profile-menu-data').appendChild(div);
- 
+
             for (let i = 0; i < contents.length; i++){
               let trow = document.createElement('tr');
               trow.innerHTML = `<td><p>${contents[i].search_term}</td><td>${contents[i].tweet}</td><td>`;
@@ -494,12 +478,12 @@ $(document).ready(() => {
             }
           })
           .fail(($xhr) => {
-            res.send($xhr.responseText);
+            console.log($xhr.responseText);
           });
       })
       .fail(($xhr) => {
-        res.send($xhr.responseText);
-        res.send('Failure');
+        console.log($xhr.responseText);
+        console.log('Failure');
       });
   };
 
