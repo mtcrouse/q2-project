@@ -422,7 +422,6 @@ $(document).ready(() => {
       });
   });
 
-
   // Display user's favorites
   const getUserFavorites = function () {
     removeUserFavorites();
@@ -486,5 +485,4 @@ $(document).ready(() => {
         console.log('Failure');
       });
   };
-
 });
