@@ -1,9 +1,10 @@
 $(document).ready(() => {
   'use strict';
  
- const removeUserFavorites = function () {
+ // Clear .favoritesBox so that it can be recreated dynamically
+  const removeUserFavorites = function () {
     $('.favoritesBox').remove();
- }
+  };
 
   $('#search-menu').delay(1000).fadeIn(1000);
   $('#user-box').delay(1000).fadeIn(1000);
@@ -21,12 +22,10 @@ $(document).ready(() => {
     $('#return-tweet-box').fadeIn();
   });
 
+  // Delete favorite from user account
   $('#profile-menu').on('click', '.delete', (event) => {
     event.preventDefault();
-    // console.log(event);
-    // console.log(event.target);
     let row = event.target.parentElement.parentElement.parentElement;
-    // console.log(row.getAttribute(`searchId`));
     let favoriteId = row.getAttribute(`favoriteId`);
     $(row).fadeOut();
     row.remove();
@@ -37,7 +36,7 @@ $(document).ready(() => {
       dataType: 'json',
       type: 'delete',
       url: '/favorites'
-    }
+    };
 
     $.ajax(options)
       .done(() => {
@@ -46,7 +45,7 @@ $(document).ready(() => {
       .fail(($xhr) => {
         Materialize.toast($xhr.responseText, 3000);
       });
-  })
+  });
 
   // Heatmap options
   var testData = {
@@ -54,7 +53,7 @@ $(document).ready(() => {
     data: []
   };
 
-  // Map options>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Map style
+  // Map styling
   let map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 40, lng: -90},
     zoom: 4,
@@ -92,7 +91,7 @@ $(document).ready(() => {
     ]
   });
 
-  // More heatmap options >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Heatmap style
+  // More heatmap styling
   const heatmap = new HeatmapOverlay(map,
     {
       'radius': .5,
@@ -111,7 +110,7 @@ $(document).ready(() => {
 
   var socket = io();
 
-  // Streaming >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Streaming
+  // Streaming
   socket.on('tweety', function(msg){
     if (msg[4] !== null){
       let coords = [msg[4], msg[5]];
@@ -119,10 +118,9 @@ $(document).ready(() => {
 
       heatmap.setData(testData);
     }
-    console.log(msg);
   });
 
-  //Toggle search div >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Toggle search icon
+  //Toggle search-result view
   $('#search-icon').click(() => { 
     removeUserFavorites();
     $('#search-menu').fadeIn();
@@ -132,41 +130,41 @@ $(document).ready(() => {
     $('#return-tweet-box').show();
     $('#tweet-box').fadeOut();
     $('#exit-tweet-box').fadeOut();
-    $
   });
 
-  // Toggle open log-in/sign-up div>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Toggle log-in/sign-up div
+  // Toggle open log-in/sign-up view
   $('#user-box').click(() => {
-      getUserFavorites();
-      $('#tweet-box').hide();
-      $('#exit-tweet-box').hide();
-      $('#search-menu').hide();
-      $('#twitter-icon').show();
-      $('#return-tweet-box').show();
-      $('#search-icon').show();
+    getUserFavorites();
+    $('#tweet-box').hide();
+    $('#exit-tweet-box').hide();
+    $('#search-menu').hide();
+    $('#twitter-icon').show();
+    $('#return-tweet-box').show();
+    $('#search-icon').show();
 
-      $.getJSON('/token')
-        .done((loggedin) => {
-          if (loggedin) {
-            // Load profile>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Load profile info
-            $('#profile-menu')
-              .attr('display', 'inline')
-              .fadeIn(1000);
-          }
+    $.getJSON('/token')
+      .done((loggedin) => {
+        // If logged in, show profile
+        if (loggedin) {
+          $('#profile-menu')
+            .attr('display', 'inline')
+            .fadeIn(1000);
+        }
 
-          else {
-            $('#signin-menu')
-              .attr('display', 'inline')
-              .fadeIn(1000);
+        // else show sign-in/-up
+        else {
+          $('#signin-menu')
+            .attr('display', 'inline')
+            .fadeIn(1000);
         }
       })
       .fail((err) => {
         Materialize.toast('Unable to log out. Please try again.', 3000);
         Materialize.toast(err);
-      })
+      });
   });
 
-  // Close tweet box on click >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Close tweet box on click
+  // Close tweet box on click 
   $('#exit-tweet-box').click(() => {
     removeUserFavorites();
     $('#tweet-box').fadeOut();
@@ -186,7 +184,7 @@ $(document).ready(() => {
     $('#search-menu').hide();
   });
 
-  // Search form >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Search form
+  // Search form and search results
   $('#search-form').submit((event) => {
     removeUserFavorites();
     event.preventDefault();
@@ -205,41 +203,41 @@ $(document).ready(() => {
 
     $.getJSON(`/tweets/${searchTerm}`)
       .done((tweets) => {
-        // Create row in searches row>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Create searches row
-          const options = {
-            contentType: 'application/json',
-            data: JSON.stringify({searchTerm: searchTerm}),
-            dataType: 'json',
-            type: 'POST',
-            url: '/searches'
-          }
 
-          $.ajax(options)
-            .done(() => {
-              console.log('Search added', 3000);
-              // Create row in searches_users >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Create searches_users row
-              const options2 = {
-                contentType: 'application/json',
-                type: 'POST',
-                url: '/searches_users'
-              }
+        // Create row in searches table
+        const options = {
+          contentType: 'application/json',
+          data: JSON.stringify({searchTerm: searchTerm}),
+          dataType: 'json',
+          type: 'POST',
+          url: '/searches'
+        };
 
-              $.ajax(options2)
-                .done(() => {
-                  console.log('Searches_users added', 3000)
-                })
-                .fail(($xhr) => {
-                  console.log($xhr.responseText, 3000);
-                });
-            })
-            .fail(($xhr) => {
-              Materialize.toast($xhr.responseText, 3000);
-            });
+        $.ajax(options)
+          .done(() => {
+            // Create row in searches_users
+            const options2 = {
+              contentType: 'application/json',
+              type: 'POST',
+              url: '/searches_users'
+            };
 
+            $.ajax(options2)
+              .done(() => {
+                res.send('Searches_users added');
+              })
+              .fail(($xhr) => {
+                res.send($xhr.responseText);
+              });
+          })
+          .fail(($xhr) => {
+            Materialize.toast($xhr.responseText);
+          });
 
+        //Empty search form
         $('#search-term').val('');
 
-        // Display tweets>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Display tweets
+        // Display tweets in search results
         for (let i = 0; i < tweets.statuses.length; i++) {
           let tweet = tweets.statuses[i];
 
@@ -256,48 +254,44 @@ $(document).ready(() => {
           }
         }
 
+        // When user clicks on favorite button, enter favorite in favorites and favorites_users tables
         $('.add-favorite').click((event) => {
-          console.log('1 trying to add favorite');
           $.getJSON(`/token`)
             .done((loggedin) => {
-              console.log('2 done and adding favorite');
               if (loggedin) {
-                console.log('3 done and adding favorite')
                 $(event.target).text('star');
-                // console.log(`$($(event.target).parent().prev().children()[0]).text() is ${$($(event.target).parent().prev().children()[0]).text()}`);
 
-                //Create row in favorites >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Create row in favorites
+                //Create row in favorites table
                 const newFavorite = {tweet: $($(event.target).parent().prev().children()[0]).text(), searchTerm: searchTerm};
-                console.log(`newFavorite is ${JSON.stringify(newFavorite)}`)
                 const options = {
                   contentType: 'application/json',
                   data: JSON.stringify(newFavorite),
                   dataType: 'json',
                   type: 'POST',
                   url: '/favorites'
-                }
+                };
 
                 $.ajax(options)
                   .done(() => {
                     Materialize.toast('Favorite added.', 3000);
 
-                    // Create row in favorites_users >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Create row in favorites_users
+                    // Create row in favorites_users table
                     const options2 = {
                       contentType: 'application/json',
                       data: JSON.stringify(newFavorite),
                       dataType: 'json',
                       type: 'POST',
                       url: '/favorites_users'
-                    }
+                    };
 
                     $.ajax(options2)
                       .done(() => {
-                        console.log('Favorite_User added.', 3000);
+                        res.send('Favorite_User added.');
                       })
                       .fail(($xhr) => {
-                        console.log($xhr.responseText, 3000);
+                        res.send($xhr.responseText);
                       });
-                  })
+                  });
               }
 
               else {
@@ -307,24 +301,23 @@ $(document).ready(() => {
             })
             .fail((err) => {
               Materialize.toast('Unable to log out. Please try again.', 3000);
-              console.log(err);
-            })
-          });
+              res.send(err);
+            });
+        });
 
         $('#tweet-box').fadeIn();
         $('#exit-tweet-box').fadeIn();
       })
       .fail(() => {
-        console.log('Unable to retrieve tweets');
+        res.send('Unable to retrieve tweets');
       });
     return false;
   });
 
-  // Needed(?)
   $('#signin-menu').hide();
   $('#profile-menu').hide();
 
-  // Login-form handling>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Login-form handling
+  // Login form
   $('#loginForm').submit((event) => {
     removeUserFavorites();
     event.preventDefault();
@@ -340,6 +333,7 @@ $(document).ready(() => {
       return Materialize.toast('Password must not be blank', 3000);
     }
 
+    // Log in; get token
     const options = {
       contentType: 'application/json',
       data: JSON.stringify({ email, password }),
@@ -355,11 +349,11 @@ $(document).ready(() => {
         Materialize.toast('Thanks for logging in. You can now favorite tweets.', 7000);
       })
       .fail(($xhr) => {
-        console.log($xhr.responseText, 3000);
+        res.send($xhr.responseText);
       });
   });
 
-  // Logout >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Log out
+  // Logout
   $('#logout').submit((event) => {
     removeUserFavorites();
     event.preventDefault();
@@ -382,7 +376,7 @@ $(document).ready(() => {
       });
   });
 
-  // Sign up >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Sign up
+  // Sign up and add user to users table
   $('#signUpForm').submit((event) => {
     removeUserFavorites();
     event.preventDefault();
@@ -436,16 +430,16 @@ $(document).ready(() => {
             Materialize.toast(`Thanks for signing up, ${username}. You're now logged in. You can now add tweets to your favorites.`, 6000);
           })
           .fail(($xhr) => {
-            console.log($xhr.responseText, 3000);
+            res.send($xhr.responseText);
           });
       })
       .fail(($xhr) => {
-        console.log($xhr.responseText, 3000);
+        res.send($xhr.responseText);
       });
   });
 
 
-  // Populate profile w/ user favorites >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> User Favorites
+  // Display user's favorites
   const getUserFavorites = function () {
     removeUserFavorites();
     const options = {
@@ -457,26 +451,24 @@ $(document).ready(() => {
 
     $.ajax(options)
       .done((contents) => {
-        // $('.add-favorite').attr('style', 'opacity:1;');
-        // content = JSON.stringify(contents);
-          let div = document.createElement('div')
-          div.className='userfavorites-box favoritesBox row';
-          div.innerHTML = `<p>Tweets you favorited:`
-          let table = document.createElement('table');
-          table.className = 'userFavorites bordered highlight';
-          table.innerHTML = `<col class="column-one"><col class="column-two"><col class="column-three"><thead class=><tr><th>Search</th><th>Tweet</th><th>Delete</th></tr></thead><tbody id="uf-tbody"></tbody>`;
-          div.appendChild(table);
-          document.getElementById('profile-menu-data').appendChild(div);
+        let div = document.createElement('div');
+        div.className='userfavorites-box favoritesBox row';
+        div.innerHTML = `<p>Tweets you favorited:</p>`;
+        let table = document.createElement('table');
+        table.className = 'userFavorites bordered highlight';
+        table.innerHTML = `<col class="column-one"><col class="column-two"><col class="column-three"><thead class=><tr><th>Search</th><th>Tweet</th><th>Delete</th></tr></thead><tbody id="uf-tbody"></tbody>`;
+        div.appendChild(table);
+        document.getElementById('profile-menu-data').appendChild(div);
         for (let i = 0; i < contents.length; i++){
-          let trow = document.createElement('tr')
-          trow.className = `user-row`
-          trow.setAttribute(`searchId`, `${contents[i].search_id}`)
-          trow.setAttribute(`favoriteId`, `${contents[i].favorite_id}`)
-          trow.innerHTML = `<td><p>${contents[i].search_term}</td><td>${contents[i].tweet}</td><td><a class="delete" href=""><i class="small material-icons red-text accent-4">clear</i></a></td>`
+          let trow = document.createElement('tr');
+          trow.className = `user-row`;
+          trow.setAttribute(`searchId`, `${contents[i].search_id}`);
+          trow.setAttribute(`favoriteId`, `${contents[i].favorite_id}`);
+          trow.innerHTML = `<td><p>${contents[i].search_term}</td><td>${contents[i].tweet}</td><td><a class="delete" href=""><i class="small material-icons red-text accent-4">clear</i></a></td>`;
           document.getElementById('uf-tbody').appendChild(trow);
         }
 
-            // Other users' favorites >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Other users' favorites
+        // Display other users' favorites
         const options2 = {
           contentType: 'application/json',
           dataType: 'json',
@@ -486,32 +478,29 @@ $(document).ready(() => {
 
         $.ajax(options2)
           .done((contents) => {
-            // $('.add-favorite').attr('style', 'opacity:1;');
-            // console.log(JSON.stringify(contents));
-              let div = document.createElement('div')
-              div.className='otherUserfavorites-box favoritesBox row';
-              div.innerHTML = `<p>Other users' favorites:</p>`
-              let table = document.createElement('table');
-              table.className = 'otherUserFavorites bordered highlight';
-              table.innerHTML = `<col class="column-one"><col class="column-two"><col class="column-three"><thead class=><tr><th>Search</th><th>Tweet</th></tr></thead><tbody id="nuf-tbody"></tbody>`;
-              div.appendChild(table);
-              document.getElementById('profile-menu-data').appendChild(div);
+            let div = document.createElement('div');
+            div.className='otherUserfavorites-box favoritesBox row';
+            div.innerHTML = `<p>Other users' favorites:</p>`;
+            let table = document.createElement('table');
+            table.className = 'otherUserFavorites bordered highlight';
+            table.innerHTML = `<col class="column-one"><col class="column-two"><col class="column-three"><thead class=><tr><th>Search</th><th>Tweet</th></tr></thead><tbody id="nuf-tbody"></tbody>`;
+            div.appendChild(table);
+            document.getElementById('profile-menu-data').appendChild(div);
+ 
             for (let i = 0; i < contents.length; i++){
-              let trow = document.createElement('tr')
-              trow.innerHTML = `<td><p>${contents[i].search_term}</td><td>${contents[i].tweet}</td><td>`
+              let trow = document.createElement('tr');
+              trow.innerHTML = `<td><p>${contents[i].search_term}</td><td>${contents[i].tweet}</td><td>`;
               document.getElementById('nuf-tbody').appendChild(trow);
             }
-            // }
           })
           .fail(($xhr) => {
-            console.log($xhr.responseText, 3000);
+            res.send($xhr.responseText);
           });
-            // }
-          })
+      })
       .fail(($xhr) => {
-        console.log($xhr.responseText);
-        console.log('Failure');
+        res.send($xhr.responseText);
+        res.send('Failure');
       });
-  }
+  };
 
 });
