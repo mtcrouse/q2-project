@@ -21,6 +21,12 @@ $(document).ready(() => {
     $('#return-tweet-box').fadeIn();
   });
 
+  $('#profile-menu').on('click', '.delete', (event) => {
+    event.preventDefault();
+    console.log(event.target.parentElement.parentElement.parentElement);
+    (event.target.parentElement.parentElement.parentElement).remove();
+  })
+
   // Heatmap options
   var testData = {
     max: 7,
