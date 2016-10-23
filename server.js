@@ -68,26 +68,19 @@ let cities = fs.readFileSync('cities.txt', 'utf8', (err, data) => {
 
 cities = cities.split(/\r?\n/);
 
-let count = 0;
-
-console.log('file is loaded');
-
-const knexFn = function(message) {
-    return knex('tweets')
-    .insert(message)
-    .then(() => {
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-};
+// const knexFn = function(message) {
+//   return knex('tweets')
+//     .insert(message)
+//     .then(() => {
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//     });
+// };
 
 // io.on('connection', function(socket) {
-//   console.log('a user connected');
 //   let stream = client.stream('statuses/sample');
 //   stream.on('data', function(event) {
-//     count += 1;
-//     console.log(`streaming tweet #${count}`);
 //     if (event.text) {
 //       let maxScore = 0;
 //       let maxScorePopulation = 0;
@@ -116,19 +109,16 @@ const knexFn = function(message) {
 
 //       io.emit('tweety', [event.text, event.user.location, bestGuess, maxScore, latitude, longitude]);
 
-//       // if (event.text && event.user.location && bestGuess && maxScore && latitude && longitude) {
-//         const line = {
+//       const line = {
 //         tweet: event.text,
 //         location: event.user.location,
 //         best_guess: bestGuess,
 //         lat: latitude,
 //         lng: longitude
-//       }
-
-//             knexFn(line);}
-
-//     // }
-//   });
+//       };
+     
+//       knexFn(line);}
+//    });
 
 //   stream.on('error', function(error) {
 //     console.log(error);
@@ -139,7 +129,7 @@ const knexFn = function(message) {
 //   });
   
 //   socket.on('error', function(){
-//     console.log('a socket.io error occurred!!!!');
+//     console.log('a socket.io error occurred');
 //   });
 // });
 

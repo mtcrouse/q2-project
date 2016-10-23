@@ -10,7 +10,7 @@ module.exports = {
     connection: 'postgres://localhost/twittermap_test'
   },
   production: {
-  client: 'pg',
-  connection: process.env.DATABASE_URL
+    client: 'pg',
+    connection: process.env.DATABASE_URL
   }
 };

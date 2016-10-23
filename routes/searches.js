@@ -51,13 +51,13 @@ router.get('/searches/:id', (req, res, next) => {
     .first()
     .then((row) => {
       if (!row) {
-        throw boom.create(400, `No row at id ${id}`)
+        throw boom.create(400, `No row at id ${id}`);
       }
 
       res.send(camelizeKeys(row));
     })
     .catch((err) => {
-      next(err)
+      next(err);
     });
 });
 
@@ -65,7 +65,7 @@ router.post('/searches', (req, res, next) => {
   const { searchTerm } = req.body;
 
   if (!searchTerm || !searchTerm.trim()) {
-    throw boom.create(400, 'searchTerm must not be blank')
+    throw boom.create(400, 'searchTerm must not be blank');
   }
 
   knex('searches')
@@ -111,14 +111,14 @@ router.patch('/searches/:id', (req, res, next) => {
   const { id } = req.params;
 
   if (!id) {
-    throw boom.create(400, `No id provided`)
+    throw boom.create(400, `No id provided`);
   }
 
   knex('searches')
     .where('id', id)
     .then ((row) => {
       if (!row) {
-        throw boom.create(404, `No search found at id ${id}`)
+        throw boom.create(404, `No search found at id ${id}`);
       }
 
       const { count, createdAt, searchTerm} = req.body;
@@ -138,7 +138,7 @@ router.patch('/searches/:id', (req, res, next) => {
 
       return knex('searches')
         .update(decamelizeKeys(patchedSearch), `*`)
-        .where(`id`, id)
+        .where(`id`, id);
     })
     .then((row) => {
       const search = camelizeKeys(row[0]);
@@ -164,14 +164,14 @@ router.delete('/searches/:id', (req, res, next) => {
     .first()
     .then((row) => {
       if (!row) {
-        return next(boom.create(400, `No search exists at id ${searchId}`))
+        return next(boom.create(400, `No search exists at id ${searchId}`));
       }
 
-    search = row;
+      search = row;
 
-    return knex('searches')
-      .del()
-      .where('id', searchId);
+      return knex('searches')
+        .del()
+        .where('id', searchId);
     })
     .then(() => {
       delete search.id;

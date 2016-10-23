@@ -112,7 +112,6 @@ router.get('/users/:id', /*authorize,*/ (req, res, next) => {
 });
 
 router.patch('/users/:id', (req, res, next) => {
-  // const { userId } = req.token
   const id = Number.parseInt(req.params.id);
 
   if (Number.isNaN(id)) {
