@@ -23,6 +23,14 @@ td, tr {
   border-bottom: 1px solid blue;
 }
 
+.input-field input[type=text].valid {
+     border-bottom: 1px solid blue;
+}
+
+.input-field input[type=password].valid {
+     border-bottom: 1px solid blue;
+}
+
 .input-field input[type=password]:focus {
   border-bottom: 1px solid blue;
 }
