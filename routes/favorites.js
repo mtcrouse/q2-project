@@ -227,14 +227,14 @@ router.patch('/favorites/:id', authorize, /*ev(validations.patch),*/ (req, res, 
 		});
 });
 
-router.delete('/favorites/:favoriteId', authorize, (req, res, next) => {
+router.delete('/favorites/', authorize, (req, res, next) => {
 	let favorite;
-  const { userId } = req.token;
+  // const { userId } = req.token;
   const { favoriteId } = req.body;
 
-	if(typeof favoriteId !== 'number') {
-		return next(boom.create(400, `favorite ${favoriteId} invalid, must be integer`))
-	}
+	// if(typeof favoriteId !== 'number') {
+	// 	return next(boom.create(400, `favorite ${favoriteId} invalid, must be integer`))
+	// }
 
 	knex('favorites')
 		.where('id', favoriteId)
@@ -244,14 +244,10 @@ router.delete('/favorites/:favoriteId', authorize, (req, res, next) => {
 				return next(boom.create(400, `No favorite exists at id ${favoriteId}`));
 			}
 
-			if (userId !== Number(row.user_id)) {
-				return next(boom.create(400, `userId ${userId} and row.user_id ${row.user_id} fail strictly equal.`));
-			}
-
 			favorite = camelizeKeys(row);
 
 			return knex('favorites')
-				.where({ id: favoriteId })
+				.where({id: favoriteId})
 				.del();
 		})
 		.then(() => {
