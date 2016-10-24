@@ -2,6 +2,7 @@ $(document).ready(() => {
   'use strict';
 
   let isLoggedIn = false;
+  let socket = io();
 
   $.getJSON('/token')
     .done((loggedin) => {
@@ -13,9 +14,17 @@ $(document).ready(() => {
       console.error(err);
     });
 
-  $('#search-menu').delay(1000).fadeIn(1000);
-  $('.pop-out-icon').delay(1000).fadeIn(1000);
-  $('#title-box').delay(1000).fadeOut(1000);
+  $('#title-box').delay(3000).fadeOut(1000);
+  $('#intro-box').delay(3000).fadeIn(1000);
+  $('#loading').show();
+
+  $('#intro-button').click(() => {
+    $('#intro-box').fadeOut(1000);
+    $('#search-menu').delay(1000).fadeIn(1000);
+    $('.pop-out-icon').delay(1000).fadeIn(1000);
+    $('#map').fadeTo(1000, 1);
+    $('#loading').hide();
+  });
 
   $('#map').click(() => {
     $('.pop-out-box').hide();
@@ -25,6 +34,36 @@ $(document).ready(() => {
   $('#exit-tweet-box').click(() => {
     $('#tweet-box').hide();
     $('.pop-out-icon').show();
+  });
+
+  $('#stream-icon').click(() => {
+    $('.pop-out-icon').hide();
+    $('.pop-out-box').hide();
+    $('#stream-stop').show();
+    $('#map').off();
+
+    socket.emit('streamingStart', 'test');
+
+    socket.on('tweety', function(msg){
+      if (msg[4] !== null){
+        let coords = [msg[4], msg[5]];
+        testData.data.push({lat: coords[0], lng: coords[1], count: 1});
+
+        heatmap.setData(testData);
+      }
+    });
+  });
+
+  $('#stream-stop').click(() => {
+    $('#stream-stop').hide();
+    socket.emit('streamingStop', true);
+    Materialize.toast('Stopping the stream -- hold on while the map catches up!', 3000);
+
+    socket.on('streamingStopWorked', function(msg){
+      $('#loading').hide();
+      Materialize.toast('Check out the Twitter heatmap!', 5000);
+      Materialize.toast('Refresh the page when you want to search for specific topics or save favorite tweets!', 5000);
+    });
   });
 
   $('#twitter-icon').click(() => {
@@ -43,7 +82,6 @@ $(document).ready(() => {
   //Toggle search-result view
   $('#search-icon').click(() => {
     $('.pop-out-box').hide();
-    $('.pop-out-icon').show();
     $('#search-menu').fadeIn();
   });
 
@@ -150,18 +188,6 @@ $(document).ready(() => {
       }
     });
 
-  // Streaming
-  // var socket = io();
-  //
-  // socket.on('tweety', function(msg){
-  //   if (msg[4] !== null){
-  //     let coords = [msg[4], msg[5]];
-  //     testData.data.push({lat: coords[0], lng: coords[1], count: 1});
-  //
-  //     heatmap.setData(testData);
-  //   }
-  // });
-
   // Search form and search results
   $('#search-form').submit((event) => {
     event.preventDefault();
@@ -203,7 +229,7 @@ $(document).ready(() => {
               });
           })
           .fail(($xhr) => {
-            Materialize.toast($xhr.responseText);
+            Materialize.toast($xhr.responseText, 3000);
           });
 
         //Empty search form
@@ -320,7 +346,7 @@ $(document).ready(() => {
         isLoggedIn = true;
       })
       .fail(($xhr) => {
-        Materialize.toast($xhr.responseText);
+        Materialize.toast($xhr.responseText, 3000);
       });
   });
 

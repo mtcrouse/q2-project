@@ -57,7 +57,7 @@ router.post('/favorites', authorize, /*ev(validations.post),*/ (req, res, next) 
             next(err);
           });
       }
-  
+
       else {
         let searchId = (row.id);
         return knex('favorites')

@@ -12,7 +12,22 @@
   <body>
 
     <div id="return-tweet-box" class="z-depth-3 float-box center-align pop-out-icon">
-      <img id="twitter-icon" src="images/twitter.png" class="pop-out-icon">
+      <img id="twitter-icon" src="images/twitter.png">
+    </div>
+
+    <div id="stream-icon" class="z-depth-3 float-box tooltipped pop-out-icon" data-position="left" data-delay="50" data-tooltip="Click here to stream tweets to the map">
+      <div class="container center-align">
+          <i class="small material-icons">play_arrow</i>
+      </div>
+    </div>
+
+    <div id="loading">
+    </div>
+
+    <div id="stream-stop" class="z-depth-3 float-box tooltipped" data-position="left" data-delay="50" data-tooltip="Click here to stop the stream">
+      <div class="container center-align">
+          <i class="small material-icons">stop</i>
+      </div>
     </div>
 
     <div id="tweet-box" class="z-depth-3 pop-out-box">
@@ -48,7 +63,7 @@
     <div id="search-menu" class="z-depth-3 float-box pop-out-box">
       <div id="search-menu-container" class="container center-align">
         <p id="search-directions">
-          Enter a search term to view tweets matching a specific topic, or click anywhere on the map to watch all tweets!
+          Enter a search term to view tweets matching a specific topic, or click the play button on the right to watch all tweets stream on the map!
         </p>
         <form id="search-form">
           <div class="input-field col s12">
@@ -56,6 +71,19 @@
           </div>
           <button class="btn blue" type="submit">Search</button>
         </form>
+      </div>
+    </div>
+
+    <div id="intro-box" class="float-box">
+      <div id="intro-box-container" class="container center-align">
+        <p id="intro-directions">
+          Welcome to Twitter Fever! Use the buttons on the right to create an
+          account, search for tweets, or stream tweets in real time to the map.
+          When you are streaming tweets, press the stop button to stop the stream
+          and navigate around the map. When you're done, refresh the page to return
+          to the other functions. Enjoy!
+        </p>
+          <button id="intro-button" class="btn blue" type="submit">Go</button>
       </div>
     </div>
 

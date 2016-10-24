@@ -45,13 +45,12 @@ app.use((_req, res) => {
   res.sendStatus(404);
 });
 
-// var client = new Twitter({
-//   consumer_key: process.env.TWITTER_CONSUMER_KEY,
-//   consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-//   access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
-//   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
-// });
-
+var client = new Twitter({
+  consumer_key: process.env.TWITTER_CONSUMER_KEY,
+  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+  access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+});
 
 let cities = fs.readFileSync('cities.txt', 'utf8', (err, data) => {
   if (err) throw err;
@@ -59,70 +58,60 @@ let cities = fs.readFileSync('cities.txt', 'utf8', (err, data) => {
 
 cities = cities.split(/\r?\n/);
 
-// const knexFn = function(message) {
-//   return knex('tweets')
-//     .insert(message)
-//     .then(() => {
-//     })
-//     .catch((err) => {
-//       console.error(err);
-//     });
-// };
+io.on('connection', function(socket) {
+  console.log('a user connected');
+  socket.on('streamingStart', function(testData) {
+    let stream = client.stream('statuses/sample');
+    stream.on('data', function(event) {
+      if (event.text) {
+        let maxScore = 0;
+        let maxScorePopulation = 0;
+        let bestGuess;
+        let latitude;
+        let longitude;
 
-// io.on('connection', function(socket) {
-//   let stream = client.stream('statuses/sample');
-//   stream.on('data', function(event) {
-//     if (event.text) {
-//       let maxScore = 0;
-//       let maxScorePopulation = 0;
-//       let bestGuess;
-//       let latitude;
-//       let longitude;
+        if (event.user.location === '' || event.user.location === null) {
+          bestGuess = null;
+          maxScore = null;
+          latitude = null;
+          longitude = null;
+        } else {
+          for (let row of cities) {
+            row = row.split('\t');
+            let currentScore = natural.JaroWinklerDistance(event.user.location.split(',')[0].trim(), row[1]);
+            let currentScorePopulation = row[14];
+            if (currentScore > maxScore || ((currentScore === maxScore) && (currentScorePopulation > maxScorePopulation))) {
+              maxScore = currentScore;
+              bestGuess = row[1];
+              latitude = row[4];
+              longitude = row[5];
+            }
+          }
+        }
 
-//       if (event.user.location === '' || event.user.location === null) {
-//         bestGuess = null;
-//         maxScore = null;
-//         latitude = null;
-//         longitude = null;
-//       } else {
-//         for (let row of cities) {
-//           row = row.split('\t');
-//           let currentScore = natural.JaroWinklerDistance(event.user.location.split(',')[0].trim(), row[1]);
-//           let currentScorePopulation = row[14];
-//           if (currentScore > maxScore || ((currentScore === maxScore) && (currentScorePopulation > maxScorePopulation))) {
-//             maxScore = currentScore;
-//             bestGuess = row[1];
-//             latitude = row[4];
-//             longitude = row[5];
-//           }
-//         }
-//       }
+        io.emit('tweety', [event.text, event.user.location, bestGuess, maxScore, latitude, longitude]);
+      }
+     });
 
-//       io.emit('tweety', [event.text, event.user.location, bestGuess, maxScore, latitude, longitude]);
+     stream.on('error', function(error) {
+       console.log(error);
+     });
+  });
 
-//       const line = {
-//         tweet: event.text,
-//         location: event.user.location,
-//         best_guess: bestGuess,
-//         lat: latitude,
-//         lng: longitude
-//       };
+  socket.on('streamingStop', function(testData) {
+    stream.destroy;
+    socket.emit('streamingStopWorked', true);
+  });
 
-//       knexFn(line);}
-//    });
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
 
-//   stream.on('error', function(error) {
-//     console.log(error);
-//   });
-
-//   socket.on('disconnect', function(){
-//     console.log('user disconnected');
-//   });
-
-//   socket.on('error', function(){
-//     console.log('a socket.io error occurred');
-//   });
-// });
+  socket.on('error', function(){
+    console.log('a socket.io error occurred');
+    socket.emit('streamingStopWorked', true);
+  });
+});
 
 // eslint-disable-next-line max-params
 app.use((err, _req, res, _next) => {
