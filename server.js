@@ -25,15 +25,6 @@ app.use(morgan('short'));
 
 app.use(express.static(path.join('public')));
 
-// CSRF protection
-// app.use((req, res, next) => {
-//   if (/json/.test(req.get('Accept'))) {
-//     return next();
-//   }
-//
-//   res.sendStatus(406);
-// });
-
 const users = require('./routes/users');
 const searches = require('./routes/searches');
 const favorites = require('./routes/favorites');
@@ -54,12 +45,12 @@ app.use((_req, res) => {
   res.sendStatus(404);
 });
 
-var client = new Twitter({
-  consumer_key: process.env.TWITTER_CONSUMER_KEY,
-  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-  access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
-  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
-});
+// var client = new Twitter({
+//   consumer_key: process.env.TWITTER_CONSUMER_KEY,
+//   consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+//   access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+//   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+// });
 
 
 let cities = fs.readFileSync('cities.txt', 'utf8', (err, data) => {
@@ -116,7 +107,7 @@ cities = cities.split(/\r?\n/);
 //         lat: latitude,
 //         lng: longitude
 //       };
-     
+
 //       knexFn(line);}
 //    });
 
@@ -127,7 +118,7 @@ cities = cities.split(/\r?\n/);
 //   socket.on('disconnect', function(){
 //     console.log('user disconnected');
 //   });
-  
+
 //   socket.on('error', function(){
 //     console.log('a socket.io error occurred');
 //   });

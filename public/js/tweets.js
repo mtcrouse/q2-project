@@ -151,16 +151,16 @@ $(document).ready(() => {
     });
 
   // Streaming
-  var socket = io();
-
-  socket.on('tweety', function(msg){
-    if (msg[4] !== null){
-      let coords = [msg[4], msg[5]];
-      testData.data.push({lat: coords[0], lng: coords[1], count: 1});
-
-      heatmap.setData(testData);
-    }
-  });
+  // var socket = io();
+  //
+  // socket.on('tweety', function(msg){
+  //   if (msg[4] !== null){
+  //     let coords = [msg[4], msg[5]];
+  //     testData.data.push({lat: coords[0], lng: coords[1], count: 1});
+  //
+  //     heatmap.setData(testData);
+  //   }
+  // });
 
   // Search form and search results
   $('#search-form').submit((event) => {
