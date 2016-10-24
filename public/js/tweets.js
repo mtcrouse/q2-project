@@ -2,7 +2,7 @@ $(document).ready(() => {
   'use strict';
 
   let isLoggedIn = false;
-  let socket = io();
+  let markers = [];
 
   $.getJSON('/token')
     .done((loggedin) => {
@@ -39,8 +39,16 @@ $(document).ready(() => {
   $('#stream-icon').click(() => {
     $('.pop-out-icon').hide();
     $('.pop-out-box').hide();
-    $('#stream-stop').show();
     $('#map').off();
+
+    for (let i = 0; i < markers.length; i++) {
+      markers[i].setMap(null);
+    }
+
+    let socket = io();
+
+    Materialize.toast('The longer you wait, the more the heatmap will fill up', 6000);
+    Materialize.toast('Refresh the page to return to the other features', 6000);
 
     socket.emit('streamingStart', 'test');
 
@@ -52,17 +60,9 @@ $(document).ready(() => {
         heatmap.setData(testData);
       }
     });
-  });
 
-  $('#stream-stop').click(() => {
-    $('#stream-stop').hide();
-    socket.emit('streamingStop', true);
-    Materialize.toast('Stopping the stream -- hold on while the map catches up!', 3000);
-
-    socket.on('streamingStopWorked', function(msg){
-      $('#loading').hide();
-      Materialize.toast('Check out the Twitter heatmap!', 5000);
-      Materialize.toast('Refresh the page when you want to search for specific topics or save favorite tweets!', 5000);
+    socket.on('streamingError', function(msg){
+      Materialize.toast('There was an error with the Twitter stream -- please refresh the page!', 10000);
     });
   });
 
@@ -192,15 +192,32 @@ $(document).ready(() => {
   $('#search-form').submit((event) => {
     event.preventDefault();
 
+    for (let i = 0; i < markers.length; i++) {
+      markers[i].setMap(null);
+    }
+
+    markers = [];
+
+    const tweetInfo = new google.maps.InfoWindow({
+      content: null
+    });
+
     const searchTerm = $('#search-term').val().trim();
 
     $('.pop-out-box').fadeOut();
+    $('.pop-out-icon').fadeOut();
     $('#return-tweet-box').hide();
     $('#tweet-box-content').empty();
-    $('#tweet-box').fadeIn();
+    $('#loading').show();
+    Materialize.toast('Hold on a second while we map your search!', 3000);
 
     $.getJSON(`/tweets/${searchTerm}`)
       .done((tweets) => {
+
+        $('#loading').hide();
+        $('#tweet-box').fadeIn();
+        $('.pop-out-icon').show();
+        $('#return-tweet-box').hide();
 
         // Create row in searches table
         const options = {
@@ -236,20 +253,35 @@ $(document).ready(() => {
         $('#search-term').val('');
 
         // Display tweets in search results
-        for (let i = 0; i < tweets.statuses.length; i++) {
-          let tweet = tweets.statuses[i];
+        for (let i = 0; i < tweets.length; i++) {
+          let tweet = tweets[i];
 
           let $div = $(`<div class='sidebox-tweet row'></div>`);
           let $div2 = $(`<div class='tweet-div col l10'></div>`);
-          $div2.append(`<p>${tweet.text}</p>`);
+          $div2.append(`<p>${tweet[0]}</p>`);
           let $button = $(`<span class="add-favorite star-right"><i class="material-icons">star_border</i></span>`);
           $div.append($div2);
           $div.append($button);
           $('#tweet-box-content').append($div);
 
-          if (i < tweets.statuses.length - 1) {
+          if (i < tweets.length - 1) {
             $('#tweet-box-content').append('<hr>');
           }
+
+          let marker = new google.maps.Marker({
+              position: {lat: Number(tweet[4]), lng: Number(tweet[5])},
+              title: tweet[0],
+              icon: 'images/blue-dot.png'
+          });
+
+          marker.addListener('click', function() {
+            tweetInfo.setContent(tweet[0]);
+            tweetInfo.open(map, marker);
+          });
+
+          marker.setMap(map);
+
+          markers.push(marker);
         }
 
         if (isLoggedIn) {

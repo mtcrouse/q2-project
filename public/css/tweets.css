@@ -155,17 +155,6 @@ td, tr {
   line-height: 64px;
 }
 
-#stream-stop {
-  top: 13px;
-  height: 50px;
-  width: 50px;
-  right: 13px;
-  border-radius: 200px;
-  cursor: pointer;
-  line-height: 68px;
-  z-index: 4;
-}
-
 #loading {
   height: 100%;
   width: 100%;

@@ -59,7 +59,6 @@ let cities = fs.readFileSync('cities.txt', 'utf8', (err, data) => {
 cities = cities.split(/\r?\n/);
 
 io.on('connection', function(socket) {
-  console.log('a user connected');
   socket.on('streamingStart', function(testData) {
     let stream = client.stream('statuses/sample');
     stream.on('data', function(event) {
@@ -98,18 +97,14 @@ io.on('connection', function(socket) {
      });
   });
 
-  socket.on('streamingStop', function(testData) {
-    stream.destroy;
-    socket.emit('streamingStopWorked', true);
-  });
-
   socket.on('disconnect', function(){
     console.log('user disconnected');
+    socket.emit('streamingError', true);
   });
 
   socket.on('error', function(){
     console.log('a socket.io error occurred');
-    socket.emit('streamingStopWorked', true);
+    socket.emit('streamingError', true);
   });
 });
 
