@@ -28,22 +28,8 @@ router.get('/token', authorize, (req, res, next) => {
   res.send(res.verify);
 });
 
-router.delete('/token', (req, res, next) => {
-  res.clearCookie('token');
-  res.status(200);
-  res.send('true');
-});
-
-router.post('/token', (req, res, next) => {
+router.post('/token', ev(validations.post), (req, res, next) => {
   const { email, password } = req.body;
-
-  if (!email || !email.trim()) {
-    return next(boom.create(400, 'Email must not be blank'));
-  }
-
-  if (!password || password.length < 8) {
-    return next(boom.create(400, 'Password must not be blank'));
-  }
 
   let user;
 
@@ -77,6 +63,12 @@ router.post('/token', (req, res, next) => {
     .catch((err) => {
       next(err);
     });
+});
+
+router.delete('/token', (req, res, next) => {
+  res.clearCookie('token');
+  res.status(200);
+  res.send('true');
 });
 
 module.exports = router;

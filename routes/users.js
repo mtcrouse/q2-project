@@ -28,20 +28,47 @@ const authorize = function(req, res, next) {
   });
 };
 
-router.post('/users', /*ev(validations.post),*/ (req, res, next) => {
+router.get('/users', authorize, (req, res, next) => {
+  knex('users')
+    .orderBy('id')
+    .then((rows) => {
+      const users = camelizeKeys(rows);
+
+      res.send(users);
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+router.get('/users/id', authorize, (req, res, next) => {
+  let { userId } = req.token;
+
+  userId = JSON.stringify(userId);
+
+  res.send(userId);
+});
+
+router.get('/users/:id', authorize, (req, res, next) => {
+  const { id } = req.params;
+
+  knex('users')
+    .where('id', id)
+    .first()
+    .then((row) => {
+      if (!row) {
+        return next(boom.create(400, `No user at id ${id}`));
+      }
+
+      res.send(camelizeKeys(row));
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+router.post('/users', ev(validations.post), (req, res, next) => {
   const { username, email, password } = req.body;
-
-  // if (!username || !username.trim()) {
-  //   return next(boom.create(400, 'Username must not be blank'));
-  // }
-
-  // if (!email || !email.trim() || email.length < 8) {
-  //   return next(boom.create(400, 'Email must not be blank'));
-  // }
-
-  // if (!password || !password.trim()) {
-  //   return next(boom.create(400, 'Password must not be blank'));
-  // }
 
   bcrypt.hash(password, 12)
     .then((hashedPassword) => {
@@ -65,46 +92,6 @@ router.post('/users', /*ev(validations.post),*/ (req, res, next) => {
       delete user.hashedPassword;
 
       res.send(user);
-    })
-    .catch((err) => {
-      next(err);
-    });
-});
-
-router.get('/users', (req, res, next) => {
-  knex('users')
-    .orderBy('id')
-    .then((rows) => {
-      const users = camelizeKeys(rows);
-
-      res.send(users);
-    })
-    .catch((err) => {
-      next(err);
-    });
-});
-
-router.get('/users/id', authorize, (req, res, next) => {
-  let { userId } = req.token;
-
-  userId = JSON.stringify(userId);
-
-  res.send(userId);
-});
-
-router.get('/users/:id', /*authorize,*/ (req, res, next) => {
-  // const { userId } = req.token;
-  const { id } = req.params;
-
-  knex('users')
-    .where('id', id)
-    .first()
-    .then((row) => {
-      if (!row) {
-        return next(boom.create(400, `No user at id ${id}`));
-      }
-
-      res.send(camelizeKeys(row));
     })
     .catch((err) => {
       next(err);
