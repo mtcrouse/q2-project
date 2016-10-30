@@ -75,15 +75,18 @@ io.on('connection', function(socket) {
           latitude = null;
           longitude = null;
         } else {
-          for (let row of cities) {
-            row = row.split('\t');
-            let currentScore = natural.JaroWinklerDistance(event.user.location.split(',')[0].trim(), row[1]);
-            let currentScorePopulation = row[14];
+          for (let city of cities) {
+            city = city.split('\t');
+            cityName = city[1];
+            cityLatitude = city[4];
+            cityLongitude = city[5];
+            let currentScore = natural.JaroWinklerDistance(event.user.location.split(',')[0].trim(), cityName);
+            let currentScorePopulation = city[14];
             if (currentScore > maxScore || ((currentScore === maxScore) && (currentScorePopulation > maxScorePopulation))) {
               maxScore = currentScore;
-              bestGuess = row[1];
-              latitude = row[4];
-              longitude = row[5];
+              bestGuess = cityName;
+              latitude = cityLatitude;
+              longitude = cityLongitude;
             }
           }
         }
