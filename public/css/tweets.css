@@ -136,6 +136,7 @@ td, tr {
   width: 50%;
   background-color: rgba(0, 0, 0, 0);
   cursor: default;
+  pointer-events: none;
   -moz-user-select: -moz-none;
   -khtml-user-select: none;
   -webkit-user-select: none;

@@ -14,8 +14,8 @@ $(document).ready(() => {
       console.error(err);
     });
 
-  $('#title-box').delay(3000).fadeOut(1000);
-  $('#intro-box').delay(3000).fadeIn(1000);
+  $('#title-box').hide();
+  $('#intro-box').show();
   $('#loading').show();
 
   $('#intro-button').click(() => {
