@@ -24,7 +24,6 @@ const authorize = function(req, res, next) {
   });
 };
 
-
 router.get('/token', authorize, (req, res, next) => {
   res.send(res.verify);
 });
@@ -35,7 +34,7 @@ router.delete('/token', (req, res, next) => {
   res.send('true');
 });
 
-router.post('/token', /*ev(validations.post),*/ (req, res, next) => {
+router.post('/token', (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !email.trim()) {

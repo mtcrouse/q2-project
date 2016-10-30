@@ -28,12 +28,7 @@ const authorize = function(req, res, next) {
 };
 
 router.post('/searches_users', authorize, (req, res, next) => {
-  const { userId } = req.token; 
-
-  // ev(validations)
-  // if (!favoriteId || !favoriteId.trim() || Number(favoriteId) !== Number.parseInt(Number(favoriteId))) {
-  //  throw boom.create(400, `favoriteId ${favoriteid} is blank or not an integer`)
-  // }
+  const { userId } = req.token;
 
   knex('searches').max('id').first()
     .then((row) => {
@@ -55,19 +50,19 @@ router.post('/searches_users', authorize, (req, res, next) => {
 });
 
 router.get('/searches_users', /*authorize,*/ (req, res, next) => {
-  return next(boom.create(400, `No route handler defined.`));
+  return next(boom.create(400, 'No route handler defined.'));
 });
 
 router.post('/searches_users', /*authorize,*/ (req, res, next) => {
-  return next(boom.create(400, `No route handler defined.`));
+  return next(boom.create(400, 'No route handler defined.'));
 });
 
 router.patch('/searches_users/:id', /*authorize,*/ (req, res, next) => {
-  return next(boom.create(400, `No route handler defined.`));
+  return next(boom.create(400, 'No route handler defined.'));
 });
 
 router.delete('/searches_users/:id', /*authorize,*/ (req, res, next) => {
-  return next(boom.create(400, `No route handler defined.`));
+  return next(boom.create(400, 'No route handler defined.'));
 });
 
 module.exports = router;
