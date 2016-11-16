@@ -144,6 +144,7 @@ td, tr {
   padding: 0;
   z-index: 2;
   white-space: nowrap;
+  display: none;
 }
 
 #user-box {
